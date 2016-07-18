@@ -1,3 +1,3 @@
 #!/bin/bash
 
-source bin/destroy.sh && source bin/build.sh && source bin/run.sh
+source bin/rebuild.sh && source bin/run.sh $1
