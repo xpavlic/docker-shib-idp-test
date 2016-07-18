@@ -2,12 +2,7 @@
 
 load ../common
 
-@test "file reading" {
-  result="$(echo  $maintainer)"
-  [ "$result" = 'bigfleet' ]
-}
-
-@test "container output" {
-  result="$(docker run bigfleet/shibboleth_idp)"
-  [ "$result" = '3.2.1' ]
+@test "Creates non-root host directory" {
+  result="$(docker run -it bigfleet/shibboleth_idp ls /opt)"
+  [ "$result" != '' ]
 }
