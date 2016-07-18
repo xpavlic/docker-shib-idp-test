@@ -2,4 +2,4 @@
 
 source common.bash .
 
-docker run $maintainer/$imagename
+docker run -it $maintainer/$imagename $1
