@@ -33,14 +33,17 @@ ENV SHIB_PREFIX=shibboleth-identity-provider-$VERSION
 
 RUN mkdir -p /tmp/shibboleth && cd /tmp/shibboleth && \
       wget -q https://shibboleth.net/downloads/PGP_KEYS \
-           $SHIB_RELDIR/$SHIB_PREFIX.tar.gz \
+           $SHIB_RELDIR/$SHIB_PREFIX.tar.gz \ 
            $SHIB_RELDIR/$SHIB_PREFIX.tar.gz.asc \
            $SHIB_RELDIR/$SHIB_PREFIX.tar.gz.sha256 && \
+# Perform verifications
            gpg --import PGP_KEYS && \
            gpg $SHIB_PREFIX.tar.gz.asc && \
            sha256sum --check $SHIB_PREFIX.tar.gz.sha256 && \
+# Prepare filesystem
            tar xf $SHIB_PREFIX.tar.gz && \
            mkdir -p /opt/shibboleth && \
            mv $SHIB_PREFIX /opt/shibboleth/. && \
            ln -s /opt/shibboleth/$SHIB_PREFIX /opt/shibboleth/current && \
+# Cleanup
            rm -rf /tmp/shibboleth

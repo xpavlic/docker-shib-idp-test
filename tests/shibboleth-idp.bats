@@ -11,3 +11,8 @@ load ../common
   result="$(docker run -it bigfleet/shibboleth_idp ls /tmp/firsttimerunning)"
   [ "$result" != '' ]
 }
+
+@test "Contains java" {
+  run docker run -it bigfleet/shibboleth_idp which java
+  [ "$status" -eq 0 ]
+}
