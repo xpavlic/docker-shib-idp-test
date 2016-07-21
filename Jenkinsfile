@@ -10,11 +10,11 @@ node {
 
   stage 'Base'
     
-    sh './build_image.sh'
+    sh 'bin/build.sh'
     
   stage 'Tests'
   
-    sh '/usr/local/bin/bats tests/shibboleth-idp.bats'
+    sh 'bin/test.sh'
     
 
 }
