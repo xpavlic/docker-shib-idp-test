@@ -1,5 +1,7 @@
 # Shibboleth IDP Container Images
 
+[![Build Status](https://jenkins.testbed.tier.internet2.edu/buildStatus/icon?job=docker/shib-idp/master)](https://jenkins.testbed.tier.internet2.edu/job/docker/job/shib-idp/job/master/)
+
 This repository creates and distributes Shibboleth IDP images to Dockerhub.
 
 ## Supported Images
