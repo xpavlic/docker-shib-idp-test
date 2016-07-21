@@ -10,17 +10,11 @@ node {
 
   stage 'Base'
     
-    sh './build_image.sh'
+    sh 'bin/build.sh'
     
   stage 'Tests'
   
-    sh '/usr/local/bin/bats tests/shibboleth-idp.bats'
+    sh '/usr/local/bin/bats tests'
     
-  # stage 'Push'
-  #   if(env.BRANCH_NAME == "master")
-  #   docker.withRegistry('https://registry.hub.docker.com/', 'dockerhub-bigfleet') {
-  #     def baseImg = docker.build('$env.DOCKERHUB_ACCOUNT/shib_')
-  #     baseImg.push('latest')
-  #   }
 
 }

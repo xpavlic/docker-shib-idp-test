@@ -2,12 +2,17 @@
 
 load ../common
 
-@test "file reading" {
-  result="$(echo  $maintainer)"
-  [ "$result" = 'bigfleet' ]
+@test "Creates non-root Shib IDP home" {
+  result="$(docker run -i bigfleet/shibboleth_idp ls /opt/shibboleth/current/bin/)"
+  [ "$result" != '' ]
 }
 
-@test "container output" {
-  result="$(docker run bigfleet/shibboleth_idp)"
-  [ "$result" = '3.2.1' ]
+@test "Retains first-run experience" {
+  result="$(docker run -i bigfleet/shibboleth_idp ls /tmp/firsttimerunning)"
+  [ "$result" != '' ]
+}
+
+@test "Contains java" {
+  run docker run -i bigfleet/shibboleth_idp which java
+  [ "$status" -eq 0 ]
 }
