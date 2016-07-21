@@ -14,7 +14,7 @@ node {
     
   stage 'Tests'
   
-    sh 'bin/test.sh'
+    sh '/usr/local/bin/bats tests'
     
 
 }
