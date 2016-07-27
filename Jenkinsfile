@@ -1,9 +1,5 @@
 node {
 
-  env.DOCKERHUB_ACCOUNT = "bigfleet"
-  env.VERSION_TAG = "3.2.1" // latest version of the release
-  env.BUILD_TAG = "testing" // default tag to push for to the registry
-  
   stage 'Checkout'
 
     checkout scm
@@ -17,8 +13,19 @@ node {
       sh 'ls'
       sh 'mv bin/* .'
     }
-
-  stage 'Base'
+    
+  stage 'Debug'
+    
+    def maintainer = maintainer()
+    def imagename = imagename()
+    def tag = env.BRANCH_NAME
+    if(!imagename){
+      echo "You must define an imagename in common.bash"
+      currentBuild.result = 'FAILURE'
+    }
+    if(maintainer){
+      echo "Building ${maintainer}:${tag} for ${maintainer}"
+    }
     
     sh 'bin/build.sh'
     
@@ -26,5 +33,22 @@ node {
   
     sh 'bin/test.sh'
     
+  stage 'Push'
+  
+    docker.withRegistry('https://registry.hub.docker.com/',   'dockerhub-bigfleet') {
+          def baseImg = docker.build("$maintainer/$imagename")
+          baseImg.push('$tag')
+    }
+    
 
+}
+
+def maintainer() {
+  def matcher = readFile('common.bash') =~ 'maintainer="(.+)"'
+  matcher ? matcher[0][1] : 'tier'
+}
+
+def imagename() {
+  def matcher = readFile('common.bash') =~ 'imagename=(.+)'
+  matcher ? matcher[0][1] : null
 }
