@@ -16,3 +16,8 @@ load ../common
   run docker run -i bigfleet/shibboleth_idp which java
   [ "$status" -eq 0 ]
 }
+
+@test "Defers configuration via ONBUILD" {
+ run grep ONBUILD Dockerfile
+ [ "$status" -eq 1 ]
+}
