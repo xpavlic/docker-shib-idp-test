@@ -4,9 +4,12 @@ This repository is intended to be downloaded into a container repository during 
 
 ## Install
 
-To use these scripts on your container image construction project, issue these commands in the root directory of your container project:
+If you are reading this file in BINSCRIPTS.md, your container project is likely to be util-enabled.
+
+To use these scripts yourself, issue this command:
 
 ```
+curl "https://github.internet2.edu/raw/docker/util/master/bin/install.sh?token=AAAAEddkrL9MeeA6VWcNn_PgV30r4lD1ks5XogeiwA%3D%3D" | bash
 ```
 
 ### common.bash
@@ -15,13 +18,17 @@ The installation process will create a common.bash file.  This file should be th
 
 You should edit this file to change the image name, and add any other helpful environment variables.
 
+### Jenkinsfile
+
+This will also install a Jenkinsfile to your repository, if it doesn't have one.  This will ensure that your Jenkins pipeline can leverage these scripts in the way intended.  Ensuring the commands that you issue on your laptop match the commands issued by the build pipeline is critical to ensure predictable, reliable results.
+
 ## Use
 
 
 ### Building
 
 #### build.sh
-`bin/build `
+`bin/build.sh `
 #### destroy.sh
 #### rebuild.sh
 

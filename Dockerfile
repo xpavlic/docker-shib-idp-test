@@ -47,3 +47,5 @@ RUN mkdir -p /tmp/shibboleth && cd /tmp/shibboleth && \
            ln -s /opt/shibboleth/$SHIB_PREFIX /opt/shibboleth/current && \
 # Cleanup
            rm -rf /tmp/shibboleth
+
+ONBUILD ADD ./root/* /opt/shibboleth/$SHIB_PREFIX
