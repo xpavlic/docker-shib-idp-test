@@ -10,7 +10,7 @@ node {
     
   stage 'Acquire util'
     
-    sh 'mkdir bin'
+    sh 'mkdir -p bin'
     dir('bin'){
       git([ url: "https://github.internet2.edu/docker/util.git",
           credentialsId: "jenkins-github-access-token" ])
