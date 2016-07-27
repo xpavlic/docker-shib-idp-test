@@ -7,6 +7,16 @@ node {
   stage 'Checkout'
 
     checkout scm
+    
+  stage 'Acquire util'
+    
+    sh 'mkdir -p bin'
+    dir('bin'){
+      git([ url: "https://github.internet2.edu/docker/util.git",
+          credentialsId: "jenkins-github-access-token" ])
+      sh 'ls'
+      sh 'mv bin/* .'
+    }
 
   stage 'Base'
     
