@@ -10,7 +10,9 @@ node {
     
   stage 'Acquire util'
   
-    sh 'curl "https://github.internet2.edu/raw/docker/util/master/bin/install.sh?token=AAAAEddkrL9MeeA6VWcNn_PgV30r4lD1ks5XogeiwA%3D%3D" | bash'
+    git([ url: "https://github.internet2.edu/docker/util.git",
+          credentialsId: "jenkins-github-access-token" ])
+    sh 'mv util/bin bin'
 
   stage 'Base'
     
