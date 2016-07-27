@@ -49,6 +49,6 @@ def maintainer() {
 }
 
 def imagename() {
-  def matcher = readFile('common.bash') =~ 'imagename=(.+)'
+  def matcher = readFile('common.bash') =~ 'imagename="(.+)"'
   matcher ? matcher[0][1] : null
 }
