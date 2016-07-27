@@ -2,6 +2,10 @@
 
 load ../common
 
+setup() {
+  ./bin/rebuild.sh
+}
+
 @test "Creates non-root Shib IDP home" {
   result="$(docker run -i bigfleet/shibboleth_idp ls /opt/shibboleth/current/bin/)"
   [ "$result" != '' ]
@@ -19,5 +23,5 @@ load ../common
 
 @test "Defers configuration via ONBUILD" {
  run grep ONBUILD Dockerfile
- [ "$status" -eq 1 ]
+ [ "$status" -eq 0 ]
 }
