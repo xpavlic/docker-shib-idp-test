@@ -14,7 +14,7 @@ node {
       sh 'mv bin/* .'
     }
     
-  stage 'Debug'
+  stage 'Build'
     
     def maintainer = maintainer()
     def imagename = imagename()
