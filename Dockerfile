@@ -48,4 +48,4 @@ RUN mkdir -p /tmp/shibboleth && cd /tmp/shibboleth && \
 # Cleanup
            rm -rf /tmp/shibboleth
 
-ONBUILD ADD ./root/* /opt/shibboleth/$SHIB_PREFIX/
+ONBUILD COPY ./root/ /opt/shibboleth/$SHIB_PREFIX/
