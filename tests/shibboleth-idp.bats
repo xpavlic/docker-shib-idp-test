@@ -2,10 +2,6 @@
 
 load ../common
 
-setup() {
-  ./bin/rebuild.sh
-}
-
 @test "Creates non-root Shib IDP home" {
   result="$(docker run -i $maintainer/$imagename ls /opt/shibboleth/current/bin/)"
   [ "$result" != '' ]
