@@ -27,7 +27,7 @@ node {
       echo "Building ${maintainer}:${tag} for ${maintainer}"
     }
     
-    sh 'bin/build.sh'
+    sh 'bin/rebuild.sh'
     
   stage 'Tests'
   

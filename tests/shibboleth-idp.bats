@@ -2,10 +2,6 @@
 
 load ../common
 
-setup() {
-  ./bin/rebuild.sh
-}
-
 @test "Creates non-root Shib IDP home" {
   result="$(docker run -i $maintainer/$imagename ls /opt/shibboleth/current/bin/)"
   [ "$result" != '' ]
@@ -19,6 +15,11 @@ setup() {
 @test "Contains java" {
   run docker run -i $maintainer/$imagename which java
   [ "$status" -eq 0 ]
+}
+
+@test "exports JAVA_HOME" {
+  result="$(docker run -i $maintainer/$imagename env | grep JAVA_HOME)"
+  [ "$result" != "" ]
 }
 
 @test "Defers configuration via ONBUILD" {
