@@ -17,8 +17,18 @@ load ../common
   [ "$status" -eq 0 ]
 }
 
+@test "Contains tomcat" {
+  run docker run -i $maintainer/$imagename which startup.sh
+  [ "$status" -eq 0 ]
+}
+
 @test "exports JAVA_HOME" {
   result="$(docker run -i $maintainer/$imagename env | grep JAVA_HOME)"
+  [ "$result" != "" ]
+}
+
+@test "exports CATALINA_HOME" {
+  result="$(docker run -i $maintainer/$imagename env | grep CATALINA_HOME)"
   [ "$result" != "" ]
 }
 
