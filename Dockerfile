@@ -39,6 +39,8 @@ RUN yum -y install \
     
 ENV SHIB_RELDIR=http://shibboleth.net/downloads/identity-provider/$VERSION
 ENV SHIB_PREFIX=shibboleth-identity-provider-$VERSION
+ENV JAVA_HOME /usr/java/latest
+ENV PATH $JAVA_HOME/bin:$PATH
 
 RUN mkdir -p /tmp/shibboleth && cd /tmp/shibboleth && \
       wget -q https://shibboleth.net/downloads/PGP_KEYS \

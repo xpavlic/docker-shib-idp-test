@@ -21,6 +21,11 @@ setup() {
   [ "$status" -eq 0 ]
 }
 
+@test "exports JAVA_HOME" {
+  result="$(docker run -i $maintainer/$imagename echo $JAVA_HOME)"
+  [ "$result" != "" ]
+}
+
 @test "Defers configuration via ONBUILD" {
  run grep ONBUILD Dockerfile
  [ "$status" -eq 0 ]
