@@ -18,7 +18,7 @@ load ../common
 }
 
 @test "exports JAVA_HOME" {
-  result="$(docker run -i $maintainer/$imagename echo $JAVA_HOME)"
+  result="$(docker run -i $maintainer/$imagename env | grep JAVA_HOME)"
   [ "$result" != "" ]
 }
 
