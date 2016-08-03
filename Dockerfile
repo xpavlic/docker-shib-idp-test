@@ -16,10 +16,19 @@ LABEL ImageName=$imagename
 LABEL ImageOS=centos7
 LABEL Version=$VERSION
 
+ENV JAVA_VERSION 8u101
+ENV BUILD_VERSION b13
+
+RUN wget -nv --no-cookies --no-check-certificate --header "Cookie: oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/$JAVA_VERSION-$BUILD_VERSION/jdk-$JAVA_VERSION-linux-x64.rpm" -O /tmp/jdk-8-linux-x64.rpm && \
+    yum -y install /tmp/jdk-8-linux-x64.rpm && \
+    rm -f /tmp/jdk-8-linux-x64.rpm && \
+    alternatives --install /usr/bin/java jar /usr/java/latest/bin/java 200000 && \
+    alternatives --install /usr/bin/javaws javaws /usr/java/latest/bin/javaws 200000 && \
+    alternatives --install /usr/bin/javac javac /usr/java/latest/bin/javac 200000
+
 RUN yum -y install \
     apr-devel \
     httpd \
-    java-1.8.0-openjdk-headless \
     krb5-workstation \
     mod_ssl \
     openssl-devel \
