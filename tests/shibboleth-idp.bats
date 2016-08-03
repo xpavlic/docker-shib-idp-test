@@ -12,6 +12,11 @@ load ../common
   [ "$result" != '' ]
 }
 
+@test "Tomcat will start Shibboleth IDP when started" {
+  result="$(docker run -i $maintainer/$imagename find conf/Catalina/idp.xml)"
+  [ "$result" != '' ]
+}
+
 @test "Contains java" {
   run docker run -i $maintainer/$imagename which java
   [ "$status" -eq 0 ]

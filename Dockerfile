@@ -93,7 +93,10 @@ RUN set -x \
 #	&& gpg --batch --verify tomcat.tar.gz.asc tomcat.tar.gz \
 	&& tar -xvf tomcat.tar.gz --strip-components=1 \
 	&& rm bin/*.bat \
-	&& rm tomcat.tar.gz*
+	&& rm tomcat.tar.gz* \
+    && mkdir -p conf/Catalina
+    
+ADD files/idp.xml conf/Catalina/idp.xml
 
 
 ENV PATH $CATALINA_HOME/bin:$JAVA_HOME/bin:$PATH
