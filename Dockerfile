@@ -94,9 +94,11 @@ RUN set -x \
 	&& tar -xvf tomcat.tar.gz --strip-components=1 \
 	&& rm bin/*.bat \
 	&& rm tomcat.tar.gz* \
-    && mkdir -p conf/Catalina
+    && mkdir -p conf/Catalina \
+    && curl -o /usr/local/tomcat/lib/jstl1.2.jar https://build.shibboleth.net/nexus/service/local/repositories/thirdparty/content/javax/servlet/jstl/1.2/jstl-1.2.jar
     
 ADD files/idp.xml conf/Catalina/idp.xml
+
 
 
 ENV PATH $CATALINA_HOME/bin:$JAVA_HOME/bin:$PATH

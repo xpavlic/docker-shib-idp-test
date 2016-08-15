@@ -27,6 +27,11 @@ load ../common
   [ "$status" -eq 0 ]
 }
 
+@test "Contains JSTL jar" {
+  run docker run -i $maintainer/$imagename find /usr/local/tomcat/lib/jstl1.2.jar
+  [ "$status" -eq 0 ]
+}
+
 @test "exports JAVA_HOME" {
   result="$(docker run -i $maintainer/$imagename env | grep JAVA_HOME)"
   [ "$result" != "" ]
