@@ -17,9 +17,9 @@ load ../common
   [ "$result" != '' ]
 }
 
-@test "Contains java" {
+@test "Does not contain java" {
   run docker run -i $maintainer/$imagename which java
-  [ "$status" -eq 0 ]
+  [ "$status" -eq 1 ]
 }
 
 @test "Contains tomcat" {
