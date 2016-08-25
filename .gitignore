@@ -5,3 +5,5 @@ bin/rebuild.sh
 bin/rerun.sh
 bin/run.sh
 bin/test.sh
+bin/start.sh
+bin/stop.sh
