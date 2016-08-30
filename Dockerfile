@@ -1,4 +1,4 @@
-FROM bigfleet/centos7base
+FROM tier/centos7base
 
 # Establish a default value for critical variables
 # These values are not used by bin scripts or the pipeline.
