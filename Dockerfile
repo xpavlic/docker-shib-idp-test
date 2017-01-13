@@ -6,7 +6,7 @@ FROM tier/centos7base
 ARG registry=docker.io
 ARG maintainer=tier
 ARG imagename=shibboleth_idp
-ARG version=3.2.1
+ARG version=3.3.0
 ENV VERSION=$version
 
 MAINTAINER $maintainer
