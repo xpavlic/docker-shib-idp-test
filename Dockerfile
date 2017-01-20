@@ -6,7 +6,7 @@ FROM tier/centos7base
 ARG registry=docker.io
 ARG maintainer=tier
 ARG imagename=shibboleth_idp
-ARG version=3.2.1
+ARG version=3.3.0
 ENV VERSION=$version
 
 MAINTAINER $maintainer
@@ -72,7 +72,7 @@ RUN mkdir -p "$CATALINA_HOME"
 #     done
 
 ENV TOMCAT_MAJOR 8
-ENV TOMCAT_VERSION 8.0.37
+ENV TOMCAT_VERSION 8.0.39
 ENV TOMCAT_TGZ_URL https://www.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz
 
 WORKDIR $CATALINA_HOME
