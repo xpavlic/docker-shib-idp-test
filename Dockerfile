@@ -8,6 +8,8 @@ ARG maintainer=tier
 ARG imagename=shibboleth_idp
 ARG version=3.3.0
 ENV VERSION=$version
+ENV IMAGENAME=$imagename
+ENV MAINTAINER=$maintainer
 
 MAINTAINER $maintainer
 LABEL Vendor="Internet2"
