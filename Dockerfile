@@ -92,6 +92,15 @@ RUN set -x \
 ADD files/idp.xml conf/Catalina/idp.xml
 ADD files/server.xml conf/server.xml
 
+ADD files/tier-crontab /opt/tier/tier-crontab
+RUN crontab /opt/tier/tier-crontab
+ADD files/bin/startcron.sh /usr/bin/startcron.sh
+RUN chmod +x /usr/bin/startcron.sh
+ADD files/bin/sendtierbeacon.sh /usr/bin/sendtierbeacon.sh
+RUN touch /var/log/cron.log
+
 ENV PATH $CATALINA_HOME/bin:$JAVA_HOME/bin:$PATH
 
 ONBUILD COPY ./root/ /opt/shibboleth/$SHIB_PREFIX/
+
+CMD /usr/bin/startcron.sh
