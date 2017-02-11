@@ -8,6 +8,8 @@ ARG maintainer=tier
 ARG imagename=shibboleth_idp
 ARG version=3.3.0
 ENV VERSION=$version
+ENV IMAGENAME=$imagename
+ENV MAINTAINER=$maintainer
 
 MAINTAINER $maintainer
 LABEL Vendor="Internet2"
@@ -72,7 +74,7 @@ RUN mkdir -p "$CATALINA_HOME"
 #     done
 
 ENV TOMCAT_MAJOR 8
-ENV TOMCAT_VERSION 8.0.39
+ENV TOMCAT_VERSION 8.0.41
 ENV TOMCAT_TGZ_URL https://www.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz
 
 WORKDIR $CATALINA_HOME
@@ -90,6 +92,15 @@ RUN set -x \
 ADD files/idp.xml conf/Catalina/idp.xml
 ADD files/server.xml conf/server.xml
 
+ADD files/tier-crontab /opt/tier/tier-crontab
+RUN crontab /opt/tier/tier-crontab
+ADD files/bin/startcron.sh /usr/bin/startcron.sh
+RUN chmod +x /usr/bin/startcron.sh
+ADD files/bin/sendtierbeacon.sh /usr/bin/sendtierbeacon.sh
+RUN touch /var/log/cron.log
+
 ENV PATH $CATALINA_HOME/bin:$JAVA_HOME/bin:$PATH
 
 ONBUILD COPY ./root/ /opt/shibboleth/$SHIB_PREFIX/
+
+CMD /usr/bin/startcron.sh
