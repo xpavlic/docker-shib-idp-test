@@ -1,3 +1,3 @@
 #!/bin/sh
-cron
+crond
 touch /var/log/cron.log
