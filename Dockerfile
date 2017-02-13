@@ -7,7 +7,9 @@ ARG registry=docker.io
 ARG maintainer=tier
 ARG imagename=shibboleth_idp
 ARG version=3.3.0
+ARG tierversion=1702
 ENV VERSION=$version
+ENV TIERVERSION=$tierversion
 ENV IMAGENAME=$imagename
 ENV MAINTAINER=$maintainer
 
