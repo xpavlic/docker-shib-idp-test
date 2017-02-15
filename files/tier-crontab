@@ -1,2 +1,0 @@
-#send daily ping to TIER Central
-0 0 * * * /usr/bin/sendtierbeacon.sh >> /var/log/cron.log 2>&1
