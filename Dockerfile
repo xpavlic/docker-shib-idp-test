@@ -96,9 +96,6 @@ ADD files/server.xml conf/server.xml
 
 ADD files/bin/setenv.sh /opt/tier/setenv.sh
 RUN chmod +x /opt/tier/setenv.sh
-ADD files/tier-crontab /opt/tier/tier-crontab
-RUN crontab /opt/tier/tier-crontab
-ADD files/tier-crontab /etc/cron.d/tier-crontab
 ADD files/bin/startup.sh /usr/bin/startup.sh
 RUN chmod +x /usr/bin/startup.sh
 ADD files/bin/sendtierbeacon.sh /usr/bin/sendtierbeacon.sh
