@@ -1,5 +1,5 @@
 #!/bin/sh
-LOGHOST="cerif.org"
+LOGHOST="collector.testbed.internet2.edu"
 LOGPORT="5000"
 if [ -s /opt/tier/env.bash ]; then
   . /opt/tier/env.bash
