@@ -100,7 +100,6 @@ ADD files/bin/startup.sh /usr/bin/startup.sh
 RUN chmod +x /usr/bin/startup.sh
 ADD files/bin/sendtierbeacon.sh /usr/bin/sendtierbeacon.sh
 RUN chmod +x /usr/bin/sendtierbeacon.sh
-RUN touch /var/log/cron.log
 
 ENV PATH $CATALINA_HOME/bin:$JAVA_HOME/bin:$PATH
 
