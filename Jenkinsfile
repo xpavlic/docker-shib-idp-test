@@ -19,6 +19,7 @@ node('docker') {
     def maintainer = maintainer()
     def imagename = imagename()
     def tag
+	def tierbuild=env.BUILD_NUMBER
     
     // Tag images created on master branch with 'latest'
     if(env.BRANCH_NAME == "master"){
