@@ -8,12 +8,13 @@ ARG maintainer=tier
 ARG imagename=shibboleth_idp
 ARG version=3.3.0
 ARG tierversion=17020
+ARG tierbuild=$BUILD_NUMBER
 ENV VERSION=$version
 ENV TIERVERSION=$tierversion
+ENV TIERBUILD=$tierbuild
 ENV IMAGENAME=$imagename
 ENV MAINTAINER=$maintainer
 
-MAINTAINER $maintainer
 LABEL Vendor="Internet2"
 LABEL ImageType="Shibboleth IDP Release"
 LABEL ImageName=$imagename

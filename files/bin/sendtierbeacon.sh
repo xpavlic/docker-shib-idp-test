@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 LOGHOST="collector.testbed.tier.internet2.edu"
 LOGPORT="5000"
 if [ -s /opt/tier/env.bash ]; then
