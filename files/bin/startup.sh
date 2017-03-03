@@ -6,7 +6,6 @@ CRONFILE=/opt/tier/tier-cron
 
 #build crontab file with random start time between midnight and 3:59am
 echo "#send daily beacon to TIER Central" > ${CRONFILE}
-echo "#* * * * * /usr/bin/sendtierbeacon.sh >> /var/log/cron.log 2>&1" >> ${CRONFILE}
 echo $(expr $RANDOM % 59) $(expr $RANDOM % 3) "* * * /usr/bin/sendtierbeacon.sh >> /var/log/cron.log 2>&1" >> ${CRONFILE}
 chmod 644 ${CRONFILE}
 
