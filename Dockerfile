@@ -95,9 +95,9 @@ RUN set -x \
     
 ADD files/idp.xml conf/Catalina/idp.xml
 ADD files/server.xml conf/server.xml
-ADD files/robots.txt webapps/ROOT/robots.txt
 
-
+RUN mkdir -p /usr/local/tomcat/webapps/ROOT
+ADD files/robots.txt /usr/local/tomcat/webapps/ROOT/robots.txt
 
 ADD files/bin/setenv.sh /opt/tier/setenv.sh
 RUN chmod +x /opt/tier/setenv.sh
