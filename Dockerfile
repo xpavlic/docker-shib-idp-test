@@ -92,8 +92,6 @@ RUN set -x \
     && mkdir -p conf/Catalina \
     && curl -o /usr/local/tomcat/lib/jstl1.2.jar https://build.shibboleth.net/nexus/service/local/repositories/thirdparty/content/javax/servlet/jstl/1.2/jstl-1.2.jar
 
-RUN mkdir -p /usr/local/tomcat/webapps/ROOT
-ADD files/robots.txt /usr/local/tomcat/webapps/ROOT/robots.txt
 
 ADD files/bin/setenv.sh /opt/tier/setenv.sh
 RUN chmod +x /opt/tier/setenv.sh
