@@ -1,5 +1,5 @@
 registry="docker.io"
-maintainer="bigfleet"
+maintainer="tier"
 basename="shibboleth_idp"
 imagename="shibboleth_idp"
 version="3.3.1"
