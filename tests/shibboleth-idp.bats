@@ -42,7 +42,7 @@ load ../common
   [ "$result" != "" ]
 }
 
-@test "Defers configuration via ONBUILD" {
- run grep ONBUILD Dockerfile
- [ "$status" -eq 0 ]
-}
+#@test "Defers configuration via ONBUILD" {
+# run grep ONBUILD Dockerfile
+# [ "$status" -eq 0 ]
+#}
