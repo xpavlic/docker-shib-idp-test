@@ -104,5 +104,4 @@ RUN chmod +x /usr/bin/sendtierbeacon.sh
 
 ENV PATH $CATALINA_HOME/bin:$JAVA_HOME/bin:$PATH
 
-ONBUILD COPY ./root/ /opt/shibboleth/$SHIB_PREFIX/
 
