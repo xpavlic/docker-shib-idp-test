@@ -7,7 +7,7 @@ ARG registry=docker.io
 ARG maintainer=tier
 ARG imagename=shibboleth_idp
 ARG version=3.3.1
-ARG tierversion=17070
+ARG tierversion=180401
 ARG tierbuild=$tierbuild
 ENV VERSION=$version
 ENV TIERVERSION=$tierversion
@@ -25,8 +25,7 @@ RUN yum -y install \
     apr-devel \
     httpd \
     krb5-workstation \
-    mod_ssl \
-    openssl-devel \
+    mod_ssl 50    openssl-devel \
     wget \
     && yum -y clean all
     
@@ -77,7 +76,7 @@ RUN mkdir -p "$CATALINA_HOME"
 #     done
 
 ENV TOMCAT_MAJOR 8
-ENV TOMCAT_VERSION 8.0.45
+ENV TOMCAT_VERSION 8.0.50
 ENV TOMCAT_TGZ_URL https://www.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz
 
 WORKDIR $CATALINA_HOME
