@@ -1,17 +1,8 @@
-# Shibboleth IDP Container Images
+# TIER "Standalone" Shibboleth-IdP
+Used for building/running a TIER Shibb-IdP container without the TIER VM or the TIER intermediate docker image.
 
-[![Build Status](https://jenkins.testbed.tier.internet2.edu/buildStatus/icon?job=docker/shib-idp/master)](https://jenkins.testbed.tier.internet2.edu/job/docker/job/shib-idp/job/master/)
+To use it, see the notes in the following document:
+https://docs.google.com/document/d/1qb5XTde1nulCdA_8QUei48CxDj0lQs7ShD622Ze_4II/edit?usp=sharing
 
-This repository creates and distributes Shibboleth IDP images to Dockerhub.
+Or the InCommon Training class guide here: https://spaces.internet2.edu/x/OQ79Bg
 
-## Supported Images
-
-### Release image
-
-These images track official releases of the software.  The `master` branch produces these images, and the build pipeline distributes the results to Dockerhub.
-
-## Development
-
-### Configuration
-
-To alter project configuration details (e.g. which version of the Shibboleth IDP software is the latest), refer to common.bash-- a file referenced by many places.
