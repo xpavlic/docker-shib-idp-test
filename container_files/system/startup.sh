@@ -6,6 +6,9 @@ export USERTOKEN="${USERTOKEN// /}"
 export ENV="${ENV//;/:}"
 export ENV="${ENV// /}"
 
+#rebuild idp war file to incorporate any post-install additions
+/opt/shibboleth-idp/bin/build.sh -q -Didp.target.dir=/opt/shibboleth-idp
+
 # generic console logging pipe for anyone
 mkfifo -m 666 /tmp/logpipe
 cat <> /tmp/logpipe 1>&2 &

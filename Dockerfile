@@ -144,7 +144,7 @@ ADD http://central.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.11.0/l
 ADD http://central.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.11.0/log4j-api-2.11.0.jar /usr/local/tomcat/bin/
 ADD http://central.maven.org/maven2/org/apache/logging/log4j/log4j-jul/2.11.0/log4j-jul-2.11.0.jar /usr/local/tomcat/bin/
 RUN cd /usr/local/tomcat/; \
-    chmod +r bin/log4j-*.jar; \
+    chmod +r bin/log4j-*.jar;
 ADD container_files/tomcat/log4j2.xml /usr/local/tomcat/conf/
 ADD container_files/tomcat/setenv.sh /usr/local/tomcat/bin/
 
