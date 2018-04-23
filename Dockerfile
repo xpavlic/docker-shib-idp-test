@@ -5,16 +5,16 @@ FROM centos:centos7
 ########################
 #
 ##java
-ENV JAVA_VERSION=8u162 \
-    BUILD_VERSION=b12 \
-    JAVA_BUNDLE_ID=0da788060d494f5095bf8624735fa2f1 \
+ENV JAVA_VERSION=8u171 \
+    BUILD_VERSION=b11 \
+    JAVA_BUNDLE_ID=512cd62ec5174c3487ac17c61aaa89e8 \
 ##tomcat
     TOMCAT_MAJOR=8 \
-    TOMCAT_VERSION=8.5.29 \
+    TOMCAT_VERSION=8.5.30 \
 ##shib-idp
     VERSION=3.3.2 \
 ##TIER
-    TIERVERSION=180401 \
+    TIERVERSION=180402 \
 
 ##################
 ### OTHER VARS ###
@@ -78,22 +78,22 @@ RUN update-ca-trust extract
 #
 # Uncomment the following commands to download the JDK to your Shibboleth IDP image.  
 #     ==> By uncommenting these next 6 lines, you agree to the Oracle Binary Code License Agreement for Java SE (http://www.oracle.com/technetwork/java/javase/terms/license/index.html)
-# RUN wget -nv --no-cookies --no-check-certificate --header "Cookie: oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/$JAVA_VERSION-$BUILD_VERSION/$JAVA_BUNDLE_ID/jdk-$JAVA_VERSION-linux-x64.rpm" -O /tmp/jdk-$JAVA_VERSION-$BUILD_VERSION-linux-x64.rpm && \
-#     yum -y install /tmp/jdk-$JAVA_VERSION-$BUILD_VERSION-linux-x64.rpm && \
-#     rm -f /tmp/jdk-$JAVA_VERSION-$BUILD_VERSION-linux-x64.rpm && \
-#     alternatives --install /usr/bin/java jar $JAVA_HOME/bin/java 200000 && \
-#     alternatives --install /usr/bin/javaws javaws $JAVA_HOME/bin/javaws 200000 && \
-#     alternatives --install /usr/bin/javac javac $JAVA_HOME/bin/javac 200000
+RUN wget -nv --no-cookies --no-check-certificate --header "Cookie: oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/$JAVA_VERSION-$BUILD_VERSION/$JAVA_BUNDLE_ID/jdk-$JAVA_VERSION-linux-x64.rpm" -O /tmp/jdk-$JAVA_VERSION-$BUILD_VERSION-linux-x64.rpm && \
+    yum -y install /tmp/jdk-$JAVA_VERSION-$BUILD_VERSION-linux-x64.rpm && \
+    rm -f /tmp/jdk-$JAVA_VERSION-$BUILD_VERSION-linux-x64.rpm && \
+    alternatives --install /usr/bin/java jar $JAVA_HOME/bin/java 200000 && \
+    alternatives --install /usr/bin/javaws javaws $JAVA_HOME/bin/javaws 200000 && \
+    alternatives --install /usr/bin/javac javac $JAVA_HOME/bin/javac 200000
 
 # Uncomment the following commands to download the Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files.  
 #     ==> By uncommenting these next 7 lines, you agree to the Oracle Binary Code License Agreement for Java SE Platform Products (http://www.oracle.com/technetwork/java/javase/terms/license/index.html)
-# RUN wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" \
-#     http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip \
-#     && echo "f3020a3922efd6626c2fff45695d527f34a8020e938a49292561f18ad1320b59  jce_policy-8.zip" | sha256sum -c - \
-#     && unzip -oj jce_policy-8.zip UnlimitedJCEPolicyJDK8/local_policy.jar -d $JAVA_HOME/jre/lib/security/ \
-#     && unzip -oj jce_policy-8.zip UnlimitedJCEPolicyJDK8/US_export_policy.jar -d $JAVA_HOME/jre/lib/security/ \
-#     && rm jce_policy-8.zip \
-#     && chmod -R 640 $JAVA_HOME/jre/lib/security/
+RUN wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" \
+    http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip \
+    && echo "f3020a3922efd6626c2fff45695d527f34a8020e938a49292561f18ad1320b59  jce_policy-8.zip" | sha256sum -c - \
+    && unzip -oj jce_policy-8.zip UnlimitedJCEPolicyJDK8/local_policy.jar -d $JAVA_HOME/jre/lib/security/ \
+    && unzip -oj jce_policy-8.zip UnlimitedJCEPolicyJDK8/US_export_policy.jar -d $JAVA_HOME/jre/lib/security/ \
+    && rm jce_policy-8.zip \
+    && chmod -R 640 $JAVA_HOME/jre/lib/security/
 
 # Copy IdP installer properties file(s)
 ADD container_files/idp/idp.installer.properties /tmp/idp.installer.properties
