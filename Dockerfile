@@ -78,22 +78,22 @@ RUN update-ca-trust extract
 #
 # Uncomment the following commands to download the JDK to your Shibboleth IDP image.  
 #     ==> By uncommenting these next 6 lines, you agree to the Oracle Binary Code License Agreement for Java SE (http://www.oracle.com/technetwork/java/javase/terms/license/index.html)
-RUN wget -nv --no-cookies --no-check-certificate --header "Cookie: oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/$JAVA_VERSION-$BUILD_VERSION/$JAVA_BUNDLE_ID/jdk-$JAVA_VERSION-linux-x64.rpm" -O /tmp/jdk-$JAVA_VERSION-$BUILD_VERSION-linux-x64.rpm && \
-    yum -y install /tmp/jdk-$JAVA_VERSION-$BUILD_VERSION-linux-x64.rpm && \
-    rm -f /tmp/jdk-$JAVA_VERSION-$BUILD_VERSION-linux-x64.rpm && \
-    alternatives --install /usr/bin/java jar $JAVA_HOME/bin/java 200000 && \
-    alternatives --install /usr/bin/javaws javaws $JAVA_HOME/bin/javaws 200000 && \
-    alternatives --install /usr/bin/javac javac $JAVA_HOME/bin/javac 200000
+# RUN wget -nv --no-cookies --no-check-certificate --header "Cookie: oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/$JAVA_VERSION-$BUILD_VERSION/$JAVA_BUNDLE_ID/jdk-$JAVA_VERSION-linux-x64.rpm" -O /tmp/jdk-$JAVA_VERSION-$BUILD_VERSION-linux-x64.rpm && \
+#    yum -y install /tmp/jdk-$JAVA_VERSION-$BUILD_VERSION-linux-x64.rpm && \
+#    rm -f /tmp/jdk-$JAVA_VERSION-$BUILD_VERSION-linux-x64.rpm && \
+#    alternatives --install /usr/bin/java jar $JAVA_HOME/bin/java 200000 && \
+#    alternatives --install /usr/bin/javaws javaws $JAVA_HOME/bin/javaws 200000 && \
+#    alternatives --install /usr/bin/javac javac $JAVA_HOME/bin/javac 200000
 
 # Uncomment the following commands to download the Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files.  
 #     ==> By uncommenting these next 7 lines, you agree to the Oracle Binary Code License Agreement for Java SE Platform Products (http://www.oracle.com/technetwork/java/javase/terms/license/index.html)
-RUN wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" \
-    http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip \
-    && echo "f3020a3922efd6626c2fff45695d527f34a8020e938a49292561f18ad1320b59  jce_policy-8.zip" | sha256sum -c - \
-    && unzip -oj jce_policy-8.zip UnlimitedJCEPolicyJDK8/local_policy.jar -d $JAVA_HOME/jre/lib/security/ \
-    && unzip -oj jce_policy-8.zip UnlimitedJCEPolicyJDK8/US_export_policy.jar -d $JAVA_HOME/jre/lib/security/ \
-    && rm jce_policy-8.zip \
-    && chmod -R 640 $JAVA_HOME/jre/lib/security/
+# RUN wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" \
+#    http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip \
+#    && echo "f3020a3922efd6626c2fff45695d527f34a8020e938a49292561f18ad1320b59  jce_policy-8.zip" | sha256sum -c - \
+#    && unzip -oj jce_policy-8.zip UnlimitedJCEPolicyJDK8/local_policy.jar -d $JAVA_HOME/jre/lib/security/ \
+#    && unzip -oj jce_policy-8.zip UnlimitedJCEPolicyJDK8/US_export_policy.jar -d $JAVA_HOME/jre/lib/security/ \
+#    && rm jce_policy-8.zip \
+#    && chmod -R 640 $JAVA_HOME/jre/lib/security/
 
 # Copy IdP installer properties file(s)
 ADD container_files/idp/idp.installer.properties /tmp/idp.installer.properties
