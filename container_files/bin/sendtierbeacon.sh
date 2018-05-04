@@ -16,10 +16,15 @@ if [ -z "$TIER_BEACON_OPT_OUT" ]; then
   #send JSON
   echo $LOGTEXT > msgjson.txt
   curl -s -XPOST "${LOGHOST}:${LOGPORT}/" -H 'Content-Type: application/json' -T msgjson.txt 1>/dev/null
+  if [ $? -eq 0 ]; then
+        echo "tier_beacon;none;$ENV;$USERTOKEN;"`date`"; TIER beacon sent"
+  else
+        echo "tier_beacon;none;$ENV;$USERTOKEN;"`date`"; Failed to send TIER beacon"
+  fi
+  
   rm -f msgjson.txt
   
   #below is for syslog, F-TICKS style
   #`logger -n $LOGHOST -P $LOGPORT -t TIERBEACON $LOGTEXT`
 
-  echo `date`"; TIER beacon sent."
 fi
