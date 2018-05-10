@@ -10,11 +10,11 @@ ENV JAVA_VERSION=8u171 \
     JAVA_BUNDLE_ID=512cd62ec5174c3487ac17c61aaa89e8 \
 ##tomcat
     TOMCAT_MAJOR=8 \
-    TOMCAT_VERSION=8.5.30 \
+    TOMCAT_VERSION=8.5.31 \
 ##shib-idp
     VERSION=3.3.2 \
 ##TIER
-    TIERVERSION=180402 \
+    TIERVERSION=180501 \
 
 ##################
 ### OTHER VARS ###
