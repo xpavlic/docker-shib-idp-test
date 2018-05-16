@@ -8,32 +8,30 @@ FROM centos:centos7
 ENV JAVA_VERSION=8u171 \
     BUILD_VERSION=b11 \
     JAVA_BUNDLE_ID=512cd62ec5174c3487ac17c61aaa89e8 \
-##tomcat
+##tomcat \
     TOMCAT_MAJOR=8 \
     TOMCAT_VERSION=8.5.31 \
-##shib-idp
-    VERSION=3.3.2 \
-##TIER
-    TIERVERSION=180501 \
-
-##################
-### OTHER VARS ###
-##################
-#
-#global
+##shib-idp \
+    VERSION=3.3.3 \
+##TIER \
+    TIERVERSION=180502 \
+################## \
+### OTHER VARS ### \
+################## \
+# \
+#global \
     IMAGENAME=shibboleth_idp \
     MAINTAINER=tier \
-#java
+#java \
     JAVA_HOME=/usr/java/latest \
     JAVA_OPTS=-Xmx3000m -XX:MaxPermSize=256m \
-#tomcat
+#tomcat \
     CATALINA_HOME=/usr/local/tomcat
 ENV TOMCAT_TGZ_URL=https://www.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz \
     PATH=$CATALINA_HOME/bin:$JAVA_HOME/bin:$PATH \
-#shib-idp
+#shib-idp \
     SHIB_RELDIR=http://shibboleth.net/downloads/identity-provider/$VERSION \
     SHIB_PREFIX=shibboleth-identity-provider-$VERSION
-
 
 ENV ENV=dev \
     USERTOKEN=nothing
@@ -108,14 +106,14 @@ RUN mkdir -p /tmp/shibboleth && cd /tmp/shibboleth && \
 # Perform verifications
     gpg --import PGP_KEYS && \
     gpg $SHIB_PREFIX.tar.gz.asc && \
-	gpg --batch --verify $SHIB_PREFIX.tar.gz.asc $SHIB_PREFIX.tar.gz && \
+    gpg --batch --verify $SHIB_PREFIX.tar.gz.asc $SHIB_PREFIX.tar.gz && \
 # Unzip
     tar xf $SHIB_PREFIX.tar.gz && \
 # Install
     cd /tmp/shibboleth/$SHIB_PREFIX && \
 	./bin/install.sh \
         -Didp.noprompt=true \
-	    -Didp.property.file=/tmp/idp.installer.properties && \
+	-Didp.property.file=/tmp/idp.installer.properties && \
 # Cleanup
     cd ~ && \
     rm -rf /tmp/shibboleth
