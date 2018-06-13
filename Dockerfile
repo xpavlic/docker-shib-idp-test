@@ -9,8 +9,8 @@ ENV JAVA_VERSION=8u171 \
     BUILD_VERSION=b11 \
     JAVA_BUNDLE_ID=512cd62ec5174c3487ac17c61aaa89e8 \
 ##tomcat \
-    TOMCAT_MAJOR=8 \
-    TOMCAT_VERSION=8.5.31 \
+    TOMCAT_MAJOR=9 \
+    TOMCAT_VERSION=9.0.8 \
 ##shib-idp \
     VERSION=3.3.3 \
 ##TIER \
@@ -23,7 +23,7 @@ ENV JAVA_VERSION=8u171 \
     IMAGENAME=shibboleth_idp \
     MAINTAINER=tier \
 #java \
-    JAVA_HOME=/usr/java/latest \
+    JAVA_HOME=/usr \
     JAVA_OPTS=-Xmx3000m -XX:MaxPermSize=256m \
 #tomcat \
     CATALINA_HOME=/usr/local/tomcat
@@ -53,7 +53,8 @@ RUN ln -sf /usr/share/zoneinfo/UTC /etc/localtime \
     && echo "NETWORKING=yes" > /etc/sysconfig/network
 
 # Install base deps
-RUN rm -fr /var/cache/yum/* && yum clean all && yum -y update && yum -y install --setopt=tsflags=nodocs epel-release && \
+#RUN rm -fr /var/cache/yum/* && yum clean all && yum -y update && yum -y install --setopt=tsflags=nodocs epel-release && \
+RUN rm -fr /var/cache/yum/* && yum clean all && yum -y install --setopt=tsflags=nodocs epel-release && \
     yum -y install net-tools wget curl tar unzip mlocate logrotate strace telnet man unzip vim wget rsyslog cronie krb5-workstation openssl-devel wget supervisor && \
     yum -y clean all && \
     mkdir -p /opt/tier && \
@@ -72,7 +73,13 @@ RUN update-ca-trust extract
 #####     ENV TIER_BEACON_OPT_OUT True
 
 
-# Install java/JCE
+# Install Zulu Java
+RUN rpm --import http://repos.azulsystems.com/RPM-GPG-KEY-azulsystems \
+	&& curl -o /etc/yum.repos.d/zulu.repo http://repos.azulsystems.com/rhel/zulu.repo \
+	&& yum -y install zulu-8
+
+
+# Install Oracle java/JCE
 #
 # Uncomment the following commands to download the JDK to your Shibboleth IDP image.  
 #     ==> By uncommenting these next 6 lines, you agree to the Oracle Binary Code License Agreement for Java SE (http://www.oracle.com/technetwork/java/javase/terms/license/index.html)
@@ -94,9 +101,9 @@ RUN update-ca-trust extract
 #     && chmod -R 640 $JAVA_HOME/jre/lib/security/
 
 # Copy IdP installer properties file(s)
-ADD container_files/idp/idp.installer.properties /tmp/idp.installer.properties
-ADD container_files/idp/idp.merge.properties /tmp/idp.merge.properties
-ADD container_files/idp/ldap.merge.properties /tmp/ldap.merge.properties
+ADD container_files/idp/idp.installer.properties container_files/idp/idp.merge.properties container_files/idp/ldap.merge.properties /tmp/
+#ADD container_files/idp/idp.merge.properties /tmp/idp.merge.properties
+#ADD container_files/idp/ldap.merge.properties /tmp/ldap.merge.properties
 		   
 # Install IdP
 RUN mkdir -p /tmp/shibboleth && cd /tmp/shibboleth && \
@@ -145,8 +152,9 @@ RUN cd /usr/local/tomcat/; \
     chmod +r bin/log4j-*.jar;
 ADD container_files/tomcat/log4j2.xml /usr/local/tomcat/conf/
 ADD container_files/tomcat/setenv.sh /usr/local/tomcat/bin/
-
-
+RUN mkdir -p /usr/local/tomcat/webapps/ROOT
+ADD container_files/tomcat/robots.txt /usr/local/tomcat/webapps/ROOT
+ADD container_files/tomcat/keystore.jks /opt/certs/
 
 # Copy TIER helper scripts
 ADD container_files/system/startup.sh /usr/bin/
@@ -161,20 +169,23 @@ RUN chmod +x /opt/tier/setenv.sh \
 # setup cron
     && /usr/bin/setupcron.sh
 
+#set cron to not require a login session
+RUN sed -i '/session    required   pam_loginuid.so/c\#session    required   pam_loginuid.so' /etc/pam.d/crond
+
 ###############################################
 ### Settings for a mounted config (default) ###
 ###############################################
-VOLUME ["/usr/local/tomcat/conf", \
-	    "/usr/local/tomcat/webapps/ROOT", \
-		"/usr/local/tomcat/logs", \
-		"/opt/certs", \
-		"/opt/shibboleth-idp/conf", \
-		"/opt/shibboleth-idp/credentials", \
-		"/opt/shibboleth-idp/views", \
-		"/opt/shibboleth-idp/edit-webapp", \
-		"/opt/shibboleth-idp/messages", \
-		"/opt/shibboleth-idp/metadata", \
-		"/opt/shibboleth-idp/logs"]
+#VOLUME ["/usr/local/tomcat/conf", \
+#	    "/usr/local/tomcat/webapps/ROOT", \
+#		"/usr/local/tomcat/logs", \
+#		"/opt/certs", \
+#		"/opt/shibboleth-idp/conf", \
+#		"/opt/shibboleth-idp/credentials", \
+#		"/opt/shibboleth-idp/views", \
+#		"/opt/shibboleth-idp/edit-webapp", \
+#		"/opt/shibboleth-idp/messages", \
+#		"/opt/shibboleth-idp/metadata", \
+#		"/opt/shibboleth-idp/logs"]
 
 
 #################################################
