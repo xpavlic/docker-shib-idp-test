@@ -14,7 +14,7 @@ ENV JAVA_VERSION=8u171 \
 ##shib-idp \
     VERSION=3.3.3 \
 ##TIER \
-    TIERVERSION=180502 \
+    TIERVERSION=180601 \
 ################## \
 ### OTHER VARS ### \
 ################## \
@@ -53,8 +53,7 @@ RUN ln -sf /usr/share/zoneinfo/UTC /etc/localtime \
     && echo "NETWORKING=yes" > /etc/sysconfig/network
 
 # Install base deps
-#RUN rm -fr /var/cache/yum/* && yum clean all && yum -y update && yum -y install --setopt=tsflags=nodocs epel-release && \
-RUN rm -fr /var/cache/yum/* && yum clean all && yum -y install --setopt=tsflags=nodocs epel-release && \
+RUN rm -fr /var/cache/yum/* && yum clean all && yum -y update && yum -y install --setopt=tsflags=nodocs epel-release && \
     yum -y install net-tools wget curl tar unzip mlocate logrotate strace telnet man unzip vim wget rsyslog cronie krb5-workstation openssl-devel wget supervisor && \
     yum -y clean all && \
     mkdir -p /opt/tier && \
@@ -79,9 +78,9 @@ RUN rpm --import http://repos.azulsystems.com/RPM-GPG-KEY-azulsystems \
 	&& yum -y install zulu-8
 
 
-# Install Oracle java/JCE
+# To use Oracle java/JCE
 #
-# Uncomment the following commands to download the JDK to your Shibboleth IDP image.  
+# Uncomment the following commands to download the Oracle JDK to your Shibboleth IDP image.  
 #     ==> By uncommenting these next 6 lines, you agree to the Oracle Binary Code License Agreement for Java SE (http://www.oracle.com/technetwork/java/javase/terms/license/index.html)
 # RUN wget -nv --no-cookies --no-check-certificate --header "Cookie: oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/$JAVA_VERSION-$BUILD_VERSION/$JAVA_BUNDLE_ID/jdk-$JAVA_VERSION-linux-x64.rpm" -O /tmp/jdk-$JAVA_VERSION-$BUILD_VERSION-linux-x64.rpm && \
 #     yum -y install /tmp/jdk-$JAVA_VERSION-$BUILD_VERSION-linux-x64.rpm && \
@@ -90,7 +89,7 @@ RUN rpm --import http://repos.azulsystems.com/RPM-GPG-KEY-azulsystems \
 #     alternatives --install /usr/bin/javaws javaws $JAVA_HOME/bin/javaws 200000 && \
 #     alternatives --install /usr/bin/javac javac $JAVA_HOME/bin/javac 200000
 
-# Uncomment the following commands to download the Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files.  
+# For Oracle Java, also uncomment the following commands to download the Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files.  
 #     ==> By uncommenting these next 7 lines, you agree to the Oracle Binary Code License Agreement for Java SE Platform Products (http://www.oracle.com/technetwork/java/javase/terms/license/index.html)
 # RUN wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" \
 #     http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip \
@@ -102,8 +101,6 @@ RUN rpm --import http://repos.azulsystems.com/RPM-GPG-KEY-azulsystems \
 
 # Copy IdP installer properties file(s)
 ADD container_files/idp/idp.installer.properties container_files/idp/idp.merge.properties container_files/idp/ldap.merge.properties /tmp/
-#ADD container_files/idp/idp.merge.properties /tmp/idp.merge.properties
-#ADD container_files/idp/ldap.merge.properties /tmp/ldap.merge.properties
 		   
 # Install IdP
 RUN mkdir -p /tmp/shibboleth && cd /tmp/shibboleth && \
@@ -200,17 +197,17 @@ RUN sed -i '/session    required   pam_loginuid.so/c\#session    required   pam_
 # they represent the folder names/paths on your build host of the relevant config material needed to run the container
 # The paths below must be relative to (subdirectories of) the directory where the Dockerfile is located.
 # The paths below are just the default values.  They are typically overriden by "build-args" in the 'docker build' command.
-ARG TOMCFG=config/tomcat
-ARG TOMLOG=logs/tomcat
-ARG TOMCERT=credentials/tomcat
-ARG TOMWWWROOT=wwwroot
-ARG SHBCFG=config/shib-idp/conf
-ARG SHBCREDS=credentials/shib-idp
-ARG SHBVIEWS=config/shib-idp/views
-ARG SHBEDWAPP=config/shib-idp/edit-webapp
-ARG SHBMSGS=config/shib-idp/messages
-ARG SHBMD=config/shib-idp/metadata
-ARG SHBLOG=logs/shib-idp
+#ARG TOMCFG=config/tomcat
+#ARG TOMLOG=logs/tomcat
+#ARG TOMCERT=credentials/tomcat
+#ARG TOMWWWROOT=wwwroot
+#ARG SHBCFG=config/shib-idp/conf
+#ARG SHBCREDS=credentials/shib-idp
+#ARG SHBVIEWS=config/shib-idp/views
+#ARG SHBEDWAPP=config/shib-idp/edit-webapp
+#ARG SHBMSGS=config/shib-idp/messages
+#ARG SHBMD=config/shib-idp/metadata
+#ARG SHBLOG=logs/shib-idp
 #
 ## ADD ${TOMCFG} /usr/local/tomcat/conf
 ## ADD ${TOMCERT} /opt/certs
