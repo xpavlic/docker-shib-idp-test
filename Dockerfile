@@ -75,7 +75,7 @@ RUN update-ca-trust extract
 # Install Zulu Java
 RUN rpm --import http://repos.azulsystems.com/RPM-GPG-KEY-azulsystems \
 	&& curl -o /etc/yum.repos.d/zulu.repo http://repos.azulsystems.com/rhel/zulu.repo \
-	&& yum -y install zulu-8
+	&& yum -y install zulu-8 && alternatives --install /usr/bin/java java $JAVA_HOME/bin/java 200000
 
 
 # To use Oracle java/JCE
