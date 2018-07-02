@@ -10,11 +10,11 @@ ENV JAVA_VERSION=8u171 \
     JAVA_BUNDLE_ID=512cd62ec5174c3487ac17c61aaa89e8 \
 ##tomcat \
     TOMCAT_MAJOR=9 \
-    TOMCAT_VERSION=9.0.8 \
+    TOMCAT_VERSION=9.0.10 \
 ##shib-idp \
     VERSION=3.3.3 \
 ##TIER \
-    TIERVERSION=180601 \
+    TIERVERSION=180701 \
 ################## \
 ### OTHER VARS ### \
 ################## \
@@ -24,7 +24,7 @@ ENV JAVA_VERSION=8u171 \
     MAINTAINER=tier \
 #java \
     JAVA_HOME=/usr \
-    JAVA_OPTS=-Xmx3000m -XX:MaxPermSize=256m \
+    JAVA_OPTS='-Xmx3000m -XX:MaxPermSize=256m' \
 #tomcat \
     CATALINA_HOME=/usr/local/tomcat
 ENV TOMCAT_TGZ_URL=https://www.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz \
@@ -77,6 +77,11 @@ RUN rpm --import http://repos.azulsystems.com/RPM-GPG-KEY-azulsystems \
 	&& curl -o /etc/yum.repos.d/zulu.repo http://repos.azulsystems.com/rhel/zulu.repo \
 	&& yum -y install zulu-8 && alternatives --install /usr/bin/java java $JAVA_HOME/bin/java 200000
 
+#install Zulu JCE
+RUN curl -o /tmp/ZuluJCEPolicies.zip https://cdn.azul.com/zcek/bin/ZuluJCEPolicies.zip \
+	&& cd /tmp && unzip -oj ZuluJCEPolicies.zip ZuluJCEPolicies/local_policy.jar -d $JAVA_HOME/lib/jvm/zulu-8/jre/lib/security/ \
+	&& unzip -oj ZuluJCEPolicies.zip ZuluJCEPolicies/US_export_policy.jar -d $JAVA_HOME/lib/jvm/zulu-8/jre/lib/security/ \
+	&& rm -rf /tmp/ZuluJCEPolicies.zip
 
 # To use Oracle java/JCE
 #
