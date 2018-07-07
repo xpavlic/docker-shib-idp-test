@@ -47,6 +47,10 @@ sed "s#<File>\${idp.logfiles}/idp-consent-audit.log</File>#<File>/tmp/logidp-con
 rm -f ${IDP_LOG_CFG_FILE}.tmp
 rm -f ${IDP_LOG_CFG_FILE}.tmp2
 rm -f ${IDP_LOG_CFG_FILE}.tmp
+# Remove auto-rolling of logfile
+sed -i -e 's/rolling.RollingFileAppender/FileAppender/g' ${IDP_LOG_CFG_FILE}
+sed -i -e '/<rollingPolicy/,/<\/rollingPolicy>/d' ${IDP_LOG_CFG_FILE}
+
 
 #launch supervisord
 /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
