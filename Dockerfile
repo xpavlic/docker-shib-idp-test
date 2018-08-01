@@ -4,17 +4,13 @@ FROM centos:centos7
 ### VERSION SETTINGS ###
 ########################
 #
-##java
-ENV JAVA_VERSION=8u171 \
-    BUILD_VERSION=b11 \
-    JAVA_BUNDLE_ID=512cd62ec5174c3487ac17c61aaa89e8 \
 ##tomcat \
-    TOMCAT_MAJOR=9 \
+ENV TOMCAT_MAJOR=9 \
     TOMCAT_VERSION=9.0.10 \
 ##shib-idp \
     VERSION=3.3.3 \
 ##TIER \
-    TIERVERSION=180701 \
+    TIERVERSION=180801 \
 ################## \
 ### OTHER VARS ### \
 ################## \
@@ -24,7 +20,7 @@ ENV JAVA_VERSION=8u171 \
     MAINTAINER=tier \
 #java \
     JAVA_HOME=/usr \
-    JAVA_OPTS='-Xmx3000m -XX:MaxPermSize=256m' \
+    JAVA_OPTS='-Xmx3000m' \
 #tomcat \
     CATALINA_HOME=/usr/local/tomcat
 ENV TOMCAT_TGZ_URL=https://www.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz \
@@ -35,7 +31,6 @@ ENV TOMCAT_TGZ_URL=https://www.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/v$TOM
 
 ENV ENV=dev \
     USERTOKEN=nothing
-
 
 #set labels
 LABEL Vendor="Internet2" \
@@ -83,7 +78,12 @@ RUN curl -o /tmp/ZuluJCEPolicies.zip https://cdn.azul.com/zcek/bin/ZuluJCEPolici
 	&& unzip -oj ZuluJCEPolicies.zip ZuluJCEPolicies/US_export_policy.jar -d $JAVA_HOME/lib/jvm/zulu-8/jre/lib/security/ \
 	&& rm -rf /tmp/ZuluJCEPolicies.zip
 
-# To use Oracle java/JCE
+
+# To use Oracle java/JCE:
+#
+#ENV JAVA_VERSION=8u171 \
+#    BUILD_VERSION=b11 \
+#    JAVA_BUNDLE_ID=512cd62ec5174c3487ac17c61aaa89e8 \
 #
 # Uncomment the following commands to download the Oracle JDK to your Shibboleth IDP image.  
 #     ==> By uncommenting these next 6 lines, you agree to the Oracle Binary Code License Agreement for Java SE (http://www.oracle.com/technetwork/java/javase/terms/license/index.html)
