@@ -10,7 +10,7 @@ ENV TOMCAT_MAJOR=9 \
 ##shib-idp \
     VERSION=3.3.3 \
 ##TIER \
-    TIERVERSION=180801 \
+    TIERVERSION=180802 \
 ################## \
 ### OTHER VARS ### \
 ################## \
@@ -163,8 +163,8 @@ ADD container_files/system/startup.sh /usr/bin/
 ADD container_files/bin/setenv.sh /opt/tier/setenv.sh
 ADD container_files/bin/setupcron.sh /usr/bin/setupcron.sh
 ADD container_files/bin/sendtierbeacon.sh /usr/bin/sendtierbeacon.sh
-ADD container_files/system/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-RUN chmod +x /opt/tier/setenv.sh \
+ADD container_files/system/supervisord.conf /etc/supervisor/supervisord.conf
+RUN mkdir -p /etc/supervisor/conf.d && chmod +x /opt/tier/setenv.sh \
     && chmod +x /usr/bin/setupcron.sh \
     && chmod +x /usr/bin/startup.sh \
     && chmod +x /usr/bin/sendtierbeacon.sh \
