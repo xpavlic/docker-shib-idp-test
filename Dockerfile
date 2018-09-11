@@ -6,7 +6,7 @@ FROM centos:centos7
 #
 ##tomcat \
 ENV TOMCAT_MAJOR=9 \
-    TOMCAT_VERSION=9.0.11 \
+    TOMCAT_VERSION=9.0.12 \
 ##shib-idp \
     VERSION=3.3.3 \
 ##TIER \
