@@ -10,7 +10,7 @@ ENV TOMCAT_MAJOR=9 \
 ##shib-idp \
     VERSION=3.3.3 \
 ##TIER \
-    TIERVERSION=180802 \
+    TIERVERSION=180901 \
 ################## \
 ### OTHER VARS ### \
 ################## \
