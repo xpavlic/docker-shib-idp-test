@@ -51,13 +51,21 @@ load ../common
        curl -L -o ./clair-scanner https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64
        chmod 755 clair-scanner
     fi
-    docker ps | grep clair
-    if [ $? -ne "0" ]; then
+    docker ps | grep db
+    if [ $? == "0" ]; then
+      docker kill db
+      docker rm db
+      docker run -p 5432:5432 -d --name db arminc/clair-db:latest
+    else
       docker run -p 5432:5432 -d --name db arminc/clair-db:latest
     fi
     sleep 15
-    docker ps | grep db
-    if [ $? -ne "0" ]; then
+    docker ps | grep clair
+    if [ $? == "0" ]; then
+      docker kill clair
+      docker rm clair
+      docker run -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan:v2.0.5
+    else
       docker run -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan:v2.0.5
     fi
     sleep 30
