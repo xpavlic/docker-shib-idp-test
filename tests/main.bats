@@ -39,11 +39,11 @@ load ../common
 }
 
 @test "050 The version of Tomcat is current" {
-    ./checktomcatver.sh ${maintainer}/${imagename}
+    ./tests/checktomcatver.sh ${maintainer}/${imagename}
 }
 
 @test "060 The version of the IdP is current" {
-    ./checkidpver.sh ${maintainer}/${imagename}
+    ./tests/checkidpver.sh ${maintainer}/${imagename}
 }
 
 @test "070 There are no known security vulnerabilities" {
@@ -51,9 +51,15 @@ load ../common
        curl -L -o ./clair-scanner https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64
        chmod 755 clair-scanner
     fi
-    docker run -p 5432:5432 -d --name db arminc/clair-db:latest
+    docker ps | grep clair
+    if [ $? -ne "0" ]; then
+      docker run -p 5432:5432 -d --name db arminc/clair-db:latest
+    fi
     sleep 15
-    docker run -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan:v2.0.5
+    docker ps | grep db
+    if [ $? -ne "0" ]; then
+      docker run -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan:v2.0.5
+    fi
     sleep 30
     ./clair-scanner --ip 172.17.0.1 ${maintainer}/${imagename}
     docker kill clair
