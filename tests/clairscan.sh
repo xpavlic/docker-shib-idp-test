@@ -25,7 +25,10 @@ else
 fi
 sleep 30
 
-./clair-scanner --ip 172.17.0.1 $1
+#get ip where clair-scanner will listen
+clairip=$(ifconfig docker0 | grep 'inet ' | sed 's/^[[:space:]]*//g' | cut -f 2 -d ' ' | sed 's/^[[:space:]]*//g')
+
+./clair-scanner --ip ${clairip} $1
 retcode=$?
 
 docker kill clair
