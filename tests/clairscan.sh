@@ -1,5 +1,11 @@
 #!/bin/bash
-echo 'starting:' $(date +%H:%M:%S:%N)
+
+startsecs=$(date +'%s')
+starttime=$(date +%H:%M:%S)
+
+echo 'starting:' ${starttime}
+
+#ensure clair-scanner
 if [ ! -s ./clair-scanner ]; then
   echo 'downloading curl-scanner...'
   curl -s -L -o ./clair-scanner https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64
@@ -8,10 +14,11 @@ else
   echo 'using existing clair-scanner...'
 fi
 
-echo 'ensuring a running clair-db container...'
+#ensure DB container
+echo 'ensuring a fresh clair-db container...'
 docker ps | grep clair-db
 if [ $? == "0" ]; then
-  echo 'removing running clair-db container...'
+  echo 'removing existing clair-db container...'
   docker kill db &>/dev/null
   docker rm db &>/dev/null
   docker run -p 5432:5432 -d --name db arminc/clair-db:latest &>/dev/null
@@ -20,10 +27,11 @@ else
 fi
 sleep 30
 
-echo 'ensuring a running clair-scan container...'
+#ensure clair-scan container
+echo 'ensuring a fresh clair-scan container...'
 docker ps | grep clair-local-scan
 if [ $? == "0" ]; then
-  echo 'removing running clair-scan container...'
+  echo 'removing existing clair-scan container...'
   docker kill clair &>/dev/null
   docker rm clair &>/dev/null
   docker run -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan:v2.0.5 &>/dev/null
@@ -35,23 +43,30 @@ sleep 30
 #get ip where clair-scanner will listen
 clairip=$(/sbin/ifconfig docker0 | grep 'inet ' | sed 's/^[[:space:]]*//g' | cut -f 2 -d ' ' | sed 's/^[[:space:]]*//g')
 
+#run scan
 echo 'running scan...'
 ./clair-scanner --ip ${clairip} $1
 retcode=$?
 
+#eval results
 if [ $retcode == '0' ]; then
   echo 'scan found nothing.'
 else
   echo 'scan found issues.'
 fi
 
+#cleanup
 echo 'removing temporary containers...'
 docker kill clair &>/dev/null
 docker rm clair &>/dev/null
 docker kill db &>/dev/null
 docker rm db &>/dev/null
 
-echo 'finished:' $(date +%H:%M:%S:%N)
+endsecs=$(date +'%s')
+endtime=$(date +%H:%M:%S)
+echo 'finished:' $endtime '  ('$((endsecs - startsecs)) 'seconds)'
+echo ""
 
+#pass along return code from scan
 exit $retcode
 
