@@ -16,7 +16,7 @@ fi
 
 #ensure DB container
 echo 'ensuring a fresh clair-db container...'
-docker ps | grep clair-db
+docker ps | grep clair-db &>/dev/null
 if [ $? == "0" ]; then
   echo 'removing existing clair-db container...'
   docker kill db &>/dev/null
@@ -29,7 +29,7 @@ sleep 30
 
 #ensure clair-scan container
 echo 'ensuring a fresh clair-scan container...'
-docker ps | grep clair-local-scan
+docker ps | grep clair-local-scan &>/dev/null
 if [ $? == "0" ]; then
   echo 'removing existing clair-scan container...'
   docker kill clair &>/dev/null
@@ -42,6 +42,7 @@ sleep 30
 
 #get ip where clair-scanner will listen
 clairip=$(/sbin/ifconfig docker0 | grep 'inet ' | sed 's/^[[:space:]]*//g' | cut -f 2 -d ' ' | sed 's/^[[:space:]]*//g')
+echo 'sending ip addr' ${clairip} 'to clair-scan server...'
 
 #run scan
 echo 'running scan...'
