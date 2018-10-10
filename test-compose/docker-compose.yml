@@ -6,15 +6,15 @@ services:
     build: 
       context: ./idp/
       args:
-        TOMCFG: ./container_files/shib-idp/config/tomcat
-        TOMCERT: ./container_files/shib-idp/credentials/tomcat
-        TOMWWWROOT: ./container_files/shib-idp/wwwroot
-        SHBCFG: ./container_files/shib-idp/config/shib-idp/conf
-        SHBCREDS: ./container_files/shib-idp/credentials/shib-idp
-        SHBVIEWS: ./container_files/shib-idp/config/shib-idp/views
-        SHBEDWAPP: ./container_files/shib-idp/config/shib-idp/edit-webapp
-        SHBMSGS: ./container_files/shib-idp/config/shib-idp/messages
-        SHBMD: ./container_files/shib-idp/config/shib-idp/metadata
+        TOMCFG: ./container_files/config/tomcat
+        TOMCERT: ./container_files/credentials/tomcat
+        TOMWWWROOT: ./container_files/wwwroot
+        SHBCFG: ./container_files/config/shib-idp/conf
+        SHBCREDS: ./container_files/credentials/shib-idp
+        SHBVIEWS: ./container_files/config/shib-idp/views
+        SHBEDWAPP: ./container_files/config/shib-idp/edit-webapp
+        SHBMSGS: ./container_files/config/shib-idp/messages
+        SHBMD: ./container_files/config/shib-idp/metadata
     depends_on:
      - data
     networks:

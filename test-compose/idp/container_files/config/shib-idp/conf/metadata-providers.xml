@@ -62,15 +62,6 @@
     <MetadataProvider id="LocalMetadata"  xsi:type="FilesystemMetadataProvider" metadataFile="PATH_TO_YOUR_METADATA"/>
     -->
 
-    <!-- SAMLtest.id SP for test purposes only, delete for production use -->
-    <MetadataProvider id="SAMLtest"
-        xsi:type="FileBackedHTTPMetadataProvider"
-        backingFile="%{idp.home}/metadata/SAMLtest.xml"
-        metadataURL="https://samltest.id/saml/sp">
-    </MetadataProvider>
-    <!-- end of SAMLtest SP -->
-
-
 	<MetadataProvider id="InCommonMetadata"
                 xsi:type="FileBackedHTTPMetadataProvider"
                 backingFile="%{idp.home}/metadata/localCopyFromInCommon.xml"
@@ -87,6 +78,14 @@
 		</MetadataFilter>
 			
     </MetadataProvider>
+
+    <!-- SAMLtest.id SP for test purposes only, delete for production use -->
+    <MetadataProvider id="SAMLtest"
+        xsi:type="FileBackedHTTPMetadataProvider"
+        backingFile="%{idp.home}/metadata/SAMLtest.xml"
+        metadataURL="https://samltest.id/saml/sp">
+    </MetadataProvider>
+    <!-- end of SAMLtest SP -->
 
 	
 </MetadataProvider>

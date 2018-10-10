@@ -8,7 +8,7 @@
           protocol="org.apache.coyote.http11.Http11NioProtocol"
           port="443" maxThreads="200"
           scheme="https" secure="true" SSLEnabled="true"
-          keystoreFile="/opt/certs/keystore.jks" keystorePass="34f9a51f-2a3a-42f8-b109-fce47dedeb24"
+          keystoreFile="/opt/certs/keystore.jks" keystorePass="e68cb9bc-bb21-4319-a664-1f755ad8b47c"
           clientAuth="false" sslProtocol="TLS"/>
     <Engine name="Catalina" defaultHost="localhost">
 

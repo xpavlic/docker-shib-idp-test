@@ -2,13 +2,13 @@
 idp.additionalProperties= /conf/ldap.properties, /conf/saml-nameid.properties, /conf/services.properties, /conf/authn/duo.properties
 
 # Set the entityID of the IdP
-idp.entityID= https://idp.example.edu/idp/shibboleth
+idp.entityID= https://example.org/idp/shibboleth
 
 # Set the scope used in the attribute resolver for scoped attributes
-idp.scope= example.edu
+idp.scope= example.org
 
 # General cookie properties (maxAge only applies to persistent cookies)
-#idp.cookie.secure = false
+idp.cookie.secure = true
 #idp.cookie.httpOnly = true
 #idp.cookie.domain =
 #idp.cookie.path =
@@ -26,8 +26,8 @@ idp.scope= example.edu
 #idp.sealer.aliasBase = secret
 idp.sealer.storeResource= %{idp.home}/credentials/sealer.jks
 idp.sealer.versionResource= %{idp.home}/credentials/sealer.kver
-idp.sealer.storePassword= ce472e68-f433-4a77-aad2-b8697670158a
-idp.sealer.keyPassword= ce472e68-f433-4a77-aad2-b8697670158a
+idp.sealer.storePassword= changeit
+idp.sealer.keyPassword= changeit
 
 # Settings for public/private signing and encryption key(s)
 # During decryption key rollover, point the ".2" properties at a second
