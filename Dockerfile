@@ -6,11 +6,11 @@ FROM centos:centos7
 #
 ##tomcat \
 ENV TOMCAT_MAJOR=9 \
-    TOMCAT_VERSION=9.0.11 \
+    TOMCAT_VERSION=9.0.12 \
 ##shib-idp \
     VERSION=3.3.3 \
 ##TIER \
-    TIERVERSION=180802 \
+    TIERVERSION=181001 \
 ################## \
 ### OTHER VARS ### \
 ################## \
@@ -231,5 +231,4 @@ EXPOSE 443
 HEALTHCHECK --interval=2m --timeout=30s \
   CMD curl -k -f https://127.0.0.1/idp/status || exit 1
   
-
 CMD ["/usr/bin/startup.sh"]

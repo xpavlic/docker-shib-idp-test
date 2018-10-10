@@ -19,8 +19,8 @@ node('docker') {
 
     checkout scm
 
-  stage 'Acquire util'
-    
+  stage 'Acquire util files'
+
     sh 'mkdir -p tmp && mkdir -p bin'
     dir('tmp'){
       git([ url: "https://github.internet2.edu/docker/util.git",
@@ -51,6 +51,7 @@ node('docker') {
      }
      
   stage 'Build'
+
     try{
       sh 'bin/rebuild.sh &> debug'
     } catch(error) {
@@ -59,6 +60,17 @@ node('docker') {
       sh "rm -f ./debug"
       handleError(message)
     }
+
+  stage 'Test'
+
+    try {
+      sh 'bin/test.sh 2>&1 | tee debug ; test ${PIPESTATUS[0]} -eq 0'
+    } catch (error) {
+      def error_details = readFile('./debug')
+      def message = "BUILD ERROR: There was a problem testing ${imagename}:${tag}. \n\n ${error_details}"
+      sh "rm -f ./debug"
+      handleError(message)
+    } 
     
   stage 'Push'
 
@@ -68,7 +80,7 @@ node('docker') {
     }
     
   stage 'Notify'
-  
+
     slackSend color: 'good', message: "$maintainer/$imagename:$tag pushed to DockerHub"
 
 }
