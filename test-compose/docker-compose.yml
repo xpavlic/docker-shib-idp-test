@@ -36,6 +36,17 @@ services:
      - shibidp_ldap:/var/lib/dirsrv
 
 
+  sp:
+    build: ./sp/
+    expose:
+     - "8443"
+    networks:
+     - front
+     - back
+    ports:
+     - "8443:8443"
+
+
 networks:
   front:
     driver: bridge

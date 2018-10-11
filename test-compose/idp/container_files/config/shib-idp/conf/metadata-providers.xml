@@ -79,13 +79,8 @@
 			
     </MetadataProvider>
 
-    <!-- SAMLtest.id SP for test purposes only, delete for production use -->
-    <MetadataProvider id="SAMLtest"
-        xsi:type="FileBackedHTTPMetadataProvider"
-        backingFile="%{idp.home}/metadata/SAMLtest.xml"
-        metadataURL="https://samltest.id/saml/sp">
-    </MetadataProvider>
-    <!-- end of SAMLtest SP -->
-
+    <!-- the test SP container -->
+    <MetadataProvider id="TestMetadata"  xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/testsp-metadata.xml"/>
+    <!--end of test SP container -->
 	
 </MetadataProvider>

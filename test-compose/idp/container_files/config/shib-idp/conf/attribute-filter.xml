@@ -97,9 +97,9 @@
         </AttributeRule>
     </AttributeFilterPolicy>
 
-    <!-- SAMLtest SP for testing purposes only, remove for production use -->
-    <AttributeFilterPolicy id="SAMLtest">
-        <PolicyRequirementRule xsi:type="Requester" value="https://samltest.id/saml/sp" />
+    <!-- the test SP container -->
+    <AttributeFilterPolicy id="SPtest">
+        <PolicyRequirementRule xsi:type="Requester" value="https://sptest.example.edu/shibboleth" />
         <AttributeRule attributeID="eduPersonPrincipalName">
             <PermitValueRule xsi:type="ANY" />
         </AttributeRule>
@@ -113,7 +113,6 @@
             <PermitValueRule xsi:type="ANY" />
         </AttributeRule>
     </AttributeFilterPolicy>
-    <!-- end of SAMLtest SP -->
-
+    <!-- end of test SP container -->
 
 </AttributeFilterPolicyGroup>
