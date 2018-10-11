@@ -17,7 +17,7 @@ echo "ensuring that webisoget is installed..."
 rpm -q webisoget &>/dev/null
 if [ $? -ne '0' ]; then
   echo "downloading webisoget rpm"
-  curl -s -L -o webisoget-2.8.7-1.x86_64.rpm https://github.internet2.edu/docker/util/blob/master/bin/webisoget-2.8.7-1.x86_64.rpm
+  curl -s -L -o webisoget-2.8.7-1.x86_64.rpm https://github.internet2.edu/docker/util/blob/master/bin/webisoget-2.8.7-1.x86_64.rpm?raw=true
   if [ -s webisoget-2.8.7-1.x86_64.rpm ]; then
     echo "installing rpm..."
     rpm -ivh webisoget-2.8.7-1.x86_64.rpm
