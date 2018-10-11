@@ -1,6 +1,6 @@
 #!/bin/bash
 
-pushd ../test-compose &>/dev/null
+pushd test-compose &>/dev/null
 echo "Launching fresh containers..."
 ./decompose.sh -y &>/dev/null
 ./compose.sh &>/dev/null
