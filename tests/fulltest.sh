@@ -24,6 +24,7 @@ if [ $? -ne '0' ]; then
   else
     echo "can't get webisoget rpm..."
     exit 1
+  fi
 else
   echo "webisoget already installed..."
 fi
