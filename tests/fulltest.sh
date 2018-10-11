@@ -13,14 +13,19 @@ pushd tests &>/dev/null
 rm -f lastpage.txt
 
 #ensure webisoget is installed
+echo "ensuring that webisoget is installed..."
 rpm -q webisoget &>/dev/null
 if [ $? -ne '0' ]; then
-  curl -s -o webisoget-2.8.7-1.x86_64.rpm https://github.internet2.edu/docker/util/blob/master/bin/webisoget-2.8.7-1.x86_64.rpm
+  echo "downloading webisoget rpm"
+  curl -s -L -o webisoget-2.8.7-1.x86_64.rpm https://github.internet2.edu/docker/util/blob/master/bin/webisoget-2.8.7-1.x86_64.rpm
   if [ -s webisoget-2.8.7-1.x86_64.rpm ]; then
+    echo "installing rpm..."
     rpm -ivh webisoget-2.8.7-1.x86_64.rpm
   else
     echo "can't get webisoget rpm..."
     exit 1
+else
+  echo "webisoget already installed..."
 fi
 
 echo "Attempting full-cycle test..."
