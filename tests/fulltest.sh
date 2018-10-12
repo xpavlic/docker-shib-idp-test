@@ -30,6 +30,18 @@ else
   echo "webisoget already installed..."
 fi
 
+#ensure that name resolution is in place
+ping -c 1 sptest.example.edu &>/dev/null
+if [ $? -ne '0' ]; then
+  echo "adding hosts record for sp..."
+  sudo echo "127.0.0.1 sptest.example.edu" >> /etc/hosts
+fi
+ping -c 1 idp.example.edu &>/dev/null
+if [ $? -ne '0' ]; then
+  echo "adding hosts record for idp..."
+  sudo echo "127.0.0.1 idp.example.edu" >> /etc/hosts
+fi
+
 echo "Attempting full-cycle test..."
 webisoget -verbose -out ./lastpage.txt -formfile ./sptest.login -url https://sptest.example.edu:8443/secure/
 
