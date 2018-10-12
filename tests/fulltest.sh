@@ -10,7 +10,7 @@ echo "Waiting 3 minutes while everything comes up..."
 sleep 180
 
 pushd tests &>/dev/null
-rm -f lastpage.txt
+rm -f ./lastpage.txt
 
 #ensure webisoget is installed
 echo "ensuring that webisoget is installed..."
@@ -31,9 +31,9 @@ else
 fi
 
 echo "Attempting full-cycle test..."
-webisoget -verbose -out lastpage.txt -formfile sptest.login -url https://sptest.example.edu:8443/secure/ &>/dev/null
+webisoget -verbose -out ./lastpage.txt -formfile ./sptest.login -url https://sptest.example.edu:8443/secure/
 
-if [ -s lastpage.txt ]; then
+if [ -s ./lastpage.txt ]; then
   cat lastpage.txt | grep kwhite@example.edu &>/dev/null
   if [ $? == "0" ]; then
     echo "The full-cycle test of the IdP and SP was successfull!"
