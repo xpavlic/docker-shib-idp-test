@@ -43,7 +43,7 @@ if [ $? -ne '0' ]; then
 fi
 
 echo "Attempting full-cycle test..."
-webisoget -verbose -out ./lastpage.txt -formfile ./sptest.login -url https://sptest.example.edu:8443/secure/
+webisoget -verbose -out ./lastpage.txt -formfile ./sptest.login -url https://sptest.example.edu:8443/secure/index.php
 
 if [ -s ./lastpage.txt ]; then
   cat lastpage.txt | grep kwhite@example.edu &>/dev/null
