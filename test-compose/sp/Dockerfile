@@ -15,6 +15,10 @@ ADD container_files/testsp.crt /etc/pki/tls/certs/
 ADD container_files/testsp.key /etc/pki/tls/private/
 ADD container_files/index.php /var/www/html/secure/
 
+## Uncomment the two lines below to generate new signing and encryption keys/certs for the Shibboleth SP
+#RUN /etc/shibboleth/keygen.sh -o /etc/shibboleth/ -f -h my.special.name -y 10 -n sp-signing && \ 
+#    /etc/shibboleth/keygen.sh -o /etc/shibboleth/ -f -h my.special.name -y 10 -n sp-encrypt
+
 
 EXPOSE 8443
 
