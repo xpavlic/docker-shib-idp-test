@@ -6,11 +6,11 @@ FROM centos:centos7
 #
 ##tomcat \
 ENV TOMCAT_MAJOR=9 \
-    TOMCAT_VERSION=9.0.12 \
+    TOMCAT_VERSION=9.0.14 \
 ##shib-idp \
-    VERSION=3.4.1 \
+    VERSION=3.4.2 \
 ##TIER \
-    TIERVERSION=181101 \
+    TIERVERSION=181201 \
 ################## \
 ### OTHER VARS ### \
 ################## \
