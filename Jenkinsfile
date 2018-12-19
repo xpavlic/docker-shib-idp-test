@@ -25,6 +25,7 @@ node('docker') {
     dir('tmp'){
       git([ url: "https://github.internet2.edu/docker/util.git",
           credentialsId: "jenkins-github-access-token" ])
+      sh 'rm -rf ../bin/*'
       sh 'mv ./bin/* ../bin/.'
     }
     sh 'rm -rf tmp'
