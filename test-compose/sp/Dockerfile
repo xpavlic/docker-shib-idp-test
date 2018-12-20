@@ -1,4 +1,4 @@
-FROM tier/shibboleth_sp:3.0_181101
+FROM tier/shibboleth_sp:3.0.3_181201
 
 LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>" \
       Vendor="TIER" \
