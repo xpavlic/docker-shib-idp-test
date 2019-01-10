@@ -6,8 +6,8 @@ echo "Launching fresh containers..."
 ./compose.sh &>/dev/null
 popd &>/dev/null
 
-echo "Waiting 3 minutes while everything comes up..."
-sleep 180
+echo "Waiting 4 minutes while everything comes up..."
+sleep 240
 
 pushd tests &>/dev/null
 rm -f ./lastpage.txt
