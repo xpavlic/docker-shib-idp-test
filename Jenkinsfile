@@ -82,7 +82,7 @@ node('docker') {
     
   stage 'Notify'
 
-    slackSend color: 'good', message: "$maintainer/$imagename:$tag pushed to DockerHub"
+    slackSend color: 'good', message: "$maintainer/$imagename:$tag pushed to DockerHubi (<${env.BUILD_URL}|Open>)"
 
 }
 
