@@ -82,7 +82,7 @@ node('docker') {
     
   stage 'Notify'
 
-    slackSend color: 'good', message: "$maintainer/$imagename:$tag pushed to DockerHubi (<${env.BUILD_URL}|Open>)"
+    slackSend color: 'good', message: "$maintainer/$imagename:$tag pushed to DockerHub"
 
 }
 
@@ -99,7 +99,7 @@ def imagename() {
 def handleError(String message){
   echo "${message}"
   currentBuild.setResult("FAILED")
-  slackSend color: 'danger', message: "${message}"
+  slackSend color: 'danger', message: "${message} (<${env.BUILD_URL}|Open>)"
   sh 'exit 1'
 }
 
