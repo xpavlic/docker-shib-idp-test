@@ -4,7 +4,7 @@ version: "3.3"
 services:
   idp:
     build: 
-      context: ./idp/
+      context: ./
       args:
         TOMCFG: ./container_files/config/tomcat
         TOMCERT: ./container_files/credentials/tomcat
@@ -25,7 +25,7 @@ services:
 
 
   data:
-    build: ./data/
+    build: ../data/
     expose:
      - "389"
     networks:
@@ -34,17 +34,6 @@ services:
      - "389:389"
     volumes:
      - shibidp_ldap:/var/lib/dirsrv
-
-
-  sp:
-    build: ./sp/
-    expose:
-     - "8443"
-    networks:
-     - front
-     - back
-    ports:
-     - "8443:8443"
 
 
 networks:
