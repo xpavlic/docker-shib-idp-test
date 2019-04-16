@@ -1,4 +1,4 @@
-FROM tier/shibboleth_sp:3.0.3_181201
+FROM tier/shibboleth_sp
 
 LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>" \
       Vendor="TIER" \
@@ -24,6 +24,8 @@ COPY container_files/sp-encrypt-cert.pem /etc/shibboleth/
 #RUN /etc/shibboleth/keygen.sh -o /etc/shibboleth/ -f -h my.special.name -y 10 -n sp-signing && \ 
 #    /etc/shibboleth/keygen.sh -o /etc/shibboleth/ -f -h my.special.name -y 10 -n sp-encrypt
 
-
+HEALTHCHECK --interval=1m --timeout=30s \
+  CMD curl -k -f https://127.0.0.1:8443/Shibboleth.sso/Status || exit 1
+ 
 EXPOSE 8443
 
