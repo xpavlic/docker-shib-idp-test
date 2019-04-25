@@ -10,7 +10,7 @@ ENV TOMCAT_MAJOR=9 \
 ##shib-idp \
     VERSION=3.4.3 \
 ##TIER \
-    TIERVERSION=20190201 \
+    TIERVERSION=20190401 \
 ################## \
 ### OTHER VARS ### \
 ################## \
@@ -31,6 +31,10 @@ ENV TOMCAT_TGZ_URL=https://www.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/v$TOM
 
 ENV ENV=dev \
     USERTOKEN=nothing
+
+#The environment variable below controls whether or not the IdP's data sealer is automatically rotated daily.
+#    Set to False if you supply this file dynamically via secrets (or some other similar mechanism).
+ENV ENABLE_SEALER_KEY_ROTATION=True
 
 #set labels
 LABEL Vendor="Internet2" \
