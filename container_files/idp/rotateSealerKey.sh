@@ -3,7 +3,7 @@
 set -e
 set -u
 
-if [ ${ENABLE_SEALER_KEY_ROTATION:=True} -eq 'True' ]
+if [ ${ENABLE_SEALER_KEY_ROTATION:=True} = 'True' ]
 then
 
  # Default IDP_HOME if not already set
