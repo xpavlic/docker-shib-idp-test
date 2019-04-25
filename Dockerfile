@@ -159,7 +159,8 @@ ADD container_files/tomcat/robots.txt /usr/local/tomcat/webapps/ROOT
 ADD container_files/tomcat/keystore.jks /opt/certs/
 
 # Copy TIER helper scripts
-ADD container_files/idp/rotateSealerKey.sh /opt/shibboleth-idp/bin/rotateSealerKey.sh && chmod +x /opt/shibboleth-idp/bin/rotateSealerKey.sh
+ADD container_files/idp/rotateSealerKey.sh /opt/shibboleth-idp/bin/rotateSealerKey.sh
+RUN chmod +x /opt/shibboleth-idp/bin/rotateSealerKey.sh
 ADD container_files/system/startup.sh /usr/bin/
 ADD container_files/bin/setenv.sh /opt/tier/setenv.sh
 ADD container_files/bin/setupcron.sh /usr/bin/setupcron.sh
