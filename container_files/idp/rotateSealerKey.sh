@@ -11,9 +11,11 @@ then
 fi
 
 # Default JAVA_HOME if not already set
-if [ ! -d "${JAVA_HOME:=/usr}" ]
+if [ -d "${JAVA_HOME:=/usr}" ]
 then
-    echo "ERROR: JAVA_HOME Directory does not exist: ${JAVA_HOME}" >&2
+    export JAVA_HOME=${JAVA_HOME:=/usr}
+else
+    echo "ERROR: JAVA_HOME Directory does not exist: ${JAVA_HOME:=/usr}" >&2
     exit 1
 fi
 
