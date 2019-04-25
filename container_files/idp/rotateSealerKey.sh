@@ -9,7 +9,14 @@ then
     echo "ERROR: Directory does not exist: ${IDP_HOME}" >&2
     exit 1
 fi
- 
+
+# Default JAVA_HOME if not already set
+if [ ! -d "${JAVA_HOME:=/usr}" ]
+then
+    echo "ERROR: JAVA_HOME Directory does not exist: ${JAVA_HOME}" >&2
+    exit 1
+fi
+
 function get_config {
     # Key to lookup (escape . for regex lookup)
     local KEY=${1:?"No key provided to look up value"}
