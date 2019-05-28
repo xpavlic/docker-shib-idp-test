@@ -8,9 +8,9 @@ FROM centos:centos7
 ENV TOMCAT_MAJOR=9 \
     TOMCAT_VERSION=9.0.19 \
 ##shib-idp \
-    VERSION=3.4.3 \
+    VERSION=3.4.4 \
 ##TIER \
-    TIERVERSION=20190201 \
+    TIERVERSION=20190502 \
 ################## \
 ### OTHER VARS ### \
 ################## \
@@ -31,6 +31,10 @@ ENV TOMCAT_TGZ_URL=https://www.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/v$TOM
 
 ENV ENV=dev \
     USERTOKEN=nothing
+
+#The environment variable below controls whether or not the IdP's data sealer is automatically rotated daily.
+#    Set to False if you supply this file dynamically via secrets (or some other similar mechanism).
+ENV ENABLE_SEALER_KEY_ROTATION=True
 
 #set labels
 LABEL Vendor="Internet2" \
@@ -159,6 +163,8 @@ ADD container_files/tomcat/robots.txt /usr/local/tomcat/webapps/ROOT
 ADD container_files/tomcat/keystore.jks /opt/certs/
 
 # Copy TIER helper scripts
+ADD container_files/idp/rotateSealerKey.sh /opt/shibboleth-idp/bin/rotateSealerKey.sh
+RUN chmod +x /opt/shibboleth-idp/bin/rotateSealerKey.sh
 ADD container_files/system/startup.sh /usr/bin/
 ADD container_files/bin/setenv.sh /opt/tier/setenv.sh
 ADD container_files/bin/setupcron.sh /usr/bin/setupcron.sh
