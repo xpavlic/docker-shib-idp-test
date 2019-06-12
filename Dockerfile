@@ -6,11 +6,11 @@ FROM centos:centos7
 #
 ##tomcat \
 ENV TOMCAT_MAJOR=9 \
-    TOMCAT_VERSION=9.0.19 \
+    TOMCAT_VERSION=9.0.21 \
 ##shib-idp \
     VERSION=3.4.4 \
 ##TIER \
-    TIERVERSION=20190502 \
+    TIERVERSION=20190601 \
 ################## \
 ### OTHER VARS ### \
 ################## \
@@ -19,7 +19,6 @@ ENV TOMCAT_MAJOR=9 \
     IMAGENAME=shibboleth_idp \
     MAINTAINER=tier \
 #java \
-    JAVA_HOME=/usr \
     JAVA_OPTS='-Xmx3000m' \
 #tomcat \
     CATALINA_HOME=/usr/local/tomcat
@@ -53,7 +52,7 @@ RUN ln -sf /usr/share/zoneinfo/UTC /etc/localtime \
 
 # Install base deps
 RUN rm -fr /var/cache/yum/* && yum clean all && yum -y update && yum -y install --setopt=tsflags=nodocs epel-release && \
-    yum -y install net-tools wget curl tar unzip mlocate logrotate strace telnet man unzip vim wget rsyslog cronie krb5-workstation openssl-devel wget supervisor && \
+    yum -y install net-tools wget curl tar unzip mlocate logrotate strace telnet man unzip vim wget rsyslog cronie krb5-workstation openssl-devel wget supervisor fontconfig && \
     yum -y clean all && \
     mkdir -p /opt/tier && \
 # Install Trusted Certificates
@@ -70,18 +69,32 @@ RUN update-ca-trust extract
 # To keep it commented, keep multiple comments on the following line (to prevent other scripts from processing it).
 #####     ENV TIER_BEACON_OPT_OUT True
 
+# Install Corretto Java JDK
+#Corretto download page: https://docs.aws.amazon.com/corretto/latest/corretto-8-ug/downloads-list.html
+ARG CORRETTO_RPM=java-1.8.0-amazon-corretto-devel-1.8.0_212.b04-2.x86_64.rpm
+ARG CORRETTO_URL_BASE=https://d3pxv6yz143wms.cloudfront.net/8.212.04.2
+ARG CORRETTO_PUBLIC_KEY=0E50DA5A06C9F82E013C6561A5E4F647D043E83B
+# above key comes from running gpg against this file: https://d3pxv6yz143wms.cloudfront.net/8.212.04.2/D043E83B.pub
+RUN curl -O $CORRETTO_URL_BASE/$CORRETTO_RPM \
+    && export GNUPGHOME="$(mktemp -d)" \
+    && gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys $CORRETTO_PUBLIC_KEY \
+    && gpg --armor --export $CORRETTO_PUBLIC_KEY > corretto.asc \
+    && rpm --import corretto.asc \
+    && rpm -K $CORRETTO_RPM \
+    && rpm -i $CORRETTO_RPM \
+    && rm -r $GNUPGHOME corretto.asc $CORRETTO_RPM
+ENV JAVA_HOME=/usr/lib/jvm/java-1.8.0-amazon-corretto
 
-# Install Zulu Java
-RUN rpm --import http://repos.azulsystems.com/RPM-GPG-KEY-azulsystems \
-	&& curl -o /etc/yum.repos.d/zulu.repo http://repos.azulsystems.com/rhel/zulu.repo \
-	&& yum -y install zulu-8 && alternatives --install /usr/bin/java java $JAVA_HOME/bin/java 200000
-
+# To use Zulu Java:
+#RUN rpm --import http://repos.azulsystems.com/RPM-GPG-KEY-azulsystems \
+#	&& curl -o /etc/yum.repos.d/zulu.repo http://repos.azulsystems.com/rhel/zulu.repo \
+#	&& yum -y install zulu-8 && alternatives --install /usr/bin/java java $JAVA_HOME/bin/java 200000
 #install Zulu JCE
-RUN curl -o /tmp/ZuluJCEPolicies.zip https://cdn.azul.com/zcek/bin/ZuluJCEPolicies.zip \
-	&& cd /tmp && unzip -oj ZuluJCEPolicies.zip ZuluJCEPolicies/local_policy.jar -d $JAVA_HOME/lib/jvm/zulu-8/jre/lib/security/ \
-	&& unzip -oj ZuluJCEPolicies.zip ZuluJCEPolicies/US_export_policy.jar -d $JAVA_HOME/lib/jvm/zulu-8/jre/lib/security/ \
-	&& rm -rf /tmp/ZuluJCEPolicies.zip
-
+#RUN curl -o /tmp/ZuluJCEPolicies.zip https://cdn.azul.com/zcek/bin/ZuluJCEPolicies.zip \
+#	&& cd /tmp && unzip -oj ZuluJCEPolicies.zip ZuluJCEPolicies/local_policy.jar -d $JAVA_HOME/lib/jvm/zulu-8/jre/lib/security/ \
+#	&& unzip -oj ZuluJCEPolicies.zip ZuluJCEPolicies/US_export_policy.jar -d $JAVA_HOME/lib/jvm/zulu-8/jre/lib/security/ \
+#	&& rm -rf /tmp/ZuluJCEPolicies.zip
+#ENV JAVA_HOME=/usr \
 
 # To use Oracle java/JCE:
 #
