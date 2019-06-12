@@ -77,7 +77,9 @@ ARG CORRETTO_PUBLIC_KEY=0E50DA5A06C9F82E013C6561A5E4F647D043E83B
 # above key comes from running gpg against this file: https://d3pxv6yz143wms.cloudfront.net/8.212.04.2/D043E83B.pub
 RUN curl -O $CORRETTO_URL_BASE/$CORRETTO_RPM \
     && export GNUPGHOME="$(mktemp -d)" \
-    && gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys $CORRETTO_PUBLIC_KEY \
+    && gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys $CORRETTO_PUBLIC_KEY || \
+    gpg --batch --keyserver pgp.mit.edu --recv-keys $CORRETTO_PUBLIC_KEY || \
+    gpg --batch --keyserver keyserver.pgp.com --recv-keys $CORRETTO_PUBLIC_KEY \
     && gpg --armor --export $CORRETTO_PUBLIC_KEY > corretto.asc \
     && rpm --import corretto.asc \
     && rpm -K $CORRETTO_RPM \
