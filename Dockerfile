@@ -73,18 +73,12 @@ RUN update-ca-trust extract
 #Corretto download page: https://docs.aws.amazon.com/corretto/latest/corretto-8-ug/downloads-list.html
 ARG CORRETTO_RPM=java-1.8.0-amazon-corretto-devel-1.8.0_212.b04-2.x86_64.rpm
 ARG CORRETTO_URL_BASE=https://d3pxv6yz143wms.cloudfront.net/8.212.04.2
-ARG CORRETTO_PUBLIC_KEY=0E50DA5A06C9F82E013C6561A5E4F647D043E83B
-# above key comes from running gpg against this file: https://d3pxv6yz143wms.cloudfront.net/8.212.04.2/D043E83B.pub
+COPY container_files/java-corretto/corretto-signing-key.pub .
 RUN curl -O $CORRETTO_URL_BASE/$CORRETTO_RPM \
-    && export GNUPGHOME="$(mktemp -d)" \
-    && gpg --batch --keyserver hkp://ha.pool.sks-keyservers.net --recv-keys $CORRETTO_PUBLIC_KEY || \
-    gpg --batch --keyserver hkp://pgp.mit.edu --recv-keys $CORRETTO_PUBLIC_KEY || \
-    gpg --batch --keyserver hkp://keyserver.pgp.com --recv-keys $CORRETTO_PUBLIC_KEY \
-    && gpg --armor --export $CORRETTO_PUBLIC_KEY > corretto.asc \
-    && rpm --import corretto.asc \
+    && rpm --import corretto-signing-key.pub \
     && rpm -K $CORRETTO_RPM \
     && rpm -i $CORRETTO_RPM \
-    && rm -r $GNUPGHOME corretto.asc $CORRETTO_RPM
+    && rm -r corretto-signing-key.pub $CORRETTO_RPM
 ENV JAVA_HOME=/usr/lib/jvm/java-1.8.0-amazon-corretto
 
 # To use Zulu Java:
