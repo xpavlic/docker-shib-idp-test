@@ -8,7 +8,7 @@ echo 'starting:' ${starttime}
 #ensure clair-scanner
 if [ ! -s ./clair-scanner ]; then
   echo 'downloading curl-scanner...'
-  curl -s -L -o ./clair-scanner https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64
+  curl -s -L -o ./clair-scanner https://github.com/arminc/clair-scanner/releases/download/v12/clair-scanner_linux_amd64
   chmod 755 clair-scanner
 else
   echo 'using existing clair-scanner...'
@@ -34,9 +34,9 @@ if [ $? == "0" ]; then
   echo 'removing existing clair-scan container...'
   docker kill clair &>/dev/null
   docker rm clair &>/dev/null
-  docker run -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan:v2.0.5 &>/dev/null
+  docker run -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan:latest &>/dev/null
 else
-  docker run -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan:v2.0.5 &>/dev/null
+  docker run -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan:latest &>/dev/null
 fi
 sleep 30
 
