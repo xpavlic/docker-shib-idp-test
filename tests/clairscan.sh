@@ -14,6 +14,14 @@ else
   echo 'using existing clair-scanner...'
 fi
 
+#ensure whitelist file (temporary)
+if [ ! -s ./centos7-clair-whitelist.yaml ]; then
+  echo 'downloading whitelist file...'
+  curl -s -L -o ./centos7-clair-whitelist.yaml https://github.internet2.edu/raw/docker/shib-idp/3.4.4_20190801/tests/centos7-clair-whitelist.yaml
+else
+  echo 'using existing whitelist file...'
+fi
+
 #ensure DB container
 echo 'ensuring a fresh clair-db container...'
 docker ps | grep clair-db &>/dev/null
