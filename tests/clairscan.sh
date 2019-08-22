@@ -46,7 +46,8 @@ echo 'sending ip addr' ${clairip} 'to clair-scan server...'
 
 #run scan
 echo 'running scan...'
-./clair-scanner --ip ${clairip} $1
+./clair-scanner -w centos7-clair-whitelist.yaml --ip ${clairip} $1
+#./clair-scanner --ip ${clairip} $1
 retcode=$?
 
 #eval results
