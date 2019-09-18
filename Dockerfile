@@ -8,9 +8,9 @@ FROM centos:centos7
 ENV TOMCAT_MAJOR=9 \
     TOMCAT_VERSION=9.0.24 \
 ##shib-idp \
-    VERSION=3.4.4 \
+    VERSION=3.4.5 \
 ##TIER \
-    TIERVERSION=20190801 \
+    TIERVERSION=20190901 \
 ################## \
 ### OTHER VARS ### \
 ################## \
