@@ -6,11 +6,11 @@ FROM centos:centos7
 #
 ##tomcat \
 ENV TOMCAT_MAJOR=9 \
-    TOMCAT_VERSION=9.0.27 \
+    TOMCAT_VERSION=9.0.29 \
 ##shib-idp \
     VERSION=3.4.6 \
 ##TIER \
-    TIERVERSION=20191002 \
+    TIERVERSION=20191202 \
 ################## \
 ### OTHER VARS ### \
 ################## \
@@ -189,56 +189,6 @@ RUN mkdir -p /etc/supervisor/conf.d && chmod +x /opt/tier/setenv.sh \
 
 #set cron to not require a login session
 RUN sed -i '/session    required   pam_loginuid.so/c\#session    required   pam_loginuid.so' /etc/pam.d/crond
-
-###############################################
-### Settings for a mounted config (default) ###
-###############################################
-#VOLUME ["/usr/local/tomcat/conf", \
-#	    "/usr/local/tomcat/webapps/ROOT", \
-#		"/usr/local/tomcat/logs", \
-#		"/opt/certs", \
-#		"/opt/shibboleth-idp/conf", \
-#		"/opt/shibboleth-idp/credentials", \
-#		"/opt/shibboleth-idp/views", \
-#		"/opt/shibboleth-idp/edit-webapp", \
-#		"/opt/shibboleth-idp/messages", \
-#		"/opt/shibboleth-idp/metadata", \
-#		"/opt/shibboleth-idp/logs"]
-
-
-#################################################
-### Settings for a burned-in config (default) ###
-#################################################		
-# Conversely, for a burned config, *uncomment* the ADD lines below and *comment* the lines of the VOLUME command above
-#
-# consider not doing the volumes below as it creates a run-time dependency and a better solution might be to use syslog from the container
-# VOLUME ["/usr/local/tomcat/logs", "/opt/shibboleth-idp/logs"]
-#
-# ensure the following locations are accurate if you plan to burn your configuration into your containers by uncommenting the relevant section below
-# they represent the folder names/paths on your build host of the relevant config material needed to run the container
-# The paths below must be relative to (subdirectories of) the directory where the Dockerfile is located.
-# The paths below are just the default values.  They are typically overriden by "build-args" in the 'docker build' command.
-#ARG TOMCFG=config/tomcat
-#ARG TOMLOG=logs/tomcat
-#ARG TOMCERT=credentials/tomcat
-#ARG TOMWWWROOT=wwwroot
-#ARG SHBCFG=config/shib-idp/conf
-#ARG SHBCREDS=credentials/shib-idp
-#ARG SHBVIEWS=config/shib-idp/views
-#ARG SHBEDWAPP=config/shib-idp/edit-webapp
-#ARG SHBMSGS=config/shib-idp/messages
-#ARG SHBMD=config/shib-idp/metadata
-#ARG SHBLOG=logs/shib-idp
-#
-## ADD ${TOMCFG} /usr/local/tomcat/conf
-## ADD ${TOMCERT} /opt/certs
-## ADD ${TOMWWWROOT} /usr/local/tomcat/webapps/ROOT
-## ADD ${SHBCFG} /opt/shibboleth-idp/conf
-## ADD ${SHBCREDS} /opt/shibboleth-idp/credentials
-## ADD ${SHBVIEWS} /opt/shibboleth-idp/views
-## ADD ${SHBEDWAPP} /opt/shibboleth-idp/edit-webapp
-## ADD ${SHBMSGS} /opt/shibboleth-idp/messages
-## ADD ${SHBMD} /opt/shibboleth-idp/metadata
 
 # Expose the port tomcat will be serving on
 EXPOSE 443
