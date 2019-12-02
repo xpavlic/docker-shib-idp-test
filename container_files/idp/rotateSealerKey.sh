@@ -1,4 +1,7 @@
 #!/bin/bash
+if [ -s /opt/tier/env.bash ]; then
+  . /opt/tier/env.bash
+fi
  
 set -e
 set -u
