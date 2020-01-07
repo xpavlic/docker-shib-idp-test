@@ -6,11 +6,11 @@ FROM centos:centos7
 #
 ##tomcat \
 ENV TOMCAT_MAJOR=9 \
-    TOMCAT_VERSION=9.0.29 \
+    TOMCAT_VERSION=9.0.30 \
 ##shib-idp \
     VERSION=3.4.6 \
 ##TIER \
-    TIERVERSION=20191202 \
+    TIERVERSION=20200107 \
 ################## \
 ### OTHER VARS ### \
 ################## \
@@ -71,11 +71,10 @@ RUN update-ca-trust extract
 
 # Install Corretto Java JDK
 #Corretto download page: https://docs.aws.amazon.com/corretto/latest/corretto-8-ug/downloads-list.html
-# https://d3pxv6yz143wms.cloudfront.net/8.232.09.1/java-1.8.0-amazon-corretto-devel-1.8.0_232.b09-1.x86_64.rpm
-ARG CORRETTO_RPM=java-1.8.0-amazon-corretto-devel-1.8.0_232.b09-1.x86_64.rpm
-ARG CORRETTO_URL_BASE=https://d3pxv6yz143wms.cloudfront.net/8.232.09.1
+ARG CORRETTO_URL_PERM=https://corretto.aws/downloads/latest/amazon-corretto-8-x64-linux-jdk.rpm
+ARG CORRETTO_RPM=amazon-corretto-8-x64-linux-jdk.rpm
 COPY container_files/java-corretto/corretto-signing-key.pub .
-RUN curl -O $CORRETTO_URL_BASE/$CORRETTO_RPM \
+RUN curl -O -L $CORRETTO_URL_PERM \
     && rpm --import corretto-signing-key.pub \
     && rpm -K $CORRETTO_RPM \
     && rpm -i $CORRETTO_RPM \
