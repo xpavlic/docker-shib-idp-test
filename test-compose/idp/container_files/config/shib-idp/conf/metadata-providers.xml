@@ -1,15 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <MetadataProvider id="ShibbolethMetadata" xsi:type="ChainingMetadataProvider"
     xmlns="urn:mace:shibboleth:2.0:metadata"
-    xmlns:resource="urn:mace:shibboleth:2.0:resource"
     xmlns:security="urn:mace:shibboleth:2.0:security"
+    xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
     xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
+    xmlns:alg="urn:oasis:names:tc:SAML:metadata:algsupport"
+    xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+    xmlns:ds11="http://www.w3.org/2009/xmldsig11#"
+    xmlns:enc="http://www.w3.org/2001/04/xmlenc#"
+    xmlns:enc11="http://www.w3.org/2009/xmlenc11#"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="urn:mace:shibboleth:2.0:metadata http://shibboleth.net/schema/idp/shibboleth-metadata.xsd
-                        urn:mace:shibboleth:2.0:resource http://shibboleth.net/schema/idp/shibboleth-resource.xsd 
                         urn:mace:shibboleth:2.0:security http://shibboleth.net/schema/idp/shibboleth-security.xsd
-                        urn:oasis:names:tc:SAML:2.0:metadata http://docs.oasis-open.org/security/saml/v2.0/saml-schema-metadata-2.0.xsd">
-                        
+                        urn:oasis:names:tc:SAML:2.0:assertion http://docs.oasis-open.org/security/saml/v2.0/saml-schema-assertion-2.0.xsd
+                        urn:oasis:names:tc:SAML:2.0:metadata http://docs.oasis-open.org/security/saml/v2.0/saml-schema-metadata-2.0.xsd
+                        urn:oasis:names:tc:SAML:metadata:algsupport http://docs.oasis-open.org/security/saml/Post2.0/sstc-saml-metadata-algsupport-v1.0.xsd
+                        http://www.w3.org/2000/09/xmldsig# http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd
+                        http://www.w3.org/2009/xmldsig11# http://www.w3.org/TR/2013/REC-xmldsig-core1-20130411/xmldsig11-schema.xsd
+                        http://www.w3.org/2001/04/xmlenc# http://www.w3.org/TR/xmlenc-core/xenc-schema.xsd
+                        http://www.w3.org/2009/xmlenc11# http://www.w3.org/TR/2013/REC-xmlenc-core1-20130411/xenc-schema-11.xsd">
+
     <!-- ========================================================================================== -->
     <!--                             Metadata Configuration                                         -->
     <!--                                                                                            -->
@@ -62,25 +72,48 @@
     <MetadataProvider id="LocalMetadata"  xsi:type="FilesystemMetadataProvider" metadataFile="PATH_TO_YOUR_METADATA"/>
     -->
 
-	<MetadataProvider id="InCommonMetadata"
-                xsi:type="FileBackedHTTPMetadataProvider"
-                backingFile="%{idp.home}/metadata/localCopyFromInCommon.xml"
-                metadataURL="http://md.incommon.org/InCommon/InCommon-metadata.xml"
-                maxRefreshDelay="PT8H">
-					  
-		<MetadataFilter xsi:type="RequiredValidUntil" maxValidityInterval="P14D" />
-			
-		<MetadataFilter xsi:type="SignatureValidation"
-			certificateFile="${idp.home}/credentials/inc-md-cert.pem" />
-				
-		<MetadataFilter xsi:type="EntityRoleWhiteList">
-			<RetainedRole>md:SPSSODescriptor</RetainedRole>
-		</MetadataFilter>
-			
+
+    <!--
+    Example CAS metadata source.
+    -->
+
+    <!--
+    <MetadataProvider id="CasMetadata"
+                      xsi:type="FilesystemMetadataProvider"
+                      metadataFile="PATH_TO_YOUR_METADATA"
+                      indexesRef="shibboleth.CASMetadataIndices" />
+    -->
+
+    <!-- InCommon Per-Entity Metadata Distribution Service -->
+    <MetadataProvider id="incommon" xsi:type="DynamicHTTPMetadataProvider"
+                  maxCacheDuration="PT24H" minCacheDuration="PT10M">
+      <!-- Verify the signature on the root element (i.e., the EntityDescriptor element) -->
+      <MetadataFilter xsi:type="SignatureValidation" requireSignedRoot="true"
+                  certificateFile="%{idp.home}/credentials/inc-md-cert-mdq.pem" />
+ 
+      <!-- Require a validUntil XML attribute no more than 14 days into the future -->
+      <MetadataFilter xsi:type="RequiredValidUntil" maxValidityInterval="P14D" />
+ 
+      <!-- The MetadataQueryProtocol element specifies the base URL for the query protocol -->
+      <MetadataQueryProtocol>https://mdq.incommon.org/</MetadataQueryProtocol>
+    </MetadataProvider>
+
+    <!-- InCommon Per-Entity Metadata Distribution Service -->
+    <MetadataProvider id="incommon" xsi:type="DynamicHTTPMetadataProvider"
+                  maxCacheDuration="PT24H" minCacheDuration="PT10M">
+      <!-- Verify the signature on the root element (i.e., the EntityDescriptor element) -->
+      <MetadataFilter xsi:type="SignatureValidation" requireSignedRoot="true"
+                  certificateFile="%{idp.home}/credentials/inc-md-cert-mdq.pem" />
+ 
+      <!-- Require a validUntil XML attribute no more than 14 days into the future -->
+      <MetadataFilter xsi:type="RequiredValidUntil" maxValidityInterval="P14D" />
+ 
+      <!-- The MetadataQueryProtocol element specifies the base URL for the query protocol -->
+      <MetadataQueryProtocol>https://mdq.incommon.org/</MetadataQueryProtocol>
     </MetadataProvider>
 
     <!-- the test SP container -->
     <MetadataProvider id="TestMetadata"  xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/testsp-metadata.xml"/>
     <!--end of test SP container -->
-	
+
 </MetadataProvider>

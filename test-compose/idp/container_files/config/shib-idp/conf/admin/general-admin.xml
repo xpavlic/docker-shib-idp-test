@@ -36,6 +36,18 @@
             p:loggingId="%{idp.service.logging.resolvertest:ResolverTest}"
             p:policyName="%{idp.resolvertest.accessPolicy:AccessByIPAddress}" />
 
+        <!-- Metadata Query -->
+        <bean parent="shibboleth.AdminFlow"
+            c:id="http://shibboleth.net/ns/profiles/mdquery"
+            p:loggingId="MetadataQuery"
+            p:policyName="AccessByIPAddress" />
+
+        <!-- REST AccountLockoutManager Access -->
+        <bean parent="shibboleth.AdminFlow"
+            c:id="http://shibboleth.net/ns/profiles/lockout-manager"
+            p:loggingId="Lockout"
+            p:policyName="AccessByIPAddress" />
+
         <!-- REST StorageService Access -->
         <bean parent="shibboleth.AdminFlow"
             c:id="http://shibboleth.net/ns/profiles/storage"
@@ -47,6 +59,15 @@
             c:id="http://shibboleth.net/ns/profiles/metrics"
             p:loggingId="Metrics"
             p:policyNameLookupStrategy-ref="shibboleth.metrics.AccessPolicyStrategy" />
+
+        <!-- Attended Startup Unlock -->
+        <!--
+        <bean parent="shibboleth.OneTimeAdminFlow"
+            c:id="http://shibboleth.net/ns/profiles/unlock-keys"
+            p:loggingId="UnlockKeys"
+            p:authenticated="true"
+            p:policyName="AccessByAdminUser" />
+        -->
     
     </util:list>
 

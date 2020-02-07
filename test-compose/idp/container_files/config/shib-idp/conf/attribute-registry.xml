@@ -11,15 +11,16 @@
                            
        default-init-method="initialize"
        default-destroy-method="destroy">
-    
-    <!-- Specify your JAAS config. -->
-    <bean id="JAASConfig" class="org.springframework.core.io.FileSystemResource" c:path="%{idp.home}/conf/authn/jaas.config" />
-    
-    <util:property-path id="shibboleth.authn.JAAS.JAASConfigURI" path="JAASConfig.URI" />
-    
-    <!-- Specify the application name(s) in the JAAS config. -->
-    <util:list id="shibboleth.authn.JAAS.LoginConfigNames">
-        <value>ShibUserPassAuth</value>
-    </util:list>
 
+    <!--
+    The system comes preconfigured to load rules directly from resource files
+    configured in services.xml so they're monitored for changes.
+    
+    You can add mappings here, add more XML resource files,
+    or drop property files into the directory noted below.
+    -->
+
+    <!-- Default directory for custom mappings. -->
+    <bean parent="shibboleth.TranscodingRuleLoader" c:_0="%{idp.home}/conf/attributes/custom" />
+   
 </beans>

@@ -11,15 +11,24 @@
                            
        default-init-method="initialize"
        default-destroy-method="destroy">
-    
-    <!-- Specify your JAAS config. -->
-    <bean id="JAASConfig" class="org.springframework.core.io.FileSystemResource" c:path="%{idp.home}/conf/authn/jaas.config" />
-    
-    <util:property-path id="shibboleth.authn.JAAS.JAASConfigURI" path="JAASConfig.URI" />
-    
-    <!-- Specify the application name(s) in the JAAS config. -->
-    <util:list id="shibboleth.authn.JAAS.LoginConfigNames">
-        <value>ShibUserPassAuth</value>
-    </util:list>
 
+    <!-- Specify discovery service location. -->
+    
+    <bean id="shibboleth.authn.discoveryURL" class="java.lang.String"
+        c:_0="https://ds.example.org/shibboleth-ds/index.html" />
+ 
+    <!-- Alternatively specify a Function<ProfileRequestContext,String> to return the URL. -->
+    <!--
+    <bean id="shibboleth.authn.discoveryURLStrategy"
+            parent="shibboleth.ContextFunction.Scripted" factory-method="inlineScript">
+        <constructor-arg>
+            <value>
+            <![CDATA[
+                "https://ds.example.org/shibboleth-ds/index.html";
+            ]]>
+            </value>
+        </constructor-arg>
+    </bean>
+    -->
+ 
 </beans>

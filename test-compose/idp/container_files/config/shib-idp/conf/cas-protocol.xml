@@ -3,6 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:c="http://www.springframework.org/schema/c"
        xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
@@ -36,6 +37,16 @@
     </bean>
 
     <!--
+       | Uncomment this bean if you want to override the default list of CAS service registries.
+       | The default configuration tries to find the relying party in a SAML metadata source and falls back to
+       | reloadableServiceRegistry if a match is not found.
+       -->
+    <!--<util:list id="shibboleth.CASServiceRegistries">
+        <ref bean="shibboleth.CASMetadataServiceRegistry" />
+        <ref bean="shibboleth.CASServiceRegistry" />
+    </util:list>-->
+
+    <!--
        | The default ticket service as of 3.3.0 serializes ticket data into the opaque section of the ticket ID
        | for service tickets and proxy tickets. Proxy-granting tickets still require server-side storage, and
        | a StorageService defined by the idp.cas.StorageService is used. Thus for deployers that do not require
@@ -63,9 +74,26 @@
        | evaluates to true under any condition, a server-side storage service must be enabled for IdP session
        | storage. The most common non-default value is "alwaysTrue."
        -->
-    <bean id="shibboleth.CASProxyValidateIdPSessionPredicate"
-          class="com.google.common.base.Predicates"
-          factory-method="alwaysFalse" />
+    <bean id="shibboleth.CASProxyValidateIdPSessionPredicate" parent="shibboleth.Conditions.FALSE" />
+
+    <!--
+       | Uncomment the following bean if you want to ignore jsessionid artifacts in service URLs.
+       | Those sorts of URLs are commonly emitted by Java servlet-based web applications.
+       -->
+    <!--<bean id="shibboleth.CASServiceComparator"
+          class="net.shibboleth.idp.cas.service.DefaultServiceComparator"
+          c:parameterNames="[a-z]+sessionid" />-->
+
+    <!--
+       | Define the list of static certificates that you trust to secure CAS proxy callback endpoints.
+       | Typically these are CA certificates and apply to _all_ CAS proxy callback endpoints.
+       | This facility complements the capability to supply relying-party-specific certificates in SAML metadata,
+       | which is the preferred mechanism to specify CAS proxy trust material. In the case of metadata, self-signed
+       | certificates are recommended.
+       -->
+    <util:list id="shibboleth.CASProxyTrustedCertificates" value-type="java.lang.String">
+        <!--<value>%{idp.home}/credentials/your_ca.pem</value>-->
+    </util:list>
 
 
     <!-- ============== Advanced CAS Configuration ============== -->
@@ -74,11 +102,5 @@
     <!--
     <bean id="shibboleth.CASTicketService"
           class="org.example.idp.cas.CustomTicketService" />
-    -->
-
-    <!-- Configure a third-party proxy authenticator. -->
-    <!--
-    <bean id="shibboleth.CASProxyAuthenticator"
-          class="org.example.idp.cas.CustomProxyAuthenticator" />
     -->
 </beans>

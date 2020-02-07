@@ -11,15 +11,27 @@
                            
        default-init-method="initialize"
        default-destroy-method="destroy">
-    
-    <!-- Specify your JAAS config. -->
-    <bean id="JAASConfig" class="org.springframework.core.io.FileSystemResource" c:path="%{idp.home}/conf/authn/jaas.config" />
-    
-    <util:property-path id="shibboleth.authn.JAAS.JAASConfigURI" path="JAASConfig.URI" />
-    
-    <!-- Specify the application name(s) in the JAAS config. -->
-    <util:list id="shibboleth.authn.JAAS.LoginConfigNames">
-        <value>ShibUserPassAuth</value>
-    </util:list>
 
+    <!--
+    Add authentication flow descriptor's supportedPrincipals collection to the resulting Subject?
+    You would normally only unset this if you plan to return a completely constructed Subject from
+    your authentication function.
+    -->
+    <util:constant id="shibboleth.authn.Function.addDefaultPrincipals" static-field="java.lang.Boolean.TRUE" />
+    
+    <!--
+    The entire flow depends on the execution of a function bean you supply. A pathological script example
+    is below. The function may return a String, Principal, Subject, or a null to signal failure.
+    -->
+    
+    <bean id="shibboleth.authn.Function.ResultLookupStrategy"
+            parent="shibboleth.ContextFunctions.Scripted" factory-method="inlineScript">
+        <constructor-arg>
+            <value>
+            <![CDATA[
+                null;
+            ]]>
+            </value>
+        </constructor-arg>
+    </bean>    
 </beans>

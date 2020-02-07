@@ -22,10 +22,8 @@
     so if idp.home is not a path, don't use it in the value.
     -->
     <!--
-    <bean id="shibboleth.authn.Krb5.ServicePrincipal" class="java.lang.String" c:_0="HTTP/idp.testbed.tier.internet2.edu@TESTBED.TIER.INTERNET2.EDU" />
-    <bean id="shibboleth.authn.Krb5.Keytab" class="java.lang.String" c:_0="%{idp.home}/credentials/http.keytab" />
+    <bean id="shibboleth.authn.Krb5.ServicePrincipal" class="java.lang.String" c:_0="SERVICE/principal" />
+    <bean id="shibboleth.authn.Krb5.Keytab" class="java.lang.String" c:_0="%{idp.home}/credentials/keytab" />
     -->
-    
-    <alias name="ValidateUsernamePasswordAgainstKerberos" alias="ValidateUsernamePassword"/>
 
 </beans>

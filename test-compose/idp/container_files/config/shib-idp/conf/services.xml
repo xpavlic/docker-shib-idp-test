@@ -4,55 +4,11 @@
     xmlns:c="http://www.springframework.org/schema/c" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
                            
-    <!-- Advanced configuration of services from SVN.
-       
-       To use an SVN resource you need to construct it and then inject it into 
-       The appropriate bean. To use property replacement you will need a separate 
-       resource pointing to the replacement phrase. 
-        
-       For example: 
-        
-    <bean id="AuthnMgr" class="org.tmatesoft.svn.core.auth.BasicAuthenticationManager">
-        <constructor-arg>
-            <null />
-        </constructor-arg>
-    </bean>
-    <bean id="ClientMgr" factory-method="newInstance"
-        class="org.tmatesoft.svn.core.wc.SVNClientManager"
-        p:authenticationManager-ref="AuthnMgr" />
-    <bean id="TheSVNURL" factory-method="create"
-        class="org.tmatesoft.svn.core.SVNURL">
-        <constructor-arg value="https" />
-        <constructor-arg>
-            <null />
-        </constructor-arg>
-        <constructor-arg value="svn.shibboleth.net" />
-        <constructor-arg value="-1" />
-        <constructor-arg
-            value="/utilities/spring-extensions/trunk/src/test/resources/data/" />
-        <constructor-arg value="false" />
-    </bean>
-    <bean id="TheSVNResource" class="net.shibboleth.ext.spring.resource.SVNResource">
-        <constructor-arg ref="ClientMgr" />
-        <constructor-arg ref="TheSVNURL" />
-        <constructor-arg value="D:/testdir/dir" />
-        <constructor-arg value="-1" />
-        <constructor-arg value="TestResource.txt" />
-    </bean>
-    
-    <util:list id="shibboleth.AttributeResolverResources">
-       <ref bean="TheSVNResource"/>
-       <value>path_to_properties_specifyingBean_file</value>
-    </util:list>
-    
-     see also https://wiki.shibboleth.net/confluence/display/IDP30/SVNResource
-              http://svnkit.com/javadoc/org/tmatesoft/svn/core/auth/BasicAuthenticationManager.html#constructor_detail 
-              http://svnkit.com/javadoc/org/tmatesoft/svn/core/SVNURL.html
-              
-    -->
-    
+    default-init-method="initialize"
+    default-destroy-method="destroy">
+                               
     <!-- Advanced configuration of services from HTTP.
     
       To use an HTTP resource you first need to configure the Apache HttpClient which will be used
@@ -98,18 +54,19 @@
         <value>%{idp.home}/system/conf/relying-party-system.xml</value>
     </util:list>
 
-    <!-- This set of resources supports a legacy 2.x relying-party.xml file. -->
-    <util:list id="shibboleth.LegacyRelyingPartyResolverResources">
-        <value>%{idp.home}/conf/relying-party.xml</value>
-        <value>%{idp.home}/system/conf/legacy-relying-party-defaults.xml</value>
-    </util:list>
-
     <util:list id="shibboleth.MetadataResolverResources">
         <value>%{idp.home}/conf/metadata-providers.xml</value>
         <value>%{idp.home}/system/conf/metadata-providers-system.xml</value>
     </util:list>
 
     <util:list id ="shibboleth.AttributeResolverResources">
+        <value>%{idp.home}/conf/attribute-resolver.xml</value>
+    </util:list>
+
+    <util:list id ="shibboleth.AttributeRegistryResources">
+        <value>%{idp.home}/conf/attribute-registry.xml</value>
+        <value>%{idp.home}/system/conf/attribute-registry-system.xml</value>
+        <value>%{idp.home}/conf/attributes/default-rules.xml</value>
         <value>%{idp.home}/conf/attribute-resolver.xml</value>
     </util:list>
 

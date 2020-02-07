@@ -30,25 +30,13 @@
         
                 <bean id="intercept/terms-of-use" parent="shibboleth.consent.TermsOfUseFlow" />
         
-                <bean id="intercept/attribute-release" parent="shibboleth.consent.AttributeReleaseFlow" p:activationCondition-ref="isFERPA" />
+                <bean id="intercept/attribute-release" parent="shibboleth.consent.AttributeReleaseFlow" />
+                
+                <bean id="intercept/impersonate" parent="shibboleth.InterceptFlow" />
+                
+                <bean id="intercept/external" parent="shibboleth.InterceptFlow" />
             </list>
         </property>
-    </bean>
-
-    <!-- Check if the FERPA restriction attribute is set -->
-    <bean id="isFERPA" class="net.shibboleth.idp.profile.logic.SimpleAttributePredicate">
-      <property name="attributeValueMap">
-        <map>
-            <entry key="isFERPAattr">
-                <list>
-                    <value>true</value>
-                    <value>TRUE</value>
-                    <value>YES</value>
-                    <value>yes</value>
-                </list>
-            </entry>
-        </map>
-      </property>
     </bean>
 
 </beans>

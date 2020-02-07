@@ -6,6 +6,7 @@
 ## attributeReleaseContext - context holding consentable attributes
 ## attributeReleaseFlowDescriptor - attribute consent flow descriptor
 ## attributeDisplayNameFunction - function to display attribute name
+## attributeDisplayDescriptionFunction - function to display attribute description
 ## consentContext - context representing the state of a consent flow
 ## encoder - HTMLEncoder class
 ## flowExecutionKey - SWF execution key (this is built into the flowExecutionUrl)
@@ -21,7 +22,7 @@
 #set ($informationURL = $rpUIContext.informationURL)
 #set ($privacyStatementURL = $rpUIContext.privacyStatementURL)
 #set ($rpOrganizationLogo = $rpUIContext.getLogo())
-#set ($rpOrganizationName = $rpUIContext.organizationName)
+#set ($rpOrganizationName = $rpUIContext.organizationDisplayName)
 #set ($replaceDollarWithNewline = true)
 ##
 <!DOCTYPE html>
@@ -34,6 +35,7 @@
     </head>
     <body>
         <form action="$flowExecutionUrl" method="post" style="padding:10px" >
+            #parse("csrf/csrf.vm")
             <div class="box">
                 <header>
                     <img src="$request.getContextPath()#springMessage("idp.logo")" alt="#springMessageText("idp.logo.alt-text", "logo")" class="federation_logo">
@@ -78,7 +80,7 @@
                                     <td>
                                         #foreach ($value in $attribute.values)
                                             #if ($replaceDollarWithNewline)
-                                                #set ($encodedValue = $encoder.encodeForHTML($value.getDisplayValue()).replaceAll($encoder.encodeForHTML("$"),"<br>"))
+                                                #set ($encodedValue = $encoder.encodeForHTML($value.getDisplayValue()).replaceAll($encoder.encodeForHTML('$'),"<br>"))
                                             #else
                                                 #set ($encodedValue = $encoder.encodeForHTML($value.getDisplayValue()))
                                             #end
