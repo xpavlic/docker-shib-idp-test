@@ -98,20 +98,6 @@
       <MetadataQueryProtocol>https://mdq.incommon.org/</MetadataQueryProtocol>
     </MetadataProvider>
 
-    <!-- InCommon Per-Entity Metadata Distribution Service -->
-    <MetadataProvider id="incommon" xsi:type="DynamicHTTPMetadataProvider"
-                  maxCacheDuration="PT24H" minCacheDuration="PT10M">
-      <!-- Verify the signature on the root element (i.e., the EntityDescriptor element) -->
-      <MetadataFilter xsi:type="SignatureValidation" requireSignedRoot="true"
-                  certificateFile="%{idp.home}/credentials/inc-md-cert-mdq.pem" />
- 
-      <!-- Require a validUntil XML attribute no more than 14 days into the future -->
-      <MetadataFilter xsi:type="RequiredValidUntil" maxValidityInterval="P14D" />
- 
-      <!-- The MetadataQueryProtocol element specifies the base URL for the query protocol -->
-      <MetadataQueryProtocol>https://mdq.incommon.org/</MetadataQueryProtocol>
-    </MetadataProvider>
-
     <!-- the test SP container -->
     <MetadataProvider id="TestMetadata"  xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/testsp-metadata.xml"/>
     <!--end of test SP container -->
