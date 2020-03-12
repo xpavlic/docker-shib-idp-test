@@ -1,4 +1,4 @@
-FROM tier/shib-idp:3.4.6_20200303
+FROM tier/shib-idp:4.0.0_20200311
 
 # The build args below can be used at build-time to tell the build process where to find your config files.  This is for a completely burned-in config.
 ARG TOMCFG=config/tomcat
@@ -17,9 +17,9 @@ ADD ${TOMCERT} /opt/certs
 ADD ${TOMWWWROOT} /usr/local/tomcat/webapps/ROOT
 ADD ${SHBCFG} /opt/shibboleth-idp/conf
 ADD ${SHBCREDS} /opt/shibboleth-idp/credentials
-ADD ${SHBVIEWS} /opt/shibboleth-idp/views
-ADD ${SHBEDWAPP} /opt/shibboleth-idp/edit-webapp
-ADD ${SHBMSGS} /opt/shibboleth-idp/messages
+#ADD ${SHBVIEWS} /opt/shibboleth-idp/views
+#ADD ${SHBEDWAPP} /opt/shibboleth-idp/edit-webapp
+#ADD ${SHBMSGS} /opt/shibboleth-idp/messages
 ADD ${SHBMD} /opt/shibboleth-idp/metadata
 
 

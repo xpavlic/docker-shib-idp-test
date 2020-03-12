@@ -8,12 +8,12 @@ FROM centos:centos7
 ENV TOMCAT_MAJOR=9 \
     TOMCAT_VERSION=9.0.31 \
 ##shib-idp \
-    VERSION=3.4.6 \
+    VERSION=4.0.0 \
 ##TIER \
-    TIERVERSION=20200303 \
-################## \
-### OTHER VARS ### \
-################## \
+    TIERVERSION=20200311 \
+#################### \
+#### OTHER VARS #### \
+#################### \
 # \
 #global \
     IMAGENAME=shibboleth_idp \
@@ -70,16 +70,16 @@ RUN update-ca-trust extract
 #####     ENV TIER_BEACON_OPT_OUT True
 
 # Install Corretto Java JDK
-#Corretto download page: https://docs.aws.amazon.com/corretto/latest/corretto-8-ug/downloads-list.html
-ARG CORRETTO_URL_PERM=https://corretto.aws/downloads/latest/amazon-corretto-8-x64-linux-jdk.rpm
-ARG CORRETTO_RPM=amazon-corretto-8-x64-linux-jdk.rpm
+#Corretto download page: https://docs.aws.amazon.com/corretto/latest/corretto-11-ug/downloads-list.html
+ARG CORRETTO_URL_PERM=https://corretto.aws/downloads/latest/amazon-corretto-11-x64-linux-jdk.rpm
+ARG CORRETTO_RPM=amazon-corretto-11-x64-linux-jdk.rpm
 COPY container_files/java-corretto/corretto-signing-key.pub .
 RUN curl -O -L $CORRETTO_URL_PERM \
     && rpm --import corretto-signing-key.pub \
     && rpm -K $CORRETTO_RPM \
     && rpm -i $CORRETTO_RPM \
     && rm -r corretto-signing-key.pub $CORRETTO_RPM
-ENV JAVA_HOME=/usr/lib/jvm/java-1.8.0-amazon-corretto
+ENV JAVA_HOME=/usr/lib/jvm/java-11-amazon-corretto
 
 # To use Zulu Java:
 #RUN rpm --import http://repos.azulsystems.com/RPM-GPG-KEY-azulsystems \
