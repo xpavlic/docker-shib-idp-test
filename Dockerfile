@@ -11,9 +11,9 @@ ENV TOMCAT_MAJOR=9 \
     VERSION=4.0.0 \
 ##TIER \
     TIERVERSION=20200311 \
-################## \
-### OTHER VARS ### \
-################## \
+#################### \
+#### OTHER VARS #### \
+#################### \
 # \
 #global \
     IMAGENAME=shibboleth_idp \
