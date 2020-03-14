@@ -9,8 +9,9 @@ ENV TOMCAT_MAJOR=9 \
     TOMCAT_VERSION=9.0.31 \
 ##shib-idp \
     VERSION=3.4.6 \
+    NEWVERSION=4.0.0 \
 ##TIER \
-    TIERVERSION=20200303 \
+    TIERVERSION=IdP3to4Upgrader_20200314 \
 ################## \
 ### OTHER VARS ### \
 ################## \
@@ -26,7 +27,9 @@ ENV TOMCAT_TGZ_URL=https://www.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/v$TOM
     PATH=$CATALINA_HOME/bin:$JAVA_HOME/bin:$PATH \
 #shib-idp \
     SHIB_RELDIR=http://shibboleth.net/downloads/identity-provider/$VERSION \
-    SHIB_PREFIX=shibboleth-identity-provider-$VERSION
+    SHIB_PREFIX=shibboleth-identity-provider-$VERSION \
+    NEWSHIB_RELDIR=http://shibboleth.net/downloads/identity-provider/$NEWVERSION \
+    NEWSHIB_PREFIX=shibboleth-identity-provider-$NEWVERSION
 
 ENV ENV=dev \
     USERTOKEN=nothing
@@ -37,7 +40,7 @@ ENV ENABLE_SEALER_KEY_ROTATION=True
 
 #set labels
 LABEL Vendor="Internet2" \
-      ImageType="Shibboleth IDP Release" \
+      ImageType="Shibboleth IDP Upgrader" \
       ImageName=$imagename \
       ImageOS=centos7 \
       Version=$VERSION
@@ -69,17 +72,29 @@ RUN update-ca-trust extract
 # To keep it commented, keep multiple comments on the following line (to prevent other scripts from processing it).
 #####     ENV TIER_BEACON_OPT_OUT True
 
-# Install Corretto Java JDK
-#Corretto download page: https://docs.aws.amazon.com/corretto/latest/corretto-8-ug/downloads-list.html
-ARG CORRETTO_URL_PERM=https://corretto.aws/downloads/latest/amazon-corretto-8-x64-linux-jdk.rpm
-ARG CORRETTO_RPM=amazon-corretto-8-x64-linux-jdk.rpm
+# Install Corretto Java JDK 11
+#Corretto download page: https://docs.aws.amazon.com/corretto/latest/corretto-11-ug/downloads-list.html
+ARG CORRETTO_URL_PERM=https://corretto.aws/downloads/latest/amazon-corretto-11-x64-linux-jdk.rpm
+ARG CORRETTO_RPM=amazon-corretto-11-x64-linux-jdk.rpm
 COPY container_files/java-corretto/corretto-signing-key.pub .
 RUN curl -O -L $CORRETTO_URL_PERM \
     && rpm --import corretto-signing-key.pub \
     && rpm -K $CORRETTO_RPM \
     && rpm -i $CORRETTO_RPM \
     && rm -r corretto-signing-key.pub $CORRETTO_RPM
-ENV JAVA_HOME=/usr/lib/jvm/java-1.8.0-amazon-corretto
+ENV JAVA_HOME=/usr/lib/jvm/java-11-amazon-corretto
+
+#Corretto 8
+#Corretto download page: https://docs.aws.amazon.com/corretto/latest/corretto-8-ug/downloads-list.html
+#ARG CORRETTO_URL_PERM=https://corretto.aws/downloads/latest/amazon-corretto-8-x64-linux-jdk.rpm
+#ARG CORRETTO_RPM=amazon-corretto-8-x64-linux-jdk.rpm
+#COPY container_files/java-corretto/corretto-signing-key.pub .
+#RUN curl -O -L $CORRETTO_URL_PERM \
+#    && rpm --import corretto-signing-key.pub \
+#    && rpm -K $CORRETTO_RPM \
+#    && rpm -i $CORRETTO_RPM \
+#    && rm -r corretto-signing-key.pub $CORRETTO_RPM
+#ENV JAVA_HOME=/usr/lib/jvm/java-1.8.0-amazon-corretto
 
 # To use Zulu Java:
 #RUN rpm --import http://repos.azulsystems.com/RPM-GPG-KEY-azulsystems \
@@ -119,7 +134,8 @@ ENV JAVA_HOME=/usr/lib/jvm/java-1.8.0-amazon-corretto
 
 # Copy IdP installer properties file(s)
 ADD container_files/idp/idp.installer.properties container_files/idp/idp.merge.properties container_files/idp/ldap.merge.properties /tmp/
-		   
+ADD container_files/idp/idp4.installer.properties /shibboleth4/		  
+ 
 # Install IdP
 RUN mkdir -p /tmp/shibboleth && cd /tmp/shibboleth && \
     wget -q https://shibboleth.net/downloads/PGP_KEYS \
@@ -139,6 +155,21 @@ RUN mkdir -p /tmp/shibboleth && cd /tmp/shibboleth && \
 # Cleanup
     cd ~ && \
     rm -rf /tmp/shibboleth
+
+
+# Download 4.0 package for performing an upgrade
+RUN mkdir -p /shibboleth4 && cd /shibboleth4 && \
+    wget -q https://shibboleth.net/downloads/PGP_KEYS \
+           $NEWSHIB_RELDIR/$NEWSHIB_PREFIX.tar.gz \
+           $NEWSHIB_RELDIR/$NEWSHIB_PREFIX.tar.gz.asc && \
+# Perform verifications
+    gpg --import PGP_KEYS && \
+    gpg $NEWSHIB_PREFIX.tar.gz.asc && \
+    gpg --batch --verify $NEWSHIB_PREFIX.tar.gz.asc $NEWSHIB_PREFIX.tar.gz && \
+# Unzip
+    tar xf $NEWSHIB_PREFIX.tar.gz && \
+    cd ~ 
+
 
 # Install tomcat
 RUN mkdir -p "$CATALINA_HOME" && set -x \
@@ -174,7 +205,7 @@ ADD container_files/tomcat/keystore.jks /opt/certs/
 # Copy TIER helper scripts
 ADD container_files/idp/rotateSealerKey.sh /opt/shibboleth-idp/bin/rotateSealerKey.sh
 RUN chmod +x /opt/shibboleth-idp/bin/rotateSealerKey.sh
-ADD container_files/system/startup.sh /usr/bin/
+ADD container_files/system/startup.sh container_files/system/upgrade.sh /usr/bin/
 ADD container_files/bin/setenv.sh /opt/tier/setenv.sh
 ADD container_files/bin/setupcron.sh /usr/bin/setupcron.sh
 ADD container_files/bin/sendtierbeacon.sh /usr/bin/sendtierbeacon.sh
@@ -182,6 +213,7 @@ ADD container_files/system/supervisord.conf /etc/supervisor/supervisord.conf
 RUN mkdir -p /etc/supervisor/conf.d && chmod +x /opt/tier/setenv.sh \
     && chmod +x /usr/bin/setupcron.sh \
     && chmod +x /usr/bin/startup.sh \
+    && chmod +x /usr/bin/upgrade.sh \
     && chmod +x /usr/bin/sendtierbeacon.sh \
 # setup cron
     && /usr/bin/setupcron.sh
@@ -196,4 +228,4 @@ EXPOSE 443
 HEALTHCHECK --interval=2m --timeout=30s \
   CMD curl -k -f https://127.0.0.1/idp/status || exit 1
   
-CMD ["/usr/bin/startup.sh"]
+CMD ["/usr/bin/upgrade.sh"]
