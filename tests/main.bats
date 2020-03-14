@@ -17,26 +17,26 @@ load ../common
 		/usr/bin/java
 }
 
-@test "030 Port 443/https is listening" {
-    docker run -d ${maintainer}/${imagename}
-    sleep 25
-    #get cont id
-   contid=$(docker ps | grep ${maintainer}/${imagename} | cut -f 1 -d ' ')
-    run docker exec -i ${contid} sh -c 'cat < /dev/null > /dev/tcp/127.0.0.1/443'
-    docker kill ${contid} &>/dev/null
-    docker rm ${contid} &>/dev/null
-    [ "$status" -eq 0 ]
-}
+#@test "030 Port 443/https is listening" {
+#    docker run -d ${maintainer}/${imagename}
+#    sleep 25
+#    #get cont id
+#   contid=$(docker ps | grep ${maintainer}/${imagename} | cut -f 1 -d ' ')
+#    run docker exec -i ${contid} sh -c 'cat < /dev/null > /dev/tcp/127.0.0.1/443'
+#    docker kill ${contid} &>/dev/null
+#    docker rm ${contid} &>/dev/null
+#    [ "$status" -eq 0 ]
+#}
 
-@test "040 The IdP Status page is present" {
-    docker run -d ${maintainer}/${imagename}
-    sleep 60
-    contid2=$(docker ps | grep ${maintainer}/${imagename} | cut -f 1 -d ' ')
-    run docker exec -i ${contid2} sh -c 'curl -I -k -s -f https://127.0.0.1/idp/status'
-    docker kill ${contid2} &>/dev/null
-    docker rm ${contid2} &>/dev/null
-    [ "$status" -eq 0 ]
-}
+#@test "040 The IdP Status page is present" {
+#    docker run -d ${maintainer}/${imagename}
+#    sleep 60
+#    contid2=$(docker ps | grep ${maintainer}/${imagename} | cut -f 1 -d ' ')
+#    run docker exec -i ${contid2} sh -c 'curl -I -k -s -f https://127.0.0.1/idp/status'
+#    docker kill ${contid2} &>/dev/null
+#    docker rm ${contid2} &>/dev/null
+#    [ "$status" -eq 0 ]
+#}
 
 #@test "050 The version of Tomcat is current" {
 #    ./tests/checktomcatver.sh ${maintainer}/${imagename}
