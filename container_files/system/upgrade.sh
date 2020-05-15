@@ -56,6 +56,7 @@ sed -i -e '/<rollingPolicy/,/<\/rollingPolicy>/d' ${IDP_LOG_CFG_FILE}
 
 if [ $? = 0 ]; then
   #copy config dirs to output folder
+  cp -R /opt/shibboleth-idp/system/ /upgradedConfig/
   cp -R /opt/shibboleth-idp/conf/ /upgradedConfig/
   cp -R /opt/shibboleth-idp/credentials/ /upgradedConfig/
   cp -R /opt/shibboleth-idp/edit-webapp/ /upgradedConfig/
