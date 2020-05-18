@@ -17,7 +17,7 @@
 
         <Valve className="org.apache.catalina.valves.AccessLogValve"
                directory="/tmp" prefix="tomcat_access_log" 
-               rotatable="false" renameOnRotate="true" pattern="%h %l %u %t &quot;%r&quot; %s %b" />
+               rotatable="false" pattern="%h %l %u %t &quot;%r&quot; %s %b" />
 
       </Host>
     </Engine>

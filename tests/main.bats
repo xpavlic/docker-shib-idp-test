@@ -42,13 +42,13 @@ load ../common
     ./tests/checktomcatver.sh ${maintainer}/${imagename}
 }
 
-#@test "060 The version of the IdP is current" {
-#    ./tests/checkidpver.sh ${maintainer}/${imagename}
-#}
+@test "060 The version of the IdP is current" {
+    ./tests/checkidpver.sh ${maintainer}/${imagename}
+}
 
-#@test "070 There are no known security vulnerabilities" {
-#    ./tests/clairscan.sh ${maintainer}/${imagename}:latest
-#}
+@test "070 There are no known security vulnerabilities" {
+    ./tests/clairscan.sh ${maintainer}/${imagename}:latest
+}
 
 @test "080 The IdP successfully completed a full-cycle test with an SP" {
     ./tests/fulltest.sh
