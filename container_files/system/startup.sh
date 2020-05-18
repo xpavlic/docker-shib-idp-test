@@ -19,6 +19,9 @@ mkfifo -m 666 /tmp/logcrond
 mkfifo -m 666 /tmp/logtomcat
 (cat <> /tmp/logtomcat | awk -v ENV="$ENV" -v UT="$USERTOKEN" '{printf "tomcat;console;%s;%s;%s\n", ENV, UT, $0; fflush()}' 1>/tmp/logpipe) &
 
+mkfifo -m 666 /tmp/tomcat_access_log
+(cat <> /tmp/tomcat_access_log | awk -v ENV="$ENV" -v UT="$USERTOKEN" '{printf "tomcat-access;console;%s;%s;%s\n", ENV, UT, $0; fflush()}' 1>/tmp/logpipe) &
+
 mkfifo -m 666 /tmp/logsuperd
 (cat <> /tmp/logsuperd | awk -v ENV="$ENV" -v UT="$USERTOKEN" '{printf "supervisord;console;%s;%s;%s\n", ENV, UT, $0; fflush()}' 1>/tmp/logpipe) &
 
