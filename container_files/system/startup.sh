@@ -1,5 +1,9 @@
 #!/bin/sh
 
+#set env vars for cron jobs
+#  this script creates /opt/tier/env.bash which is sourced by the cron jobs' scripts
+/opt/tier/setenv.sh
+
 #for passed-in env vars, remove spaces and replace any ; with : in usertoken env var since we will use ; as a delimiter
 export USERTOKEN="${USERTOKEN//;/:}"
 export USERTOKEN="${USERTOKEN// /}"
