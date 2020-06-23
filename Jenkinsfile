@@ -75,12 +75,12 @@ node('docker') {
     
   stage 'Push'
 
-    docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-$maintainer") {
+    docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-$previous_maintainer") {
           def baseImg = docker.build("$maintainer/$imagename")
           baseImg.push("$tag")
     }
 
-    docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-$maintainer") {
+    docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-$previous_maintainer") {
           def altImg = docker.build("$previous_maintainer/$imagename")
           altImg.push("$tag")
     }
