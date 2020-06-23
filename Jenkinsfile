@@ -33,6 +33,7 @@ node('docker') {
   stage 'Setting build context'
   
     def maintainer = maintainer()
+    def previous_maintainer = previous_maintainer()
     def imagename = imagename()
     def tag
     
@@ -75,9 +76,14 @@ node('docker') {
     
   stage 'Push'
 
-    docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-$maintainer") {
+    docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-$previous_maintainer") {
           def baseImg = docker.build("$maintainer/$imagename")
           baseImg.push("$tag")
+    }
+
+    docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-$previous_maintainer") {
+          def altImg = docker.build("$previous_maintainer/$imagename")
+          altImg.push("$tag")
     }
     
   stage 'Notify'
@@ -88,6 +94,11 @@ node('docker') {
 
 def maintainer() {
   def matcher = readFile('common.bash') =~ 'maintainer="(.+)"'
+  matcher ? matcher[0][1] : 'i2incommon'
+}
+
+def previous_maintainer() {
+  def matcher = readFile('common.bash') =~ 'previous_maintainer="(.+)"'
   matcher ? matcher[0][1] : 'tier'
 }
 
