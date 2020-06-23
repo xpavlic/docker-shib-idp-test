@@ -33,6 +33,7 @@ node('docker') {
   stage 'Setting build context'
   
     def maintainer = maintainer()
+    def previous_maintainer = previous_maintainer()
     def imagename = imagename()
     def tag
     
