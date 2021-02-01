@@ -4,12 +4,18 @@
   <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
 
   <Service name="Catalina">
-<Connector
+
+    <Connector
           protocol="org.apache.coyote.http11.Http11NioProtocol"
           port="443" maxThreads="200"
-          scheme="https" secure="true" SSLEnabled="true"
-          keystoreFile="/opt/certs/keystore.jks" keystorePass="password"
-          clientAuth="false" sslProtocol="TLS"/>
+          scheme="https" secure="true" SSLEnabled="true">
+      <SSLHostConfig protocols="TLSv1.2">
+        <Certificate
+          certificateKeystoreFile="/opt/certs/keystore.jks" 
+          certificateKeystorePassword="password" />
+      </SSLHostConfig>
+    </Connector>
+
     <Engine name="Catalina" defaultHost="localhost">
 
       <Host name="localhost"  appBase="webapps"
