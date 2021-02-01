@@ -9,7 +9,7 @@
           protocol="org.apache.coyote.http11.Http11NioProtocol"
           port="443" maxThreads="200"
           scheme="https" secure="true" SSLEnabled="true">
-      <SSLHostConfig protocols="TLSv1.2">
+      <SSLHostConfig protocols="TLSv1.2,TLSv1.3">
         <Certificate
           certificateKeystoreFile="/opt/certs/keystore.jks" 
           certificateKeystorePassword="password" />
