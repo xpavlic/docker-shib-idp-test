@@ -6,13 +6,12 @@
     <Appenders>
         <File name="CATALINA"
                      fileName="/tmp/logpipe">
-            <PatternLayout pattern="tomcat;catalina.out;${env:ENV};${env:USERTOKEN} ${layout}"/>
+            <PatternLayout pattern="tomcat;catalina.out;${env:ENV};${env:USERTOKEN};${layout}"/>
         </File>
         <File name="LOCALHOST"
                      fileName="/tmp/logpipe">
-            <PatternLayout pattern="tomcat;localhost.log;${env:ENV};${env:USERTOKEN} ${layout}"/>
+            <PatternLayout pattern="tomcat;localhost.log;${env:ENV};${env:USERTOKEN};${layout}"/>
         </File>
-
     </Appenders>
     <Loggers>
         <Root level="info">
