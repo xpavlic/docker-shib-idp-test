@@ -1,0 +1,2 @@
+generalwhitelist:
+  RHSA-2021:2147: glib2
