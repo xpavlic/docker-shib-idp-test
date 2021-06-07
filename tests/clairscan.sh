@@ -46,7 +46,7 @@ if [ $? == "0" ]; then
 else
   docker run -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan:latest &>/dev/null
 fi
-sleep 30
+sleep 60
 
 #get ip where clair-scanner will listen
 clairip=$(/sbin/ifconfig docker0 | grep 'inet ' | sed 's/^[[:space:]]*//g' | cut -f 2 -d ' ' | cut -f 2 -d ':')
