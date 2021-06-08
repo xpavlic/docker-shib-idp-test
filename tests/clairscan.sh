@@ -15,12 +15,12 @@ else
 fi
 
 #if needed, ensure whitelist file
-#if [ ! -s ./centos7-clair-whitelist.yaml ]; then
-#  echo 'downloading whitelist file...'
-#  curl -s -L -o ./centos7-clair-whitelist.yaml https://github.internet2.edu/raw/docker/shib-idp/3.4.4_20190801/tests/centos7-clair-whitelist.yaml
-#else
-#  echo 'using existing whitelist file...'
-#fi
+if [ ! -s ./centos7-clair-whitelist.yaml ]; then
+  echo 'downloading whitelist file...'
+  curl -s -L -o ./centos7-clair-whitelist.yaml https://github.internet2.edu/raw/docker/shib-idp/4.1.2_20210607/tests/centos7-clair-whitelist.yaml
+else
+  echo 'using existing whitelist file...'
+fi
 
 #ensure DB container
 echo 'ensuring a fresh clair-db container...'
@@ -46,16 +46,16 @@ if [ $? == "0" ]; then
 else
   docker run -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan:latest &>/dev/null
 fi
-sleep 30
+sleep 60
 
 #get ip where clair-scanner will listen
-clairip=$(/sbin/ifconfig docker0 | grep 'inet ' | sed 's/^[[:space:]]*//g' | cut -f 2 -d ' ' | sed 's/^[[:space:]]*//g')
+clairip=$(/sbin/ifconfig docker0 | grep 'inet ' | sed 's/^[[:space:]]*//g' | cut -f 2 -d ' ' | cut -f 2 -d ':')
 echo 'sending ip addr' ${clairip} 'to clair-scan server...'
 
 #run scan
 echo 'running scan...'
-#./clair-scanner -w centos7-clair-whitelist.yaml --ip ${clairip} $1
-./clair-scanner --ip ${clairip} $1
+./clair-scanner -w centos7-clair-whitelist.yaml --ip ${clairip} $1
+#./clair-scanner --ip ${clairip} $1
 retcode=$?
 
 #eval results
