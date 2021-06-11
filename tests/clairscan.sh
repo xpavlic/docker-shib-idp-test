@@ -15,12 +15,12 @@ else
 fi
 
 #if needed, ensure whitelist file
-if [ ! -s ./centos7-clair-whitelist.yaml ]; then
-  echo 'downloading whitelist file...'
-  curl -s -L -o ./centos7-clair-whitelist.yaml https://github.internet2.edu/raw/docker/shib-idp/4.1.2_20210607/tests/centos7-clair-whitelist.yaml
-else
-  echo 'using existing whitelist file...'
-fi
+#if [ ! -s ./centos7-clair-whitelist.yaml ]; then
+#  echo 'downloading whitelist file...'
+#  curl -s -L -o ./centos7-clair-whitelist.yaml https://github.internet2.edu/raw/docker/shib-idp/4.1.2_20210607/tests/centos7-clair-whitelist.yaml
+#else
+#  echo 'using existing whitelist file...'
+#fi
 
 #ensure DB container
 echo 'ensuring a fresh clair-db container...'
@@ -54,8 +54,8 @@ echo 'sending ip addr' ${clairip} 'to clair-scan server...'
 
 #run scan
 echo 'running scan...'
-./clair-scanner -w centos7-clair-whitelist.yaml --ip ${clairip} $1
-#./clair-scanner --ip ${clairip} $1
+#./clair-scanner -w centos7-clair-whitelist.yaml --ip ${clairip} $1
+./clair-scanner --ip ${clairip} $1
 retcode=$?
 
 #eval results
