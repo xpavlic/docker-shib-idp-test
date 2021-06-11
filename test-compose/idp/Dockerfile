@@ -17,7 +17,7 @@ ADD ${TOMCERT} /opt/certs
 ADD ${TOMWWWROOT} /usr/local/tomcat/webapps/ROOT
 ADD ${SHBCFG} /opt/shibboleth-idp/conf
 ADD ${SHBCREDS} /opt/shibboleth-idp/credentials
-#ADD ${SHBVIEWS} /opt/shibboleth-idp/views
+ADD ${SHBVIEWS} /opt/shibboleth-idp/views
 #ADD ${SHBEDWAPP} /opt/shibboleth-idp/edit-webapp
 #ADD ${SHBMSGS} /opt/shibboleth-idp/messages
 ADD ${SHBMD} /opt/shibboleth-idp/metadata
