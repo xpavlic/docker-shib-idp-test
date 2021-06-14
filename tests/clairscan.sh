@@ -29,9 +29,9 @@ if [ $? == "0" ]; then
   echo 'removing existing clair-db container...'
   docker kill db &>/dev/null
   docker rm db &>/dev/null
-  docker run -p 5432:5432 -d --name db arminc/clair-db:latest &>/dev/null
+  docker run --pull always --rm -p 5432:5432 -d --name db arminc/clair-db:latest &>/dev/null
 else
-  docker run -p 5432:5432 -d --name db arminc/clair-db:latest &>/dev/null
+  docker run --pull always --rm -p 5432:5432 -d --name db arminc/clair-db:latest &>/dev/null
 fi
 sleep 30
 
@@ -42,9 +42,13 @@ if [ $? == "0" ]; then
   echo 'removing existing clair-scan container...'
   docker kill clair &>/dev/null
   docker rm clair &>/dev/null
-  docker run -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan:latest &>/dev/null
+  docker run --pull always --rm -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan:latest &>/dev/null
+  #for docker versions prior to 20.10:
+  #docker run --rm -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan:latest &>/dev/null
 else
-  docker run -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan:latest &>/dev/null
+  docker run --pull always --rm -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan:latest &>/dev/null
+  #for docker versions prior to 20.10:
+  #docker run --rm -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan:latest &>/dev/null
 fi
 sleep 60
 
