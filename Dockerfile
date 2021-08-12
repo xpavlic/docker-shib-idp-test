@@ -1,4 +1,4 @@
-FROM centos:centos7
+FROM rockylinux/rockylinux:8.4
 
 ########################
 ### VERSION SETTINGS ###
@@ -6,11 +6,11 @@ FROM centos:centos7
 #
 ##tomcat \
 ENV TOMCAT_MAJOR=9 \
-    TOMCAT_VERSION=9.0.50 \
+    TOMCAT_VERSION=9.0.52 \
 ##shib-idp \
     VERSION=4.1.4 \
 ##TIER \
-    TIERVERSION=20210802 \
+    TIERVERSION=20210811_rocky84 \
 #################### \
 #### OTHER VARS #### \
 #################### \
@@ -52,7 +52,7 @@ RUN ln -sf /usr/share/zoneinfo/UTC /etc/localtime \
 
 # Install base deps
 RUN rm -fr /var/cache/yum/* && yum clean all && yum -y update && yum -y install --setopt=tsflags=nodocs epel-release && \
-    yum -y install net-tools wget curl tar unzip mlocate logrotate strace telnet man unzip vim wget rsyslog cronie krb5-workstation openssl-devel wget supervisor fontconfig && \
+    yum -y install net-tools wget curl tar unzip mlocate logrotate strace telnet man unzip vim rsyslog cronie krb5-workstation openssl-devel supervisor fontconfig && \
     yum -y clean all && \
     mkdir -p /opt/tier && \
 # Install Trusted Certificates
@@ -142,17 +142,17 @@ RUN mkdir -p /tmp/shibboleth && cd /tmp/shibboleth && \
 
 # Install tomcat
 RUN mkdir -p "$CATALINA_HOME" && set -x \
-	&& wget -q -O $CATALINA_HOME/tomcat.tar.gz "$TOMCAT_TGZ_URL" \
-	&& wget -q -O $CATALINA_HOME/tomcat.tar.gz.asc "$TOMCAT_TGZ_URL.asc" \
-	&& wget -q -O $CATALINA_HOME/KEYS "https://www.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/KEYS" \
-    && gpg --import $CATALINA_HOME/KEYS \
-    && gpg $CATALINA_HOME/tomcat.tar.gz.asc \
+        && curl -s -o $CATALINA_HOME/tomcat.tar.gz "$TOMCAT_TGZ_URL" \
+        && curl -s -o $CATALINA_HOME/tomcat.tar.gz.asc "$TOMCAT_TGZ_URL.asc" \
+	&& curl -s -L -o $CATALINA_HOME/KEYS "https://www.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/KEYS" \
+        && gpg --import $CATALINA_HOME/KEYS \
+        && gpg $CATALINA_HOME/tomcat.tar.gz.asc \
 	&& gpg --batch --verify $CATALINA_HOME/tomcat.tar.gz.asc $CATALINA_HOME/tomcat.tar.gz \
 	&& tar -xvf $CATALINA_HOME/tomcat.tar.gz -C $CATALINA_HOME --strip-components=1 \
 	&& rm $CATALINA_HOME/bin/*.bat \
-	&& rm $CATALINA_HOME/tomcat.tar.gz* \
-    && mkdir -p $CATALINA_HOME/conf/Catalina \
-    && curl -o /usr/local/tomcat/lib/jstl1.2.jar https://build.shibboleth.net/nexus/service/local/repositories/thirdparty/content/javax/servlet/jstl/1.2/jstl-1.2.jar \
+	&& rm $CATALINA_HOME/tomcat.tar.gz*
+RUN mkdir -p $CATALINA_HOME/conf/Catalina \
+        && curl -o /usr/local/tomcat/lib/jstl1.2.jar https://build.shibboleth.net/nexus/service/local/repositories/thirdparty/content/javax/servlet/jstl/1.2/jstl-1.2.jar \
 	&& rm -rf /usr/local/tomcat/webapps/* \
 	&& ln -s /opt/shibboleth-idp/war/idp.war $CATALINA_HOME/webapps/idp.war
 	
