@@ -23,8 +23,8 @@ if [ $? == '0' ]; then
   if [  $? -ne '0' ]; then
      docker run -d $1 &>/dev/null
      launchflag="yes"
-     echo 'launching container (will take about a minute)...'
-     sleep 80
+     echo 'launching container (will take about 2 minutes)...'
+     sleep 120
   fi
   
   #get container ID
@@ -34,6 +34,8 @@ if [ $? == '0' ]; then
 	echo "Specified container does not appear to be running...  Terminating."
 	echo ""
 	exit 1
+  else
+        echo "Container is running at id: $contid"
   fi
 
   #get version from running status page inside container
@@ -47,10 +49,12 @@ if [ -z "$(echo $shibver | xargs)" ]; then
       echo "Unable to determine version from a running instance...  Terminating."
       echo ""
       exit 1
+else
+      echo "Running shibb version is: $shibver"
 fi
 
 #check if that version is available in the 'latest' download area (return is 0 if current, non-zero if not current)
-wget -q --spider https://shibboleth.net/downloads/identity-provider/latest/shibboleth-identity-provider-${shibver}.tar.gz
+wget --spider https://shibboleth.net/downloads/identity-provider/latest/shibboleth-identity-provider-${shibver}.tar.gz
 
 if [  $? == '0' ]; then
   echo "Running IdP version (${shibver}) is current!"
