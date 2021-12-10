@@ -54,7 +54,7 @@ else
 fi
 
 #check if that version is available in the 'latest' download area (return is 0 if current, non-zero if not current)
-wget --spider https://shibboleth.net/downloads/identity-provider/latest/shibboleth-identity-provider-${shibver}.tar.gz
+wget --no-check-certificate --spider https://shibboleth.net/downloads/identity-provider/latest/shibboleth-identity-provider-${shibver}.tar.gz
 
 if [  $? == '0' ]; then
   echo "Running IdP version (${shibver}) is current!"
