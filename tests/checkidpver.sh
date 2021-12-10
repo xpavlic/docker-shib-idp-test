@@ -24,7 +24,7 @@ if [ $? == '0' ]; then
      docker run -d $1 &>/dev/null
      launchflag="yes"
      echo 'launching container (will take about a minute)...'
-     sleep 60
+     sleep 80
   fi
   
   #get container ID
