@@ -25,7 +25,7 @@ ENV TOMCAT_MAJOR=9 \
 ENV TOMCAT_TGZ_URL=https://www.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz \
     PATH=$CATALINA_HOME/bin:$JAVA_HOME/bin:$PATH \
 #shib-idp \
-    SHIB_RELDIR=http://shibboleth.net/downloads/identity-provider/$VERSION \
+    SHIB_RELDIR=http://shibboleth.net/downloads/identity-provider/archive/$VERSION \
     SHIB_PREFIX=shibboleth-identity-provider-$VERSION
 
 ENV ENV=dev \
