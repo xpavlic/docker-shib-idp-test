@@ -6,11 +6,11 @@ FROM centos:centos7
 #
 ##tomcat \
 ENV TOMCAT_MAJOR=9 \
-    TOMCAT_VERSION=9.0.44 \
+    TOMCAT_VERSION=9.0.56 \
 ##shib-idp \
     VERSION=4.0.1 \
 ##TIER \
-    TIERVERSION=20210319 \
+    TIERVERSION=20211210-401 \
 #################### \
 #### OTHER VARS #### \
 #################### \
@@ -160,9 +160,13 @@ ADD container_files/idp/idp.xml /usr/local/tomcat/conf/Catalina/idp.xml
 ADD container_files/tomcat/server.xml /usr/local/tomcat/conf/server.xml
 
 #use log4j for tomcat logging
-ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.11.0/log4j-core-2.11.0.jar /usr/local/tomcat/bin/
-ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.11.0/log4j-api-2.11.0.jar /usr/local/tomcat/bin/
-ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-jul/2.11.0/log4j-jul-2.11.0.jar /usr/local/tomcat/bin/
+#ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.15.0/log4j-core-2.15.0.jar /usr/local/tomcat/bin/
+COPY container_files/tomcat/log4j-core-2.15.0.jar /usr/local/tomcat/bin/
+#ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.15.0/log4j-api-2.15.0.jar /usr/local/tomcat/bin/
+COPY container_files/tomcat/log4j-api-2.15.0.jar /usr/local/tomcat/bin/
+#ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-jul/2.15.0/log4j-jul-2.15.0.jar /usr/local/tomcat/bin/
+COPY container_files/tomcat/log4j-jul-2.15.0.jar /usr/local/tomcat/bin/
+
 RUN cd /usr/local/tomcat/; \
     chmod +r bin/log4j-*.jar;
 ADD container_files/tomcat/log4j2.xml /usr/local/tomcat/conf/
