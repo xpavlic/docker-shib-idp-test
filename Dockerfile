@@ -10,7 +10,7 @@ ENV TOMCAT_MAJOR=9 \
 ##shib-idp \
     VERSION=4.1.4 \
 ##TIER \
-    TIERVERSION=20211210 \
+    TIERVERSION=20211214 \
 #################### \
 #### OTHER VARS #### \
 #################### \
@@ -161,11 +161,11 @@ ADD container_files/tomcat/server.xml /usr/local/tomcat/conf/server.xml
 
 #use log4j for tomcat logging
 #ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.15.0/log4j-core-2.15.0.jar /usr/local/tomcat/bin/
-COPY container_files/tomcat/log4j-core-2.15.0.jar /usr/local/tomcat/bin/
+COPY container_files/tomcat/log4j-core-2.16.0.jar /usr/local/tomcat/bin/
 #ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.15.0/log4j-api-2.15.0.jar /usr/local/tomcat/bin/
-COPY container_files/tomcat/log4j-api-2.15.0.jar /usr/local/tomcat/bin/
+COPY container_files/tomcat/log4j-api-2.16.0.jar /usr/local/tomcat/bin/
 #ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-jul/2.15.0/log4j-jul-2.15.0.jar /usr/local/tomcat/bin/
-COPY container_files/tomcat/log4j-jul-2.15.0.jar /usr/local/tomcat/bin/
+COPY container_files/tomcat/log4j-jul-2.16.0.jar /usr/local/tomcat/bin/
 
 RUN cd /usr/local/tomcat/; \
     chmod +r bin/log4j-*.jar;
