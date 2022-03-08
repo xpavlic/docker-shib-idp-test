@@ -10,7 +10,7 @@ ENV TOMCAT_MAJOR=9 \
 ##shib-idp \
     VERSION=4.1.5 \
 ##TIER \
-    TIERVERSION=20220304 \
+    TIERVERSION=20220307 \
 #################### \
 #### OTHER VARS #### \
 #################### \
@@ -160,12 +160,12 @@ ADD container_files/idp/idp.xml /usr/local/tomcat/conf/Catalina/idp.xml
 ADD container_files/tomcat/server.xml /usr/local/tomcat/conf/server.xml
 
 #use log4j for tomcat logging
-#ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.17.0/log4j-core-2.17.0.jar /usr/local/tomcat/bin/
-COPY container_files/tomcat/log4j-core-2.17.0.jar /usr/local/tomcat/bin/
-#ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.17.0/log4j-api-2.17.0.jar /usr/local/tomcat/bin/
-COPY container_files/tomcat/log4j-api-2.17.0.jar /usr/local/tomcat/bin/
-#ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-jul/2.17.0/log4j-jul-2.17.0.jar /usr/local/tomcat/bin/
-COPY container_files/tomcat/log4j-jul-2.17.0.jar /usr/local/tomcat/bin/
+#ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.17.2/log4j-core-2.17.2.jar /usr/local/tomcat/bin/
+COPY container_files/tomcat/log4j-core-2.17.2.jar /usr/local/tomcat/bin/
+#ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.17.2/log4j-api-2.17.2.jar /usr/local/tomcat/bin/
+COPY container_files/tomcat/log4j-api-2.17.2.jar /usr/local/tomcat/bin/
+#ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-jul/2.17.2/log4j-jul-2.17.2.jar /usr/local/tomcat/bin/
+COPY container_files/tomcat/log4j-jul-2.17.2.jar /usr/local/tomcat/bin/
 
 RUN cd /usr/local/tomcat/; \
     chmod +r bin/log4j-*.jar;
