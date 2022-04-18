@@ -8,9 +8,9 @@ FROM centos:centos7
 ENV TOMCAT_MAJOR=9 \
     TOMCAT_VERSION=9.0.62 \
 ##shib-idp \
-    VERSION=4.1.6 \
+    VERSION=4.1.7 \
 ##TIER \
-    TIERVERSION=20220401 \
+    TIERVERSION=20220418 \
 #################### \
 #### OTHER VARS #### \
 #################### \
@@ -25,7 +25,7 @@ ENV TOMCAT_MAJOR=9 \
 ENV TOMCAT_TGZ_URL=https://archive.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz \
     PATH=$CATALINA_HOME/bin:$JAVA_HOME/bin:$PATH \
 #shib-idp \
-    SHIB_RELDIR=http://shibboleth.net/downloads/identity-provider/$VERSION \
+    SHIB_RELDIR=http://shibboleth.net/downloads/identity-provider/archive/$VERSION \
     SHIB_PREFIX=shibboleth-identity-provider-$VERSION
 
 ENV ENV=dev \
