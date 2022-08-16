@@ -83,7 +83,7 @@ node('docker') {
 
           // Scan container for all vulnerability levels
           sh 'mkdir -p reports'
-          sh "trivy image --ignore-unfixed --vuln-type os,library --no-progress --security-checks vuln --format template --template '@html.tpl' -o reports/container-scan.html ${maintainer}/${imagename}:${tag}"
+          sh "trivy image --ignore-unfixed --vuln-type os,library --no-progress --security-checks vuln --format template --template '@html.tpl' -o reports/container-scan.html ${maintainer}/${imagename}:latest"
           publishHTML target : [
               allowMissing: true,
               alwaysLinkToLastBuild: true,
