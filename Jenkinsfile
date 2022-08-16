@@ -74,8 +74,9 @@ node('docker') {
       handleError(message)
     } 
    
-  stage('Scan') {
-      steps {
+  stage 'Scan'
+
+    try {
           // Install trivy and HTML template
           sh 'curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.31.1'
           sh 'curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl > html.tpl'
@@ -95,9 +96,12 @@ node('docker') {
 
           // Scan again and fail on CRITICAL vulns
           sh 'trivy image --ignore-unfixed --vuln-type os,library --exit-code 1 --severity CRITICAL ${imagename}:${tag}'
-
-      }
-  }
+    } catch(error) {
+      def error_details = readFile('./debug');
+      def message = "BUILD ERROR: There was a problem scanning ${imagename}:${tag}. \n\n ${error_details}"
+      sh "rm -f ./debug"
+      handleError(message)
+    }
  
   stage 'Push'
 
