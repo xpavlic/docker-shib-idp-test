@@ -95,7 +95,7 @@ node('docker') {
           ]
 
           // Scan again and fail on CRITICAL vulns
-          sh 'trivy image --ignore-unfixed --vuln-type os,library --exit-code 1 --severity CRITICAL ${maintainer}/${imagename}:latest'
+          //sh 'trivy image --ignore-unfixed --vuln-type os,library --exit-code 1 --severity CRITICAL ${maintainer}/${imagename}:latest'
     } catch(error) {
       def error_details = readFile('./debug');
       def message = "BUILD ERROR: There was a problem scanning ${imagename}:${tag}. \n\n ${error_details}"
