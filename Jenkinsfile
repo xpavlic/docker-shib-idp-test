@@ -83,7 +83,7 @@ node('docker') {
 
           // Scan container for all vulnerability levels
           sh 'mkdir -p reports'
-          sh "trivy image --ignore-unfixed --vuln-type os,library --no-progress --security-checks vuln --format template --template '@html.tpl' -o reports/container-scan.html ${maintainer}/${imagename}:latest"
+          sh "trivy image --ignore-unfixed --vuln-type os,library --severity CRITICAL,HIGH --no-progress --security-checks vuln --format template --template '@html.tpl' -o reports/container-scan.html ${maintainer}/${imagename}:latest"
           publishHTML target : [
               allowMissing: true,
               alwaysLinkToLastBuild: true,
@@ -95,7 +95,7 @@ node('docker') {
           ]
 
           // Scan again and fail on CRITICAL vulns
-          sh 'trivy image --ignore-unfixed --vuln-type os,library --exit-code 1 --severity CRITICAL ${imagename}:${tag}'
+          sh 'trivy image --ignore-unfixed --vuln-type os,library --exit-code 1 --severity CRITICAL ${maintainer}/${imagename}:latest'
     } catch(error) {
       def error_details = readFile('./debug');
       def message = "BUILD ERROR: There was a problem scanning ${imagename}:${tag}. \n\n ${error_details}"
