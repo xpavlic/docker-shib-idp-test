@@ -73,7 +73,32 @@ node('docker') {
       sh "rm -f ./debug"
       handleError(message)
     } 
-    
+   
+  stage('Scan') {
+      steps {
+          // Install trivy and HTML template
+          sh 'curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.31.1'
+          sh 'curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl > html.tpl'
+
+          // Scan container for all vulnerability levels
+          sh 'mkdir -p reports'
+          sh 'trivy image --ignore-unfixed --vuln-type os,library --no-progress --format template --template "@html.tpl" -o reports/container-scan.html ${imagename}:${tag}'
+          publishHTML target : [
+              allowMissing: true,
+              alwaysLinkToLastBuild: true,
+              keepAll: true,
+              reportDir: 'reports',
+              reportFiles: 'container-scan.html',
+              reportName: 'Security Scan',
+              reportTitles: 'Security Scan'
+          ]
+
+          // Scan again and fail on CRITICAL vulns
+          sh 'trivy image --ignore-unfixed --vuln-type os,library --exit-code 1 --severity CRITICAL ${imagename}:${tag}'
+
+      }
+  }
+ 
   stage 'Push'
 
     docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-$previous_maintainer") {

@@ -1,4 +1,4 @@
-FROM rockylinux/rockylinux:8.4
+FROM rockylinux/rockylinux:8.6
 
 ########################
 ### VERSION SETTINGS ###
@@ -6,11 +6,11 @@ FROM rockylinux/rockylinux:8.4
 #
 ##tomcat \
 ENV TOMCAT_MAJOR=9 \
-    TOMCAT_VERSION=9.0.52 \
+    TOMCAT_VERSION=9.0.65 \
 ##shib-idp \
-    VERSION=4.1.4 \
+    VERSION=4.2.1 \
 ##TIER \
-    TIERVERSION=20210811_rocky84 \
+    TIERVERSION=20220815_rocky8 \
 #################### \
 #### OTHER VARS #### \
 #################### \
@@ -160,9 +160,9 @@ ADD container_files/idp/idp.xml /usr/local/tomcat/conf/Catalina/idp.xml
 ADD container_files/tomcat/server.xml /usr/local/tomcat/conf/server.xml
 
 #use log4j for tomcat logging
-ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.11.0/log4j-core-2.11.0.jar /usr/local/tomcat/bin/
-ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.11.0/log4j-api-2.11.0.jar /usr/local/tomcat/bin/
-ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-jul/2.11.0/log4j-jul-2.11.0.jar /usr/local/tomcat/bin/
+ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.18.0/log4j-core-2.18.0.jar /usr/local/tomcat/bin/
+ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.18.0/log4j-api-2.18.0.jar /usr/local/tomcat/bin/
+ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-jul/2.18.0/log4j-jul-2.18.0.jar /usr/local/tomcat/bin/
 RUN cd /usr/local/tomcat/; \
     chmod +r bin/log4j-*.jar;
 ADD container_files/tomcat/log4j2.xml /usr/local/tomcat/conf/
@@ -188,6 +188,9 @@ RUN mkdir -p /etc/supervisor/conf.d && chmod +x /opt/tier/setenv.sh \
 
 #set cron to not require a login session
 RUN sed -i '/session    required   pam_loginuid.so/c\#session    required   pam_loginuid.so' /etc/pam.d/crond
+
+#upgrade pip to remove sec vuln
+RUN pip3 install --upgrade pip
 
 # Expose the port tomcat will be serving on
 EXPOSE 443
