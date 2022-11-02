@@ -1,4 +1,4 @@
-FROM --platform linux/amd64 rockylinux/rockylinux:8.6
+FROM --platform=linux/amd64 rockylinux/rockylinux:8.6
 
 ########################
 ### VERSION SETTINGS ###
