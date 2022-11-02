@@ -1,4 +1,4 @@
-FROM --platform=linux/armv8 rockylinux/rockylinux:8.6
+FROM --platform=$TARGETPLATFORM rockylinux:8
 
 ########################
 ### VERSION SETTINGS ###
