@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 rockylinux/rockylinux:8.6
+FROM --platform=linux/arm64 rockylinux/rockylinux:8.6
 
 ########################
 ### VERSION SETTINGS ###
@@ -46,7 +46,7 @@ LABEL Vendor="Internet2" \
 
 
 ARG TARGETPLATFORM
-ENV TARGETPLATFORM=linux/amd64
+ENV TARGETPLATFORM=linux/arm64
 
 
 
