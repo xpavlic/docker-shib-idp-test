@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM rockylinux:8
+FROM --platform=$TARGETPLATFORM rockylinux:8.6
 
 ########################
 ### VERSION SETTINGS ###
@@ -41,14 +41,6 @@ LABEL Vendor="Internet2" \
       ImageName=$imagename \
       ImageOS=centos7 \
       Version=$VERSION
-
-
-
-
-ARG TARGETPLATFORM
-ENV TARGETPLATFORM=linux/armv8
-
-
 
 #########################
 ### BEGIN IMAGE BUILD ###
