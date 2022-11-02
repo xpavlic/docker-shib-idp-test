@@ -69,21 +69,10 @@ RUN update-ca-trust extract
 # To keep it commented, keep multiple comments on the following line (to prevent other scripts from processing it).
 #####     ENV TIER_BEACON_OPT_OUT True
 
-# Install Corretto Java JDK (newer more arch independent way)
+# Install Corretto Java JDK (from Amazon repo, more arch independent)
 RUN rpm --import https://yum.corretto.aws/corretto.key \
     && curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo \
     && yum install -y java-11-amazon-corretto-devel
-
-##### # Install Corretto Java JDK
-##### #Corretto download page: https://docs.aws.amazon.com/corretto/latest/corretto-11-ug/downloads-list.html
-##### ARG CORRETTO_URL_PERM=https://corretto.aws/downloads/latest/amazon-corretto-11-aarch64-linux-jdk.rpm
-##### ARG CORRETTO_RPM=amazon-corretto-11-aarch64-linux-jdk.rpm
-##### COPY container_files/java-corretto/corretto-signing-key.pub .
-##### RUN curl -O -L $CORRETTO_URL_PERM \
-#####     && rpm --import corretto-signing-key.pub \
-#####     && rpm -K $CORRETTO_RPM \
-#####     && rpm -i $CORRETTO_RPM \
-#####     && rm -r corretto-signing-key.pub $CORRETTO_RPM
 ENV JAVA_HOME=/usr/lib/jvm/java-11-amazon-corretto
 
 # Copy IdP installer properties file(s)
