@@ -6,11 +6,11 @@ FROM rockylinux/rockylinux:8.6
 #
 ##tomcat \
 ENV TOMCAT_MAJOR=9 \
-    TOMCAT_VERSION=9.0.65 \
+    TOMCAT_VERSION=9.0.68 \
 ##shib-idp \
     VERSION=4.2.1 \
 ##TIER \
-    TIERVERSION=20220815_rocky8 \
+    TIERVERSION=20221101_rocky8_multiarch_dev \
 #################### \
 #### OTHER VARS #### \
 #################### \
@@ -71,8 +71,8 @@ RUN update-ca-trust extract
 
 # Install Corretto Java JDK
 #Corretto download page: https://docs.aws.amazon.com/corretto/latest/corretto-11-ug/downloads-list.html
-ARG CORRETTO_URL_PERM=https://corretto.aws/downloads/latest/amazon-corretto-11-x64-linux-jdk.rpm
-ARG CORRETTO_RPM=amazon-corretto-11-x64-linux-jdk.rpm
+ARG CORRETTO_URL_PERM=https://corretto.aws/downloads/latest/amazon-corretto-11-aarch64-linux-jdk.rpm
+ARG CORRETTO_RPM=amazon-corretto-11-aarch64-linux-jdk.rpm
 COPY container_files/java-corretto/corretto-signing-key.pub .
 RUN curl -O -L $CORRETTO_URL_PERM \
     && rpm --import corretto-signing-key.pub \
@@ -80,42 +80,6 @@ RUN curl -O -L $CORRETTO_URL_PERM \
     && rpm -i $CORRETTO_RPM \
     && rm -r corretto-signing-key.pub $CORRETTO_RPM
 ENV JAVA_HOME=/usr/lib/jvm/java-11-amazon-corretto
-
-# To use Zulu Java:
-#RUN rpm --import http://repos.azulsystems.com/RPM-GPG-KEY-azulsystems \
-#	&& curl -o /etc/yum.repos.d/zulu.repo http://repos.azulsystems.com/rhel/zulu.repo \
-#	&& yum -y install zulu-8 && alternatives --install /usr/bin/java java $JAVA_HOME/bin/java 200000
-#install Zulu JCE
-#RUN curl -o /tmp/ZuluJCEPolicies.zip https://cdn.azul.com/zcek/bin/ZuluJCEPolicies.zip \
-#	&& cd /tmp && unzip -oj ZuluJCEPolicies.zip ZuluJCEPolicies/local_policy.jar -d $JAVA_HOME/lib/jvm/zulu-8/jre/lib/security/ \
-#	&& unzip -oj ZuluJCEPolicies.zip ZuluJCEPolicies/US_export_policy.jar -d $JAVA_HOME/lib/jvm/zulu-8/jre/lib/security/ \
-#	&& rm -rf /tmp/ZuluJCEPolicies.zip
-#ENV JAVA_HOME=/usr \
-
-# To use Oracle java/JCE:
-#
-#ENV JAVA_VERSION=8u171 \
-#    BUILD_VERSION=b11 \
-#    JAVA_BUNDLE_ID=512cd62ec5174c3487ac17c61aaa89e8 \
-#
-# Uncomment the following commands to download the Oracle JDK to your Shibboleth IDP image.  
-#     ==> By uncommenting these next 6 lines, you agree to the Oracle Binary Code License Agreement for Java SE (http://www.oracle.com/technetwork/java/javase/terms/license/index.html)
-# RUN wget -nv --no-cookies --no-check-certificate --header "Cookie: oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/$JAVA_VERSION-$BUILD_VERSION/$JAVA_BUNDLE_ID/jdk-$JAVA_VERSION-linux-x64.rpm" -O /tmp/jdk-$JAVA_VERSION-$BUILD_VERSION-linux-x64.rpm && \
-#     yum -y install /tmp/jdk-$JAVA_VERSION-$BUILD_VERSION-linux-x64.rpm && \
-#     rm -f /tmp/jdk-$JAVA_VERSION-$BUILD_VERSION-linux-x64.rpm && \
-#     alternatives --install /usr/bin/java jar $JAVA_HOME/bin/java 200000 && \
-#     alternatives --install /usr/bin/javaws javaws $JAVA_HOME/bin/javaws 200000 && \
-#     alternatives --install /usr/bin/javac javac $JAVA_HOME/bin/javac 200000
-
-# For Oracle Java, also uncomment the following commands to download the Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files.  
-#     ==> By uncommenting these next 7 lines, you agree to the Oracle Binary Code License Agreement for Java SE Platform Products (http://www.oracle.com/technetwork/java/javase/terms/license/index.html)
-# RUN wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" \
-#     http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip \
-#     && echo "f3020a3922efd6626c2fff45695d527f34a8020e938a49292561f18ad1320b59  jce_policy-8.zip" | sha256sum -c - \
-#     && unzip -oj jce_policy-8.zip UnlimitedJCEPolicyJDK8/local_policy.jar -d $JAVA_HOME/jre/lib/security/ \
-#     && unzip -oj jce_policy-8.zip UnlimitedJCEPolicyJDK8/US_export_policy.jar -d $JAVA_HOME/jre/lib/security/ \
-#     && rm jce_policy-8.zip \
-#     && chmod -R 640 $JAVA_HOME/jre/lib/security/
 
 # Copy IdP installer properties file(s)
 ADD container_files/idp/idp.installer.properties container_files/idp/idp.merge.properties container_files/idp/ldap.merge.properties /tmp/
@@ -190,7 +154,7 @@ RUN mkdir -p /etc/supervisor/conf.d && chmod +x /opt/tier/setenv.sh \
 RUN sed -i '/session    required   pam_loginuid.so/c\#session    required   pam_loginuid.so' /etc/pam.d/crond
 
 #upgrade pip to remove sec vuln
-RUN pip3 install --upgrade pip
+#RUN pip3 install --upgrade pip
 
 # Expose the port tomcat will be serving on
 EXPOSE 443
