@@ -58,10 +58,10 @@ pipeline {
                         // sh 'docker buildx create --use --name multiarch --append'
                         sh 'docker buildx inspect --bootstrap'
                         sh 'docker buildx ls'
-                        // sh 'docker buildx build --platform linux/amd64 -t shib-idp  .'
+                        sh 'docker buildx build --platform linux/amd64 -t shib-idp  .'
                         sh 'docker buildx build --platform linux/arm64 -t shib-idp:arm64 .'
-                        //sh "docker buildx build --push --platform linux/arm64,linux/amd64 -t i2incommon/shib-idp:$tag ."
-                        sh "docker buildx build --push --platform linux/arm64 -t i2incommon/shib-idp:$tag ."
+                        sh "docker buildx build --push --platform linux/arm64,linux/amd64 -t i2incommon/shib-idp:$tag ."
+                        //sh "docker buildx build --push --platform linux/arm64 -t i2incommon/shib-idp:$tag ."
                         // test the environment 
                         // sh 'cd test-compose && ./compose.sh'
                         // bring down after testing
