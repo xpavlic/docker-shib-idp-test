@@ -42,6 +42,14 @@ LABEL Vendor="Internet2" \
       ImageOS=centos7 \
       Version=$VERSION
 
+
+
+
+ARG TARGETPLATFORM
+ENV TARGETPLATFORM=linux/amd64
+
+
+
 #########################
 ### BEGIN IMAGE BUILD ###
 #########################
