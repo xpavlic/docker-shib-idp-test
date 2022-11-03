@@ -94,6 +94,8 @@ pipeline {
                 script {
                    try {
                          echo "Starting security scan..."
+                         maintainer = maintain()
+                         imagename = imagename()
                          // Install trivy and HTML template
                          sh 'curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.31.1'
                          sh 'curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl > html.tpl'
@@ -101,7 +103,7 @@ pipeline {
                          // Scan container for all vulnerability levels
                          echo "Scanning for all vulnerabilities..."
                          sh 'mkdir -p reports'
-                         sh 'docker pull ${maintainer}/${imagename}:${tag}'
+                         //sh 'docker pull ${maintainer}/${imagename}:${tag}'
                          sh 'trivy image --ignore-unfixed --vuln-type os,library --severity CRITICAL,HIGH --no-progress --security-checks vuln --format template --template \'@html.tpl\' -o reports/container-scan.html ${maintainer}/${imagename}:${tag}'
                          publishHTML target : [
                              allowMissing: true,
