@@ -50,7 +50,7 @@ load ../common
 #    ./tests/clairscan.sh ${maintainer}/${imagename}:latest
 #}
 
-@test "080 The IdP successfully completed a full-cycle test with an SP" {
-    ./tests/fulltest.sh
-}
+#@test "080 The IdP successfully completed a full-cycle test with an SP" {
+#    ./tests/fulltest.sh
+#}
 

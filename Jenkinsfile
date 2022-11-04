@@ -58,13 +58,9 @@ pipeline {
                         // sh 'docker buildx create --use --name multiarch --append'
                         sh 'docker buildx inspect --bootstrap'
                         sh 'docker buildx ls'
-                        sh 'docker buildx build --platform linux/amd64 -t shib-idp  .'
-                        sh 'docker buildx build --platform linux/arm64 -t shib-idp:arm64 .'
-                        sh 'docker buildx build --push --platform linux/arm64,linux/amd64 -t i2incommon/shib-idp:$tag .'
-                        // test the environment 
-                        // sh 'cd test-compose && ./compose.sh'
-                        // bring down after testing
-                        // sh 'cd test-compose && docker-compose down'
+                        sh "docker buildx build --platform linux/amd64 -t ${imagename} ."
+                        sh "docker buildx build --platform linux/arm64 -t ${imagename}:arm64 ."
+                        // sh 'docker buildx build --push --platform linux/arm64,linux/amd64 -t i2incommon/shib-idp:$tag .'
                   } catch(error) {
                      def error_details = readFile('./debug');
                       def message = "BUILD ERROR: There was a problem building ${maintainer}/${imagename}:${tag}. \n\n ${error_details}"
@@ -78,7 +74,9 @@ pipeline {
             steps {
                 script {
                    try {
+                     // echo "Starting tests..."
                      // sh 'bin/test.sh 2>&1 | tee debug ; test ${PIPESTATUS[0]} -eq 0'
+                     //    ===> need bats, webisoget on jenkins node
                      echo "Skipping tests for now"
                    } catch (error) {
                      def error_details = readFile('./debug')
@@ -94,8 +92,6 @@ pipeline {
                 script {
                    try {
                          echo "Starting security scan..."
-                         maintainer = maintain()
-                         imagename = imagename()
                          // Install trivy and HTML template
                          sh 'curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.31.1'
                          sh 'curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl > html.tpl'
@@ -134,7 +130,9 @@ pipeline {
                         // statically defining jenkins credential value dockerhub-tier
                         docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-tier") {
                           // baseImg.push("$tag")
-                          echo "already pushed to Dockerhub"
+                          // echo "already pushed to Dockerhub"
+                        echo "Pushing image to Docker hub"
+                        sh "docker buildx build --push --platform linux/arm64,linux/amd64 -t ${maintainer}/${imagename}:$tag ."
                         }
                   }
             }
