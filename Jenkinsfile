@@ -91,8 +91,8 @@ pipeline {
                          //echo "Skipping scan for CRITICAL vulnerabilities (temporary)..."
 
 
-                        echo "Pushing image to dockerhub
-                        sh 'docker buildx build --push --platform linux/arm64,linux/amd64 -t i2incommon/shib-idp:$tag .'
+                        echo "Pushing image to dockerhub..."
+                        sh "docker buildx build --push --platform linux/arm64,linux/amd64 -t i2incommon/shib-idp:$tag ."
                   } catch(error) {
                      def error_details = readFile('./debug');
                       def message = "BUILD ERROR: There was a problem building-testing-pushing ${maintainer}/${imagename}:${tag}. \n\n ${error_details}"
