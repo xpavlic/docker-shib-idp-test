@@ -49,7 +49,7 @@ pipeline {
                 }
             }
         } 
-        stage('Build-Test-Push') {
+        stage('Build') {
             steps {
                 script {
                   try{
@@ -95,7 +95,7 @@ pipeline {
 //                        sh "docker buildx build --push --platform linux/arm64,linux/amd64 -t i2incommon/shib-idp:$tag ."
                   } catch(error) {
                      def error_details = readFile('./debug');
-                      def message = "BUILD ERROR: There was a problem building-testing-pushing ${maintainer}/${imagename}:${tag}. \n\n ${error_details}"
+                      def message = "BUILD ERROR: There was a problem building ${maintainer}/${imagename}:${tag}. \n\n ${error_details}"
                      sh "rm -f ./debug"
                      handleError(message)
                   }
@@ -176,6 +176,8 @@ pipeline {
                           // baseImg.push("$tag")
                           // echo "already pushed to Dockerhub"
                         sh "docker login -u tieradmin -p $DOCKERHUBPW"
+                        // fails if already exists
+                        sh 'docker buildx create --use --name multiarch --append'
                         sh 'docker buildx inspect --bootstrap'
                         sh 'docker buildx ls'
                         echo "Pushing image to dockerhub..."
