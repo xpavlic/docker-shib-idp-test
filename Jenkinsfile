@@ -143,8 +143,7 @@ pipeline {
                         sh 'docker buildx ls'
                         echo "Pushing image to dockerhub..."
                         sh "docker buildx build --push --platform linux/arm64,linux/amd64 -t i2incommon/shib-idp:$tag ."
-                        }
-                  }
+                 }
             }
         }
         stage('Notify') {
