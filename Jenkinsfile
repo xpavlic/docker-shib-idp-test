@@ -60,7 +60,7 @@ pipeline {
                         sh 'docker buildx ls'
                         sh "docker buildx build --platform linux/amd64 -t ${imagename} ."
                         sh "docker buildx build --platform linux/arm64 -t ${imagename}:arm64 ."
-                        // sh 'docker buildx build --push --platform linux/arm64,linux/amd64 -t i2incommon/shib-idp:$tag .'
+                        //sh 'docker buildx build --push --platform linux/arm64,linux/amd64 -t i2incommon/shib-idp:$tag .'
                   } catch(error) {
                      def error_details = readFile('./debug');
                       def message = "BUILD ERROR: There was a problem building ${maintainer}/${imagename}:${tag}. \n\n ${error_details}"
@@ -99,7 +99,8 @@ pipeline {
                          // Scan container for all vulnerability levels
                          echo "Scanning for all vulnerabilities..."
                          sh 'mkdir -p reports'
-                         sh "trivy image --ignore-unfixed --vuln-type os,library --severity CRITICAL,HIGH --no-progress --security-checks vuln --format template --template '@html.tpl' -o reports/container-scan.html ${maintainer}/${imagename}:${tag}"
+                         // sh "trivy image --ignore-unfixed --vuln-type os,library --severity CRITICAL,HIGH --no-progress --security-checks vuln --format template --template '@html.tpl' -o reports/container-scan.html ${maintainer}/${imagename}:${tag}"
+                         sh "trivy image --ignore-unfixed --vuln-type os,library --severity CRITICAL,HIGH --no-progress --security-checks vuln --format template --template '@html.tpl' -o reports/container-scan.html ${imagename}"
                          publishHTML target : [
                              allowMissing: true,
                              alwaysLinkToLastBuild: true,
@@ -131,8 +132,8 @@ pipeline {
                         docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-tier") {
                           // baseImg.push("$tag")
                           // echo "already pushed to Dockerhub"
-                        echo "Pushing image to Docker hub"
-                        sh "docker buildx build --push --platform linux/arm64,linux/amd64 -t ${maintainer}/${imagename}:$tag ."
+                        // echo "Pushing image to Docker hub"
+                        // sh "docker buildx build --push --platform linux/arm64,linux/amd64 -t ${maintainer}/${imagename}:$tag ."
                         }
                   }
             }
