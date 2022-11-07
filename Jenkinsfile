@@ -61,38 +61,38 @@ pipeline {
                         sh "docker buildx build --platform linux/amd64 -t ${imagename} --load ."
                         sh "docker buildx build --platform linux/arm64 -t ${imagename}:arm64 --load ."
 
-                        echo "Starting security scan..."
-                        // Install trivy and HTML template
-                        sh 'curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.31.1'
-                        sh 'curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl > html.tpl'
+//                        echo "Starting security scan..."
+//                        // Install trivy and HTML template
+//                        sh 'curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.31.1'
+//                        sh 'curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl > html.tpl'
 
-                        // Scan container for all vulnerability levels
-                        echo "Scanning for all vulnerabilities..."
-                        sh 'mkdir -p reports'
+//                        // Scan container for all vulnerability levels
+//                        echo "Scanning for all vulnerabilities..."
+//                        sh 'mkdir -p reports'
 
-                        sh "trivy image --ignore-unfixed --vuln-type os,library --severity CRITICAL,HIGH --no-progress --security-checks vuln --format template --template '@html.tpl' -o reports/container-scan.html ${imagename}"
+//                        sh "trivy image --ignore-unfixed --vuln-type os,library --severity CRITICAL,HIGH --no-progress --security-checks vuln --format template --template '@html.tpl' -o reports/container-scan.html ${imagename}"
 
-                        sh "trivy image --ignore-unfixed --vuln-type os,library --severity CRITICAL,HIGH --no-progress --security-checks vuln --format template --template '@html.tpl' -o reports/container-scan.html ${imagename}:arm64"
-                        publishHTML target : [
-                            allowMissing: true,
-                            alwaysLinkToLastBuild: true,
-                            keepAll: true,
-                            reportDir: 'reports',
-                            reportFiles: 'container-scan.html',
-                            reportName: 'Security Scan',
-                            reportTitles: 'Security Scan'
-                          ]
+//                        sh "trivy image --ignore-unfixed --vuln-type os,library --severity CRITICAL,HIGH --no-progress --security-checks vuln --format template --template '@html.tpl' -o reports/container-scan.html ${imagename}:arm64"
+//                        publishHTML target : [
+//                            allowMissing: true,
+//                            alwaysLinkToLastBuild: true,
+//                            keepAll: true,
+//                            reportDir: 'reports',
+//                            reportFiles: 'container-scan.html',
+//                            reportName: 'Security Scan',
+//                            reportTitles: 'Security Scan'
+//                          ]
 
-                         // Scan again and fail on CRITICAL vulns
-                         //below can be temporarily commented to prevent build from failing
-                         echo "Scanning for CRITICAL vulnerabilities only (fatal)..."
-                         sh "trivy image --ignore-unfixed --vuln-type os,library --exit-code 1 --severity CRITICAL ${imagename}"
-                         sh "trivy image --ignore-unfixed --vuln-type os,library --exit-code 1 --severity CRITICAL ${imagename}:arm64"
-                         //echo "Skipping scan for CRITICAL vulnerabilities (temporary)..."
+//                         // Scan again and fail on CRITICAL vulns
+//                         //below can be temporarily commented to prevent build from failing
+//                         echo "Scanning for CRITICAL vulnerabilities only (fatal)..."
+//                         sh "trivy image --ignore-unfixed --vuln-type os,library --exit-code 1 --severity CRITICAL ${imagename}"
+//                         sh "trivy image --ignore-unfixed --vuln-type os,library --exit-code 1 --severity CRITICAL ${imagename}:arm64"
+//                         //echo "Skipping scan for CRITICAL vulnerabilities (temporary)..."
 
 
-                        echo "Pushing image to dockerhub..."
-                        sh "docker buildx build --push --platform linux/arm64,linux/amd64 -t i2incommon/shib-idp:$tag ."
+//                        echo "Pushing image to dockerhub..."
+//                        sh "docker buildx build --push --platform linux/arm64,linux/amd64 -t i2incommon/shib-idp:$tag ."
                   } catch(error) {
                      def error_details = readFile('./debug');
                       def message = "BUILD ERROR: There was a problem building-testing-pushing ${maintainer}/${imagename}:${tag}. \n\n ${error_details}"
@@ -123,32 +123,42 @@ pipeline {
             steps {
                 script {
                    try {
-                         echo "Skipping security scan here, was done earlier..."
-//                         echo "Starting security scan..."
-//                         // Install trivy and HTML template
-//                         sh 'curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.31.1'
-//                         sh 'curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl > html.tpl'
+//                         echo "Skipping security scan here, was done earlier..."
+                         echo "Starting security scan..."
+                         // Install trivy and HTML template
+                         sh 'curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.31.1'
+                         sh 'curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl > html.tpl'
 
-//                         // Scan container for all vulnerability levels
-//                         echo "Scanning for all vulnerabilities..."
-//                         sh 'mkdir -p reports'
-//                         // sh "trivy image --ignore-unfixed --vuln-type os,library --severity CRITICAL,HIGH --no-progress --security-checks vuln --format template --template '@html.tpl' -o reports/container-scan.html ${maintainer}/${imagename}:${tag}"
-//                         sh "trivy image --ignore-unfixed --vuln-type os,library --severity CRITICAL,HIGH --no-progress --security-checks vuln --format template --template '@html.tpl' -o reports/container-scan.html ${imagename}"
-//                         publishHTML target : [
-//                             allowMissing: true,
-//                             alwaysLinkToLastBuild: true,
-//                             keepAll: true,
-//                             reportDir: 'reports',
-//                             reportFiles: 'container-scan.html',
-//                             reportName: 'Security Scan',
-//                             reportTitles: 'Security Scan'
-//                          ]
-
-//                         // Scan again and fail on CRITICAL vulns
-//                         //below can be temporarily commented to prevent build from failing
-//                         echo "Scanning for CRITICAL vulnerabilities only (fatal)..."
-//                         sh "trivy image --ignore-unfixed --vuln-type os,library --exit-code 1 --severity CRITICAL ${maintainer}/${imagename}:${tag}"
-//                         //echo "Skipping scan for CRITICAL vulnerabilities (temporary)..."
+                         // Scan container for all vulnerability levels
+                         echo "Scanning for all vulnerabilities..."
+                         sh 'mkdir -p reports'
+                         // sh "trivy image --ignore-unfixed --vuln-type os,library --severity CRITICAL,HIGH --no-progress --security-checks vuln --format template --template '@html.tpl' -o reports/container-scan.html ${maintainer}/${imagename}:${tag}"
+                         sh "trivy image --ignore-unfixed --vuln-type os,library --severity CRITICAL,HIGH --no-progress --security-checks vuln --format template --template '@html.tpl' -o reports/container-scan.html ${imagename}"
+                         sh "trivy image --ignore-unfixed --vuln-type os,library --severity CRITICAL,HIGH --no-progress --security-checks vuln --format template --template '@html.tpl' -o reports/container-scan-arm.html ${imagename}:arm64"
+                         publishHTML target : [
+                             allowMissing: true,
+                             alwaysLinkToLastBuild: true,
+                             keepAll: true,
+                             reportDir: 'reports',
+                             reportFiles: 'container-scan.html',
+                             reportName: 'Security Scan',
+                             reportTitles: 'Security Scan'
+                          ]
+                         publishHTML target : [
+                             allowMissing: true,
+                             alwaysLinkToLastBuild: true,
+                             keepAll: true,
+                             reportDir: 'reports',
+                             reportFiles: 'container-scan-arm.html',
+                             reportName: 'Security Scan (ARM)',
+                             reportTitles: 'Security Scan (ARM)'
+                          ]
+                         // Scan again and fail on CRITICAL vulns
+                         //below can be temporarily commented to prevent build from failing
+                         echo "Scanning for CRITICAL vulnerabilities only (fatal)..."
+                         sh "trivy image --ignore-unfixed --vuln-type os,library --exit-code 1 --severity CRITICAL ${imagename}"
+                         sh "trivy image --ignore-unfixed --vuln-type os,library --exit-code 1 --severity CRITICAL ${imagename}:arm64"
+                         //echo "Skipping scan for CRITICAL vulnerabilities (temporary)..."
                    } catch(error) {
                            def error_details = readFile('./debug');
                            def message = "BUILD ERROR: There was a problem scanning ${imagename}:${tag}. \n\n ${error_details}"
@@ -165,8 +175,9 @@ pipeline {
                         docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-tier") {
                           // baseImg.push("$tag")
                           // echo "already pushed to Dockerhub"
-                        // echo "Pushing image to Docker hub"
-                        // sh "docker buildx build --push --platform linux/arm64,linux/amd64 -t ${maintainer}/${imagename}:$tag ."
+                        sh 'docker login -u tieradmin -p $DOCKERHUBPW'
+                        echo "Pushing image to dockerhub..."
+                        sh "docker buildx build --push --platform linux/arm64,linux/amd64 -t i2incommon/shib-idp:$tag ."
                         }
                   }
             }
