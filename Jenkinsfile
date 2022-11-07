@@ -138,7 +138,7 @@ pipeline {
                 script {
                         sh 'docker login -u tieradmin -p $DOCKERHUBPW'
                         // fails if already exists
-                        sh 'docker buildx create --use --name multiarch --append'
+                        // sh 'docker buildx create --use --name multiarch --append'
                         sh 'docker buildx inspect --bootstrap'
                         sh 'docker buildx ls'
                         echo "Pushing image to dockerhub..."
