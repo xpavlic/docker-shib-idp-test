@@ -58,8 +58,8 @@ pipeline {
                         // sh 'docker buildx create --use --name multiarch --append'
                         sh 'docker buildx inspect --bootstrap'
                         sh 'docker buildx ls'
-                        sh "docker buildx build --platform linux/amd64 -t ${imagename} --load ."
-                        sh "docker buildx build --platform linux/arm64 -t ${imagename}:arm64 --load ."
+                        sh "docker buildx build --platform linux/amd64 -t ${imagename}_${tag} --load ."
+                        sh "docker buildx build --platform linux/arm64 -t ${imagename}_${tag}:arm64 --load ."
                   } catch(error) {
                      def error_details = readFile('./debug');
                       def message = "BUILD ERROR: There was a problem building ${maintainer}/${imagename}:${tag}. \n\n ${error_details}"
@@ -75,7 +75,7 @@ pipeline {
                    try {
                      // echo "Starting tests..."
                      // sh 'bin/test.sh 2>&1 | tee debug ; test ${PIPESTATUS[0]} -eq 0'
-                     //    ===> need bats, webisoget on jenkins node
+                     //    ===> need bats, webisoget on jenkins node, also need to send/set correct image name
                      echo "Skipping tests for now"
                    } catch (error) {
                      def error_details = readFile('./debug')
@@ -98,8 +98,8 @@ pipeline {
                          // Scan container for all vulnerability levels
                          echo "Scanning for all vulnerabilities..."
                          sh 'mkdir -p reports'
-                         sh "trivy image --ignore-unfixed --vuln-type os,library --severity CRITICAL,HIGH --no-progress --security-checks vuln --format template --template '@html.tpl' -o reports/container-scan.html ${imagename}"
-                         sh "trivy image --ignore-unfixed --vuln-type os,library --severity CRITICAL,HIGH --no-progress --security-checks vuln --format template --template '@html.tpl' -o reports/container-scan-arm.html ${imagename}:arm64"
+                         sh "trivy image --ignore-unfixed --vuln-type os,library --severity CRITICAL,HIGH --no-progress --security-checks vuln --format template --template '@html.tpl' -o reports/container-scan.html ${imagename}_${tag}"
+                         sh "trivy image --ignore-unfixed --vuln-type os,library --severity CRITICAL,HIGH --no-progress --security-checks vuln --format template --template '@html.tpl' -o reports/container-scan-arm.html ${imagename}_${tag}:arm64"
                          publishHTML target : [
                              allowMissing: true,
                              alwaysLinkToLastBuild: true,
@@ -121,8 +121,8 @@ pipeline {
                          // Scan again and fail on CRITICAL vulns
                          //below can be temporarily commented to prevent build from failing
                          echo "Scanning for CRITICAL vulnerabilities only (fatal)..."
-                         sh "trivy image --ignore-unfixed --vuln-type os,library --exit-code 1 --severity CRITICAL ${imagename}"
-                         sh "trivy image --ignore-unfixed --vuln-type os,library --exit-code 1 --severity CRITICAL ${imagename}:arm64"
+                         sh "trivy image --ignore-unfixed --vuln-type os,library --exit-code 1 --severity CRITICAL ${imagename}_${tag}"
+                         sh "trivy image --ignore-unfixed --vuln-type os,library --exit-code 1 --severity CRITICAL ${imagename}_${tag}:arm64"
                          //echo "Skipping scan for CRITICAL vulnerabilities (temporary)..."
                    } catch(error) {
                            def error_details = readFile('./debug');
@@ -142,7 +142,7 @@ pipeline {
                         sh 'docker buildx inspect --bootstrap'
                         sh 'docker buildx ls'
                         echo "Pushing image to dockerhub..."
-                        sh "docker buildx build --push --platform linux/arm64,linux/amd64 -t i2incommon/shib-idp:$tag ."
+                        sh "docker buildx build --push --platform linux/arm64,linux/amd64 -t ${maintainer}/${imagename}:${tag} ."
                  }
             }
         }
