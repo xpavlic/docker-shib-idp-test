@@ -45,7 +45,8 @@ rm -f ./lastpage.txt
 #fi
 
 # replace FROM line in IdP Dockerfile to newly-built local image
-sed -i "/FROM/ c\FROM ${imagename}_${tag}" ../test-compose/idp/Dockerfile
+# sed -i "/FROM/c\FROM ${imagename}_${tag}" ../test-compose/idp/Dockerfile
+sed -i "/FROM/c\FROM shib-idp_4.2.1_20221101_rocky8_multiarch_dev" ../test-compose/idp/Dockerfile
 
 echo "Attempting full-cycle test..."
 #webisoget -verbose -out ./lastpage.txt -formfile ./sptest.login -url https://sptest.example.edu:8443/secure/index.php
