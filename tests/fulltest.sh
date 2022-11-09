@@ -55,7 +55,7 @@ pushd ../test-compose/webisoget/
 docker build -t webisoget .
 popd
 
-docker run --net host -w /webisoget/ -it webisoget /bin/bash -c "rm -f lastpage.txt & webisoget -out ./lastpage.txt -maxhop 100 -timeout 120 -formfile /webisoget/sptest.login -url https://sptest.example.edu:8443/secure/index.php && cat lastpage.txt" > lastpage.txt
+docker run --net host -w /webisoget/ -i webisoget /bin/bash -c "rm -f lastpage.txt & webisoget -out ./lastpage.txt -maxhop 100 -timeout 120 -formfile /webisoget/sptest.login -url https://sptest.example.edu:8443/secure/index.php && cat lastpage.txt" > lastpage.txt
 
 
 if [ -s ./lastpage.txt ]; then
