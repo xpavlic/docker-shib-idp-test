@@ -52,9 +52,9 @@ echo "Attempting full-cycle test..."
 #webisoget -verbose -out ./lastpage.txt -formfile ./sptest.login -url https://sptest.example.edu:8443/secure/index.php
 
 #build docker container
-pushd ../test-compose/webisoget/ 
+pushd ../test-compose/webisoget/ &>/dev/null 
 docker build -t webisoget .
-popd
+popd &>/dev/null
 
 docker run --net host -w /webisoget/ -i webisoget /bin/bash -c "rm -f lastpage.txt & webisoget -out ./lastpage.txt -maxhop 100 -timeout 120 -formfile /webisoget/sptest.login -url https://sptest.example.edu:8443/secure/index.php && cat lastpage.txt" > lastpage.txt
 

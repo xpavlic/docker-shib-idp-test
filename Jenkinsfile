@@ -75,7 +75,7 @@ pipeline {
                    try {
                      echo "Starting tests..."
                      // sh "bin/test.sh 2>&1 | tee debug ; test ${PIPESTATUS[0]} -eq 0"
-                     sh tests/fulltest.sh
+                     sh 'tests/fulltest.sh'
                      //    ===> need bats, webisoget on jenkins node, also need to send/set correct image name
                      // echo "Skipping tests for now"
                    } catch (error) {
