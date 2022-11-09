@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. ../common.bash
+. ./common.bash
 
 pushd test-compose &>/dev/null
 echo "Launching fresh containers..."
@@ -45,7 +45,7 @@ rm -f ./lastpage.txt
 #fi
 
 # replace FROM line in IdP Dockerfile to newly-built local image
-sed -i '/FROM/c\FROM ${imagename}_${tag}' ../test-compose/idp/Dockerfile
+sed -i "/FROM/c\FROM ${imagename}_${tag}" ../test-compose/idp/Dockerfile
 
 echo "Attempting full-cycle test..."
 #webisoget -verbose -out ./lastpage.txt -formfile ./sptest.login -url https://sptest.example.edu:8443/secure/index.php
