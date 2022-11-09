@@ -1,5 +1,7 @@
 #!/bin/bash
 
+. ../common.bash
+
 pushd test-compose &>/dev/null
 echo "Launching fresh containers..."
 ./decompose.sh -y &>/dev/null
@@ -13,37 +15,48 @@ pushd tests &>/dev/null
 rm -f ./lastpage.txt
 
 #ensure webisoget is installed
-echo "ensuring that webisoget is installed..."
-rpm -q webisoget &>/dev/null
-if [ $? -ne '0' ]; then
-  echo "downloading webisoget rpm"
-  curl -s -L -o webisoget-2.8.7-1.x86_64.rpm https://github.internet2.edu/docker/util/blob/master/bin/webisoget-2.8.7-1.x86_64.rpm?raw=true
-  if [ -s webisoget-2.8.7-1.x86_64.rpm ]; then
-    echo "installing rpm..."
-    sudo rpm -ivh webisoget-2.8.7-1.x86_64.rpm
-    rm -f webisoget-2.8.7-1.x86_64.rpm
-  else
-    echo "can't get webisoget rpm..."
-    exit 1
-  fi
-else
-  echo "webisoget already installed..."
-fi
+#echo "ensuring that webisoget is installed..."
+#rpm -q webisoget &>/dev/null
+#if [ $? -ne '0' ]; then
+#  echo "downloading webisoget rpm"
+#  curl -s -L -o webisoget-2.8.7-1.x86_64.rpm https://github.internet2.edu/docker/util/blob/master/bin/webisoget-2.8.7-1.x86_64.rpm?raw=true
+#  if [ -s webisoget-2.8.7-1.x86_64.rpm ]; then
+#    echo "installing rpm..."
+#    sudo rpm -ivh webisoget-2.8.7-1.x86_64.rpm
+#    rm -f webisoget-2.8.7-1.x86_64.rpm
+#  else
+#    echo "can't get webisoget rpm..."
+#    exit 1
+#  fi
+#else
+#  echo "webisoget already installed..."
+#fi
 
 #ensure that name resolution is in place
-ping -c 1 sptest.example.edu &>/dev/null
-if [ $? -ne '0' ]; then
-  echo "adding hosts record for sp..."
-  echo '127.0.0.1 sptest.example.edu' | sudo tee -a /etc/hosts
-fi
-ping -c 1 idp.example.edu &>/dev/null
-if [ $? -ne '0' ]; then
-  echo "adding hosts record for idp..."
-  echo '127.0.0.1 idp.example.edu' | sudo tee -a /etc/hosts
-fi
+#ping -c 1 sptest.example.edu &>/dev/null
+#if [ $? -ne '0' ]; then
+#  echo "adding hosts record for sp..."
+#  echo '127.0.0.1 sptest.example.edu' | sudo tee -a /etc/hosts
+#fi
+#ping -c 1 idp.example.edu &>/dev/null
+#if [ $? -ne '0' ]; then
+#  echo "adding hosts record for idp..."
+#  echo '127.0.0.1 idp.example.edu' | sudo tee -a /etc/hosts
+#fi
+
+# replace FROM line in IdP Dockerfile to newly-built local image
+sed -i '/FROM/c\FROM ${imagename}_${tag}' ../test-compose/idp/Dockerfile
 
 echo "Attempting full-cycle test..."
-webisoget -verbose -out ./lastpage.txt -formfile ./sptest.login -url https://sptest.example.edu:8443/secure/index.php
+#webisoget -verbose -out ./lastpage.txt -formfile ./sptest.login -url https://sptest.example.edu:8443/secure/index.php
+
+#build docker container
+pushd ../test-compose/webisoget/ 
+docker build -t webisoget .
+popd
+
+docker run --net host -w /webisoget/ -it webisoget /bin/bash -c "rm -f lastpage.txt & webisoget -out ./lastpage.txt -maxhop 100 -timeout 120 -formfile /webisoget/sptest.login -url https://sptest.example.edu:8443/secure/index.php && cat lastpage.txt" > lastpage.txt
+
 
 if [ -s ./lastpage.txt ]; then
   cat lastpage.txt | grep kwhite@example.edu &>/dev/null

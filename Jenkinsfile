@@ -73,10 +73,10 @@ pipeline {
             steps {
                 script {
                    try {
-                     // echo "Starting tests..."
-                     // sh 'bin/test.sh 2>&1 | tee debug ; test ${PIPESTATUS[0]} -eq 0'
+                     echo "Starting tests..."
+                     sh 'bin/test.sh 2>&1 | tee debug ; test ${PIPESTATUS[0]} -eq 0'
                      //    ===> need bats, webisoget on jenkins node, also need to send/set correct image name
-                     echo "Skipping tests for now"
+                     // echo "Skipping tests for now"
                    } catch (error) {
                      def error_details = readFile('./debug')
                      def message = "BUILD ERROR: There was a problem testing ${maintainer}/${imagename}:${tag}. \n\n ${error_details}"
