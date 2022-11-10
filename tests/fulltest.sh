@@ -1,15 +1,15 @@
 #!/bin/bash
-echo "Starting fulltest.sh script..." >&3
+echo "Starting fulltest.sh script..."
 
 . ./common.bash
 
 pushd test-compose &>/dev/null
-echo "Launching fresh containers..." >&3
+echo "Launching fresh containers..."
 ./decompose.sh -y &>/dev/null
 ./compose.sh &>/dev/null
 popd &>/dev/null
 
-echo "Waiting 1 minute while everything comes up..." >&3
+echo "Waiting 1 minute while everything comes up..."
 sleep 60
 
 pushd tests &>/dev/null
@@ -48,7 +48,7 @@ rm -f ./lastpage.txt
 # replace FROM line in IdP Dockerfile to newly-built local image
 sed -i "s*FROM i2incommon/shib-idp:latest*FROM shib-idp_4.2.1_20221101_rocky8_multiarch_dev*g" ../test-compose/idp/Dockerfile
 
-echo "Attempting full-cycle test..." >&3
+echo "Attempting full-cycle test..."
 #webisoget -verbose -out ./lastpage.txt -formfile ./sptest.login -url https://sptest.example.edu:8443/secure/index.php
 
 #build docker container
