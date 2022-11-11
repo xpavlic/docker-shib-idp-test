@@ -46,11 +46,7 @@ load ../common
     ./tests/checkidpver.sh ${imagename}_${tag}
 }
 
-##@test "070 There are no known security vulnerabilities" {
-##    ./tests/clairscan.sh ${maintainer}/${imagename}:latest
-##}
-
-#@test "080 The IdP successfully completed a full-cycle test with an SP" {
-#    ./tests/fulltest.sh
-#}
+@test "070 The IdP successfully completed a full-cycle test with an SP" {
+    ./tests/fulltest.sh
+}
 
