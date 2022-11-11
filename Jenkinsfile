@@ -150,8 +150,8 @@ pipeline {
                 script {
                    try{
 		     echo "Cleaning up artifacts from the build..."
-                     sh "result=\$5(docker ps -a | grep ${imagename}_${tag});if [ ! -z "\$5result" ]; then docker rm -f \$5(docker ps -a | grep ${imagename}_${tag} | awk '{print \$51}');fi;docker rmi -f ${imagename}_${tag}"
-                     sh "result=\$5(docker ps -a | grep ${imagename}_${tag}:arm64);if [ ! -z "\$5result" ]; then docker rm -f \$5(docker ps -a | grep ${imagename}_${tag}:arm64 | awk '{print \$51}');fi;docker rmi -f ${imagename}_${tag}:arm64"
+                     sh "result=\$5(docker ps -a | grep ${imagename}_${tag});if [ ! -z \"\$5result\" ]; then docker rm -f \$5(docker ps -a | grep ${imagename}_${tag} | awk '{print \$51}');fi;docker rmi -f ${imagename}_${tag}"
+                     sh "result=\$5(docker ps -a | grep ${imagename}_${tag}:arm64);if [ ! -z \"\$5result\" ]; then docker rm -f \$5(docker ps -a | grep ${imagename}_${tag}:arm64 | awk '{print \$51}');fi;docker rmi -f ${imagename}_${tag}:arm64"
                    } catch(error) {
                      def error_details = readFile('./debug');
                      def message = "BUILD ERROR: There was a problem with cleanup of the image. \n\n ${error_details}"
