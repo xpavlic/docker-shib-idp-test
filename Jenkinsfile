@@ -74,7 +74,7 @@ pipeline {
                 script {
                    try {
                      echo "Starting tests..."
-                     // sh "bin/test.sh 2>&1 | tee debug ; test ${PIPESTATUS[0]} -eq 0"
+                     sh "bin/test.sh 2>&1 | tee debug ; test ${PIPESTATUS[0]} -eq 0"
                      sh 'tests/fulltest.sh'
                      // echo "Skipping tests for now"
                    } catch (error) {

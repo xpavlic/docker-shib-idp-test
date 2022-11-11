@@ -47,7 +47,6 @@ rm -f ./lastpage.txt
 
 # replace FROM line in IdP Dockerfile to newly-built local image
 echo "Setting test suite to base from new IdP image: ${imagename}_${tag}"
-#sed -i "s*FROM i2incommon/shib-idp:latest*FROM shib-idp_4.2.1_20221101_rocky8_multiarch_dev*g" ../test-compose/idp/Dockerfile
 sed -i "s*FROM i2incommon/shib-idp:latest*FROM ${imagename}_${tag}*g" ../test-compose/idp/Dockerfile
 
 echo "Attempting full-cycle test..."
