@@ -145,6 +145,22 @@ pipeline {
                  }
             }
         }
+        stage('Cleanup') {
+            steps {
+                script {
+                   try{
+		     echo "Cleaning up artifacts from the build..."
+                     sh "result=$(docker ps -a | grep ${imagename}_${tag});if [ ! -z "$result" ]; then docker rm -f $(docker ps -a | grep ${imagename}_${tag} | awk '{print $1}');fi;docker rmi -f ${imagename}_${tag}"
+                     sh "result=$(docker ps -a | grep ${imagename}_${tag}:arm64);if [ ! -z "$result" ]; then docker rm -f $(docker ps -a | grep ${imagename}_${tag}:arm64 | awk '{print $1}'); fi; docker rmi -f ${imagename}_${tag}:arm64"
+                   } catch(error) {
+                     def error_details = readFile('./debug');
+                     def message = "BUILD ERROR: There was a problem with cleanup of the image. \n\n ${error_details}"
+                     sh "rm -f ./debug"
+                     handleError(message)
+                   }
+                }
+            }
+        }
         stage('Notify') {
             steps{
                 echo "$maintainer"
