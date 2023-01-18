@@ -97,10 +97,10 @@ pipeline {
                          // Scan container for all vulnerability levels
                          echo "Scanning for all vulnerabilities..."
                          sh 'mkdir -p reports'
-                         #sh "trivy image --ignore-unfixed --vuln-type os,library --severity CRITICAL,HIGH --no-progress --security-checks vuln --format template --template '@html.tpl' -o reports/container-scan.html ${imagename}_${tag}"
-                         #2 scans below are temp (os scan only, no lib scan), while timeout issues are worked
+                         // 2 scans below are temp (os scan only, no lib scan), while timeout issues are worked
+                         // sh "trivy image --ignore-unfixed --vuln-type os,library --severity CRITICAL,HIGH --no-progress --security-checks vuln --format template --template '@html.tpl' -o reports/container-scan.html ${imagename}_${tag}"
                          sh "trivy image --ignore-unfixed --vuln-type os --severity CRITICAL,HIGH --no-progress --security-checks vuln --format template --template '@html.tpl' -o reports/container-scan.html ${imagename}_${tag}"
-                         #sh "trivy image --ignore-unfixed --vuln-type os,library --severity CRITICAL,HIGH --no-progress --security-checks vuln --format template --template '@html.tpl' -o reports/container-scan-arm.html ${imagename}_${tag}:arm64"
+                         // sh "trivy image --ignore-unfixed --vuln-type os,library --severity CRITICAL,HIGH --no-progress --security-checks vuln --format template --template '@html.tpl' -o reports/container-scan-arm.html ${imagename}_${tag}:arm64"
                          sh "trivy image --ignore-unfixed --vuln-type os --severity CRITICAL,HIGH --no-progress --security-checks vuln --format template --template '@html.tpl' -o reports/container-scan-arm.html ${imagename}_${tag}:arm64"
                          publishHTML target : [
                              allowMissing: true,
