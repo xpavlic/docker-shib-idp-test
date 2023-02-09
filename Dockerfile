@@ -10,7 +10,7 @@ ENV TOMCAT_MAJOR=9 \
 ##shib-idp \
     VERSION=4.3.0 \
 ##TIER \
-    TIERVERSION=20230118 \
+    TIERVERSION=20230208 \
 #################### \
 #### OTHER VARS #### \
 #################### \
@@ -152,12 +152,13 @@ RUN mkdir -p "$CATALINA_HOME" && set -x \
 	&& rm $CATALINA_HOME/bin/*.bat \
 	&& rm $CATALINA_HOME/tomcat.tar.gz* \
     && mkdir -p $CATALINA_HOME/conf/Catalina \
-    && curl -o /usr/local/tomcat/lib/jstl1.2.jar https://build.shibboleth.net/nexus/service/local/repositories/thirdparty/content/javax/servlet/jstl/1.2/jstl-1.2.jar \
-	&& rm -rf /usr/local/tomcat/webapps/* \
-	&& ln -s /opt/shibboleth-idp/war/idp.war $CATALINA_HOME/webapps/idp.war
+    && rm -rf /usr/local/tomcat/webapps/* \
+    && ln -s /opt/shibboleth-idp/war/idp.war $CATALINA_HOME/webapps/idp.war
 	
 ADD container_files/idp/idp.xml /usr/local/tomcat/conf/Catalina/idp.xml
 ADD container_files/tomcat/server.xml /usr/local/tomcat/conf/server.xml
+#ADD https://repo.maven.apache.org/maven2/jstl/jstl/1.2/jstl-1.2.jar /usr/local/tomcat/lib/
+ADD container_files/tomcat/jstl-1.2.jar /usr/local/tomcat/lib/
 
 #use log4j for tomcat logging
 #ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.17.2/log4j-core-2.17.2.jar /usr/local/tomcat/bin/
