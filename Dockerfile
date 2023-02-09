@@ -110,10 +110,10 @@ RUN mkdir -p "$CATALINA_HOME" && set -x \
 	&& rm $CATALINA_HOME/bin/*.bat \
 	&& rm $CATALINA_HOME/tomcat.tar.gz*
 RUN mkdir -p $CATALINA_HOME/conf/Catalina \
-        && curl -o /usr/local/tomcat/lib/jstl1.2.jar https://build.shibboleth.net/nexus/service/local/repositories/thirdparty/content/javax/servlet/jstl/1.2/jstl-1.2.jar \
 	&& rm -rf /usr/local/tomcat/webapps/* \
 	&& ln -s /opt/shibboleth-idp/war/idp.war $CATALINA_HOME/webapps/idp.war
-	
+
+ADD container_files/tomcat/jstl-1.2.jar /usr/local/tomcat/lib/	
 ADD container_files/idp/idp.xml /usr/local/tomcat/conf/Catalina/idp.xml
 ADD container_files/tomcat/server.xml /usr/local/tomcat/conf/server.xml
 
