@@ -51,8 +51,7 @@ if [ -z "$(echo $tomcatver | xargs)" ]; then
 fi
 
 #check if that version of tomcat is available in the download area (return is 0 if current, non-zero if not current)
-wget -q --spider https://mirrors.gigenet.com/apache/tomcat/tomcat-9/v${tomcatver}/bin/apache-tomcat-${tomcatver}.tar.gz
-#wget -q --spider http://apache.mirrors.ionfish.org/tomcat/tomcat-9/v${tomcatver}/bin/apache-tomcat-${tomcatver}.tar.gz
+wget -q --spider https://dlcdn.apache.org/tomcat/tomcat-9/v${tomcatver}/bin/apache-tomcat-${tomcatver}.tar.gz
 
 if [  $? == '0' ]; then
   echo "Running Tomcat version (${tomcatver}) is current!"
