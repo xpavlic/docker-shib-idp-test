@@ -5,12 +5,12 @@ FROM --platform=$TARGETPLATFORM rockylinux:8.6
 ########################
 #
 ##tomcat \
-ENV TOMCAT_MAJOR=9 \
-    TOMCAT_VERSION=9.0.76 \
+ENV TOMCAT_MAJOR=10 \
+    TOMCAT_VERSION=10.1.11 \
 ##shib-idp \
-    VERSION=4.3.1 \
+    VERSION=5.0.0-beta1 \
 ##TIER \
-    TIERVERSION=20230706_rocky8_multiarch \
+    TIERVERSION=20230810_rocky8_multiarch \
 #################### \
 #### OTHER VARS #### \
 #################### \
@@ -25,8 +25,12 @@ ENV TOMCAT_MAJOR=9 \
 ENV TOMCAT_TGZ_URL=https://archive.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz \
     PATH=$CATALINA_HOME/bin:$JAVA_HOME/bin:$PATH \
 #shib-idp \
-    SHIB_RELDIR=http://shibboleth.net/downloads/identity-provider/$VERSION \
-    SHIB_PREFIX=shibboleth-identity-provider-$VERSION
+    SHIB_RELDIR=https://shibboleth.net/downloads/prerelease/identity-provider-$VERSION \
+# remove line above and uncomment line below for non-beta release
+#    SHIB_RELDIR=http://shibboleth.net/downloads/identity-provider/$VERSION \
+    SHIB_PREFIX=shibboleth-identity-provider-$VERSION \
+#below is only needed for beta
+    SHIB_PREFIX2=shibboleth-identity-provider-5.0.0-SNAPSHOT
 
 ENV ENV=dev \
     USERTOKEN=nothing
@@ -39,7 +43,7 @@ ENV ENABLE_SEALER_KEY_ROTATION=True
 LABEL Vendor="Internet2" \
       ImageType="Shibboleth IDP Release" \
       ImageName=$imagename \
-      ImageOS=centos7 \
+      ImageOS=RockyLinux8 \
       Version=$VERSION
 
 #########################
@@ -72,8 +76,8 @@ RUN update-ca-trust extract
 # Install Corretto Java JDK (from Amazon repo, more arch independent)
 RUN rpm --import https://yum.corretto.aws/corretto.key \
     && curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo \
-    && yum install -y java-11-amazon-corretto-devel
-ENV JAVA_HOME=/usr/lib/jvm/java-11-amazon-corretto
+    && yum install -y java-17-amazon-corretto-devel
+ENV JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto
 
 # Copy IdP installer properties file(s)
 ADD container_files/idp/idp.installer.properties container_files/idp/idp.merge.properties container_files/idp/ldap.merge.properties /tmp/
@@ -90,10 +94,11 @@ RUN mkdir -p /tmp/shibboleth && cd /tmp/shibboleth && \
 # Unzip
     tar xf $SHIB_PREFIX.tar.gz && \
 # Install
-    cd /tmp/shibboleth/$SHIB_PREFIX && \
+    cd /tmp/shibboleth/$SHIB_PREFIX2 && \
+#    cd /tmp/shibboleth/$SHIB_PREFIX && \
 	./bin/install.sh \
-        -Didp.noprompt=true \
-	-Didp.property.file=/tmp/idp.installer.properties && \
+        --noPrompt true \
+	--propertyFile /tmp/idp.installer.properties && \
 # Cleanup
     cd ~ && \
     rm -rf /tmp/shibboleth
@@ -113,9 +118,14 @@ RUN mkdir -p $CATALINA_HOME/conf/Catalina \
 	&& rm -rf /usr/local/tomcat/webapps/* \
 	&& ln -s /opt/shibboleth-idp/war/idp.war $CATALINA_HOME/webapps/idp.war
 
-ADD container_files/tomcat/jstl-1.2.jar /usr/local/tomcat/lib/	
 ADD container_files/idp/idp.xml /usr/local/tomcat/conf/Catalina/idp.xml
 ADD container_files/tomcat/server.xml /usr/local/tomcat/conf/server.xml
+
+# add JSTL support
+## from https://repo1.maven.org/maven2/org/glassfish/web/jakarta.servlet.jsp.jstl/2.0.0/
+ADD container_files/tomcat/jakarta.servlet.jsp.jstl-2.0.0.jar /usr/local/tomcat/lib/
+## from https://repo1.maven.org/maven2/jakarta/servlet/jsp/jstl/jakarta.servlet.jsp.jstl-api/2.0.0/
+ADD container_files/tomcat/jakarta.servlet.jsp.jstl-api-2.0.0.jar /usr/local/tomcat/lib/
 
 #use log4j for tomcat logging
 ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.18.0/log4j-core-2.18.0.jar /usr/local/tomcat/bin/
@@ -127,7 +137,19 @@ ADD container_files/tomcat/log4j2.xml /usr/local/tomcat/conf/
 ADD container_files/tomcat/setenv.sh /usr/local/tomcat/bin/
 RUN mkdir -p /usr/local/tomcat/webapps/ROOT
 ADD container_files/tomcat/robots.txt /usr/local/tomcat/webapps/ROOT
-ADD container_files/tomcat/keystore.jks /opt/certs/
+ADD container_files/tomcat/idp-default.key /opt/certs/
+ADD container_files/tomcat/idp-default.crt /opt/certs/
+
+# install needed IdP plugins
+#ARG truststore="/opt/shibboleth-idp/credentials/PGP_KEYS"
+#ARG plugin_args="--noPrompt --noRebuild --truststore ${truststore}"
+#RUN /bin/curl -Lo ${truststore} https://shibboleth.net/downloads/PGP_KEYS && \
+#    /opt/shibboleth-idp/bin/plugin.sh ${plugin_args} -I net.shibboleth.idp.plugin.nashorn
+####remove below and switch to above for non-beta release ######
+ARG truststore="/opt/shibboleth-idp/credentials/beta1-keys"
+ARG plugin_args="--noPrompt --noRebuild --noCheck --truststore ${truststore}"
+RUN /bin/curl -Lo ${truststore} https://shibboleth.net/downloads/prerelease/identity-provider-5.0.0-beta1/beta1-plugin-truststore.gpg && \
+    /opt/shibboleth-idp/bin/plugin.sh ${plugin_args} -i https://shibboleth.net/downloads/prerelease/identity-provider-5.0.0-beta1/shibboleth-idp-plugin-nashorn-jdk-2.0.0-beta1.tar.gz
 
 # Copy TIER helper scripts
 ADD container_files/idp/rotateSealerKey.sh /opt/shibboleth-idp/bin/rotateSealerKey.sh
