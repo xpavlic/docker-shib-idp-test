@@ -147,7 +147,9 @@ ADD container_files/tomcat/log4j2.xml /usr/local/tomcat/conf/
 ADD container_files/tomcat/setenv.sh /usr/local/tomcat/bin/
 RUN mkdir -p /usr/local/tomcat/webapps/ROOT
 ADD container_files/tomcat/robots.txt /usr/local/tomcat/webapps/ROOT
-ADD container_files/tomcat/keystore.jks /opt/certs/
+#ADD container_files/tomcat/keystore.jks /opt/certs/
+ADD container_files/tomcat/idp-default.key /opt/certs/
+ADD container_files/tomcat/idp-default.crt /opt/certs/
 
 # install needed IdP plugins
 #ARG truststore="/opt/shibboleth-idp/credentials/PGP_KEYS"
@@ -159,7 +161,6 @@ ARG truststore="/opt/shibboleth-idp/credentials/beta1-keys"
 ARG plugin_args="--noPrompt --noRebuild --noCheck --truststore ${truststore}"
 RUN /bin/curl -Lo ${truststore} https://shibboleth.net/downloads/prerelease/identity-provider-5.0.0-beta1/beta1-plugin-truststore.gpg && \
     /opt/shibboleth-idp/bin/plugin.sh ${plugin_args} -i https://shibboleth.net/downloads/prerelease/identity-provider-5.0.0-beta1/shibboleth-idp-plugin-nashorn-jdk-2.0.0-beta1.tar.gz
-
 
 # Copy TIER helper scripts
 ADD container_files/idp/rotateSealerKey.sh /opt/shibboleth-idp/bin/rotateSealerKey.sh
