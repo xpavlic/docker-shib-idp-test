@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM rockylinux:8.6
+FROM --platform=$TARGETPLATFORM rockylinux:8.8
 
 ########################
 ### VERSION SETTINGS ###
