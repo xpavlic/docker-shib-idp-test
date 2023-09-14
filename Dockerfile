@@ -6,11 +6,11 @@ FROM --platform=$TARGETPLATFORM rockylinux:8.8
 #
 ##tomcat \
 ENV TOMCAT_MAJOR=10 \
-    TOMCAT_VERSION=10.1.11 \
+    TOMCAT_VERSION=10.1.13 \
 ##shib-idp \
-    VERSION=5.0.0-beta1 \
+    VERSION=5.0.0 \
 ##TIER \
-    TIERVERSION=20230810_rocky8_multiarch \
+    TIERVERSION=20230914_rocky8_multiarch \
 #################### \
 #### OTHER VARS #### \
 #################### \
@@ -25,12 +25,8 @@ ENV TOMCAT_MAJOR=10 \
 ENV TOMCAT_TGZ_URL=https://archive.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz \
     PATH=$CATALINA_HOME/bin:$JAVA_HOME/bin:$PATH \
 #shib-idp \
-    SHIB_RELDIR=https://shibboleth.net/downloads/prerelease/identity-provider-$VERSION \
-# remove line above and uncomment line below for non-beta release
-#    SHIB_RELDIR=http://shibboleth.net/downloads/identity-provider/$VERSION \
-    SHIB_PREFIX=shibboleth-identity-provider-$VERSION \
-#below is only needed for beta
-    SHIB_PREFIX2=shibboleth-identity-provider-5.0.0-SNAPSHOT
+    SHIB_RELDIR=http://shibboleth.net/downloads/identity-provider/$VERSION \
+    SHIB_PREFIX=shibboleth-identity-provider-$VERSION
 
 ENV ENV=dev \
     USERTOKEN=nothing
@@ -94,8 +90,7 @@ RUN mkdir -p /tmp/shibboleth && cd /tmp/shibboleth && \
 # Unzip
     tar xf $SHIB_PREFIX.tar.gz && \
 # Install
-    cd /tmp/shibboleth/$SHIB_PREFIX2 && \
-#    cd /tmp/shibboleth/$SHIB_PREFIX && \
+    cd /tmp/shibboleth/$SHIB_PREFIX && \
 	./bin/install.sh \
         --noPrompt true \
 	--propertyFile /tmp/idp.installer.properties && \
