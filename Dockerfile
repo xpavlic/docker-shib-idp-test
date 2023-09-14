@@ -147,15 +147,10 @@ ADD container_files/tomcat/idp-default.key /opt/certs/
 ADD container_files/tomcat/idp-default.crt /opt/certs/
 
 # install needed IdP plugins
-#ARG truststore="/opt/shibboleth-idp/credentials/PGP_KEYS"
-#ARG plugin_args="--noPrompt --noRebuild --truststore ${truststore}"
-#RUN /bin/curl -Lo ${truststore} https://shibboleth.net/downloads/PGP_KEYS && \
-#    /opt/shibboleth-idp/bin/plugin.sh ${plugin_args} -I net.shibboleth.idp.plugin.nashorn
-####remove below and switch to above for non-beta release ######
-ARG truststore="/opt/shibboleth-idp/credentials/beta1-keys"
-ARG plugin_args="--noPrompt --noRebuild --noCheck --truststore ${truststore}"
-RUN /bin/curl -Lo ${truststore} https://shibboleth.net/downloads/prerelease/identity-provider-5.0.0-beta1/beta1-plugin-truststore.gpg && \
-    /opt/shibboleth-idp/bin/plugin.sh ${plugin_args} -i https://shibboleth.net/downloads/prerelease/identity-provider-5.0.0-beta1/shibboleth-idp-plugin-nashorn-jdk-2.0.0-beta1.tar.gz
+ARG truststore="/opt/shibboleth-idp/credentials/PGP_KEYS"
+ARG plugin_args="--noPrompt --noRebuild --truststore ${truststore}"
+RUN /bin/curl -Lo ${truststore} https://shibboleth.net/downloads/PGP_KEYS && \
+    /opt/shibboleth-idp/bin/plugin.sh ${plugin_args} -I net.shibboleth.idp.plugin.nashorn
 
 # Copy TIER helper scripts
 ADD container_files/idp/rotateSealerKey.sh /opt/shibboleth-idp/bin/rotateSealerKey.sh
