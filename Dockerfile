@@ -5,19 +5,19 @@ FROM centos:centos7
 ########################
 #
 ##tomcat \
-ENV TOMCAT_MAJOR=9 \
-    TOMCAT_VERSION=9.0.79 \
+ENV TOMCAT_MAJOR=10 \
+    TOMCAT_VERSION=10.1.13 \
 ##shib-idp \
-    VERSION=4.3.1 \
+    VERSION=5.0.0 \
 ##TIER \
-    TIERVERSION=20230818 \
+    TIERVERSION=20230914 \
 #################### \
 #### OTHER VARS #### \
 #################### \
 # \
 #global \
     IMAGENAME=shibboleth_idp \
-    MAINTAINER=tier \
+    MAINTAINER=i2incommon \
 #java \
     JAVA_OPTS='-Xmx3000m' \
 #tomcat \
@@ -70,52 +70,16 @@ RUN update-ca-trust extract
 #####     ENV TIER_BEACON_OPT_OUT True
 
 # Install Corretto Java JDK
-#Corretto download page: https://docs.aws.amazon.com/corretto/latest/corretto-11-ug/downloads-list.html
-ARG CORRETTO_URL_PERM=https://corretto.aws/downloads/latest/amazon-corretto-11-x64-linux-jdk.rpm
-ARG CORRETTO_RPM=amazon-corretto-11-x64-linux-jdk.rpm
+#Corretto download page: https://docs.aws.amazon.com/corretto/latest/corretto-17-ug/downloads-list.html
+ARG CORRETTO_URL_PERM=https://corretto.aws/downloads/latest/amazon-corretto-17-x64-linux-jdk.rpm
+ARG CORRETTO_RPM=amazon-corretto-17-x64-linux-jdk.rpm
 COPY container_files/java-corretto/corretto-signing-key.pub .
 RUN curl -O -L $CORRETTO_URL_PERM \
     && rpm --import corretto-signing-key.pub \
     && rpm -K $CORRETTO_RPM \
     && rpm -i $CORRETTO_RPM \
     && rm -r corretto-signing-key.pub $CORRETTO_RPM
-ENV JAVA_HOME=/usr/lib/jvm/java-11-amazon-corretto
-
-# To use Zulu Java:
-#RUN rpm --import http://repos.azulsystems.com/RPM-GPG-KEY-azulsystems \
-#	&& curl -o /etc/yum.repos.d/zulu.repo http://repos.azulsystems.com/rhel/zulu.repo \
-#	&& yum -y install zulu-8 && alternatives --install /usr/bin/java java $JAVA_HOME/bin/java 200000
-#install Zulu JCE
-#RUN curl -o /tmp/ZuluJCEPolicies.zip https://cdn.azul.com/zcek/bin/ZuluJCEPolicies.zip \
-#	&& cd /tmp && unzip -oj ZuluJCEPolicies.zip ZuluJCEPolicies/local_policy.jar -d $JAVA_HOME/lib/jvm/zulu-8/jre/lib/security/ \
-#	&& unzip -oj ZuluJCEPolicies.zip ZuluJCEPolicies/US_export_policy.jar -d $JAVA_HOME/lib/jvm/zulu-8/jre/lib/security/ \
-#	&& rm -rf /tmp/ZuluJCEPolicies.zip
-#ENV JAVA_HOME=/usr \
-
-# To use Oracle java/JCE:
-#
-#ENV JAVA_VERSION=8u171 \
-#    BUILD_VERSION=b11 \
-#    JAVA_BUNDLE_ID=512cd62ec5174c3487ac17c61aaa89e8 \
-#
-# Uncomment the following commands to download the Oracle JDK to your Shibboleth IDP image.  
-#     ==> By uncommenting these next 6 lines, you agree to the Oracle Binary Code License Agreement for Java SE (http://www.oracle.com/technetwork/java/javase/terms/license/index.html)
-# RUN wget -nv --no-cookies --no-check-certificate --header "Cookie: oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/$JAVA_VERSION-$BUILD_VERSION/$JAVA_BUNDLE_ID/jdk-$JAVA_VERSION-linux-x64.rpm" -O /tmp/jdk-$JAVA_VERSION-$BUILD_VERSION-linux-x64.rpm && \
-#     yum -y install /tmp/jdk-$JAVA_VERSION-$BUILD_VERSION-linux-x64.rpm && \
-#     rm -f /tmp/jdk-$JAVA_VERSION-$BUILD_VERSION-linux-x64.rpm && \
-#     alternatives --install /usr/bin/java jar $JAVA_HOME/bin/java 200000 && \
-#     alternatives --install /usr/bin/javaws javaws $JAVA_HOME/bin/javaws 200000 && \
-#     alternatives --install /usr/bin/javac javac $JAVA_HOME/bin/javac 200000
-
-# For Oracle Java, also uncomment the following commands to download the Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files.  
-#     ==> By uncommenting these next 7 lines, you agree to the Oracle Binary Code License Agreement for Java SE Platform Products (http://www.oracle.com/technetwork/java/javase/terms/license/index.html)
-# RUN wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" \
-#     http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip \
-#     && echo "f3020a3922efd6626c2fff45695d527f34a8020e938a49292561f18ad1320b59  jce_policy-8.zip" | sha256sum -c - \
-#     && unzip -oj jce_policy-8.zip UnlimitedJCEPolicyJDK8/local_policy.jar -d $JAVA_HOME/jre/lib/security/ \
-#     && unzip -oj jce_policy-8.zip UnlimitedJCEPolicyJDK8/US_export_policy.jar -d $JAVA_HOME/jre/lib/security/ \
-#     && rm jce_policy-8.zip \
-#     && chmod -R 640 $JAVA_HOME/jre/lib/security/
+ENV JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto
 
 # Copy IdP installer properties file(s)
 ADD container_files/idp/idp.installer.properties container_files/idp/idp.merge.properties container_files/idp/ldap.merge.properties /tmp/
@@ -134,8 +98,8 @@ RUN mkdir -p /tmp/shibboleth && cd /tmp/shibboleth && \
 # Install
     cd /tmp/shibboleth/$SHIB_PREFIX && \
 	./bin/install.sh \
-        -Didp.noprompt=true \
-	-Didp.property.file=/tmp/idp.installer.properties && \
+        --propertyFile /tmp/idp.installer.properties \
+        --noPrompt true \
 # Cleanup
     cd ~ && \
     rm -rf /tmp/shibboleth
@@ -157,8 +121,12 @@ RUN mkdir -p "$CATALINA_HOME" && set -x \
 	
 ADD container_files/idp/idp.xml /usr/local/tomcat/conf/Catalina/idp.xml
 ADD container_files/tomcat/server.xml /usr/local/tomcat/conf/server.xml
-#ADD https://repo.maven.apache.org/maven2/jstl/jstl/1.2/jstl-1.2.jar /usr/local/tomcat/lib/
-ADD container_files/tomcat/jstl-1.2.jar /usr/local/tomcat/lib/
+
+# add JSTL support
+## from https://repo1.maven.org/maven2/org/glassfish/web/jakarta.servlet.jsp.jstl/2.0.0/
+ADD container_files/tomcat/jakarta.servlet.jsp.jstl-2.0.0.jar /usr/local/tomcat/lib/
+## from https://repo1.maven.org/maven2/jakarta/servlet/jsp/jstl/jakarta.servlet.jsp.jstl-api/2.0.0/
+ADD container_files/tomcat/jakarta.servlet.jsp.jstl-api-2.0.0.jar /usr/local/tomcat/lib/
 
 #use log4j for tomcat logging
 #ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.17.2/log4j-core-2.17.2.jar /usr/local/tomcat/bin/
@@ -174,7 +142,15 @@ ADD container_files/tomcat/log4j2.xml /usr/local/tomcat/conf/
 ADD container_files/tomcat/setenv.sh /usr/local/tomcat/bin/
 RUN mkdir -p /usr/local/tomcat/webapps/ROOT
 ADD container_files/tomcat/robots.txt /usr/local/tomcat/webapps/ROOT
-ADD container_files/tomcat/keystore.jks /opt/certs/
+#ADD container_files/tomcat/keystore.jks /opt/certs/
+ADD container_files/tomcat/idp-default.key /opt/certs/
+ADD container_files/tomcat/idp-default.crt /opt/certs/
+
+# install needed IdP plugins
+ARG truststore="/opt/shibboleth-idp/credentials/PGP_KEYS"
+ARG plugin_args="--noPrompt --noRebuild --truststore ${truststore}"
+RUN /bin/curl -Lo ${truststore} https://shibboleth.net/downloads/PGP_KEYS && \
+    /opt/shibboleth-idp/bin/plugin.sh ${plugin_args} -I net.shibboleth.idp.plugin.nashorn
 
 # Copy TIER helper scripts
 ADD container_files/idp/rotateSealerKey.sh /opt/shibboleth-idp/bin/rotateSealerKey.sh

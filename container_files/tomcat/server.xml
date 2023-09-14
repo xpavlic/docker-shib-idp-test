@@ -5,20 +5,23 @@
 
   <Service name="Catalina">
 
-    <Connector
-        protocol="org.apache.coyote.http11.Http11NioProtocol"
-        port="443" maxThreads="200"
-        scheme="https" secure="true" SSLEnabled="true">
-      <SSLHostConfig
+    <Connector protocol="org.apache.coyote.http11.Http11NioProtocol"
+               port="443" 
+               maxThreads="200"
+               scheme="https"
+               secure="true" 
+               SSLEnabled="true"
+               defaultSSLHostConfigName="IdP">
+      <SSLHostConfig hostName="IdP"
           ciphers="ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384"
           disableSessionTickets="true"
           honorCipherOrder="false"
           protocols="TLSv1.2,TLSv1.3">
         <Certificate
-            certificateKeystoreFile="/opt/certs/keystore.jks" 
-            certificateKeystorePassword="password" />
+            certificateFile="/opt/certs/idp-default.crt" 
+	    certificateKeyFile="/opt/certs/idp-default.key" />
       </SSLHostConfig>
-      <UpgradeProtocol className="org.apache.coyote.http2.Http2Protocol" />
+      <!--<UpgradeProtocol className="org.apache.coyote.http2.Http2Protocol" />-->
     </Connector>
 
     <Engine name="Catalina" defaultHost="localhost">
