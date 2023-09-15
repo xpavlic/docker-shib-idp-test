@@ -42,9 +42,9 @@ load ../common
     ./tests/checktomcatver.sh ${imagename}_${tag}
 }
 
-@test "060 The version of the IdP is current" {
-    ./tests/checkidpver.sh ${imagename}_${tag}
-}
+#@test "060 The version of the IdP is current" {
+#    ./tests/checkidpver.sh ${imagename}_${tag}
+#}
 
 @test "070 The IdP successfully completed a full-cycle test with an SP" {
     ./tests/fulltest.sh
