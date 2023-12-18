@@ -1,4 +1,4 @@
-FROM centos:centos7
+FROM --platform=$TARGETPLATFORM rockylinux:8.8
 
 ########################
 ### VERSION SETTINGS ###
@@ -6,11 +6,11 @@ FROM centos:centos7
 #
 ##tomcat \
 ENV TOMCAT_MAJOR=10 \
-    TOMCAT_VERSION=10.1.13 \
+    TOMCAT_VERSION=10.1.17 \
 ##shib-idp \
     VERSION=5.0.0 \
 ##TIER \
-    TIERVERSION=20230914 \
+    TIERVERSION=20231218_rocky8_multiarch \
 #################### \
 #### OTHER VARS #### \
 #################### \
@@ -39,7 +39,7 @@ ENV ENABLE_SEALER_KEY_ROTATION=True
 LABEL Vendor="Internet2" \
       ImageType="Shibboleth IDP Release" \
       ImageName=$imagename \
-      ImageOS=centos7 \
+      ImageOS=RockyLinux8 \
       Version=$VERSION
 
 #########################
@@ -52,7 +52,7 @@ RUN ln -sf /usr/share/zoneinfo/UTC /etc/localtime \
 
 # Install base deps
 RUN rm -fr /var/cache/yum/* && yum clean all && yum -y update && yum -y install --setopt=tsflags=nodocs epel-release && \
-    yum -y install net-tools wget curl tar unzip mlocate logrotate strace telnet man unzip vim wget rsyslog cronie krb5-workstation openssl-devel wget supervisor fontconfig && \
+    yum -y install net-tools wget curl tar unzip mlocate logrotate strace telnet man unzip vim rsyslog cronie krb5-workstation openssl-devel supervisor fontconfig findutils && \
     yum -y clean all && \
     mkdir -p /opt/tier && \
 # Install Trusted Certificates
@@ -69,16 +69,11 @@ RUN update-ca-trust extract
 # To keep it commented, keep multiple comments on the following line (to prevent other scripts from processing it).
 #####     ENV TIER_BEACON_OPT_OUT True
 
-# Install Corretto Java JDK
-#Corretto download page: https://docs.aws.amazon.com/corretto/latest/corretto-17-ug/downloads-list.html
-ARG CORRETTO_URL_PERM=https://corretto.aws/downloads/latest/amazon-corretto-17-x64-linux-jdk.rpm
-ARG CORRETTO_RPM=amazon-corretto-17-x64-linux-jdk.rpm
-COPY container_files/java-corretto/corretto-signing-key.pub .
-RUN curl -O -L $CORRETTO_URL_PERM \
-    && rpm --import corretto-signing-key.pub \
-    && rpm -K $CORRETTO_RPM \
-    && rpm -i $CORRETTO_RPM \
-    && rm -r corretto-signing-key.pub $CORRETTO_RPM
+
+# Install Corretto Java JDK (from Amazon repo, more arch independent)
+RUN rpm --import https://yum.corretto.aws/corretto.key \
+    && curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo \
+    && yum install -y java-17-amazon-corretto-devel
 ENV JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto
 
 # Copy IdP installer properties file(s)
@@ -98,27 +93,28 @@ RUN mkdir -p /tmp/shibboleth && cd /tmp/shibboleth && \
 # Install
     cd /tmp/shibboleth/$SHIB_PREFIX && \
 	./bin/install.sh \
-        --propertyFile /tmp/idp.installer.properties \
         --noPrompt true \
+      	--propertyFile /tmp/idp.installer.properties && \
+
 # Cleanup
     cd ~ && \
     rm -rf /tmp/shibboleth
 
 # Install tomcat
 RUN mkdir -p "$CATALINA_HOME" && set -x \
-	&& wget -q -O $CATALINA_HOME/tomcat.tar.gz "$TOMCAT_TGZ_URL" \
-	&& wget -q -O $CATALINA_HOME/tomcat.tar.gz.asc "$TOMCAT_TGZ_URL.asc" \
-	&& wget -q -O $CATALINA_HOME/KEYS "https://www.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/KEYS" \
-    && gpg --import $CATALINA_HOME/KEYS \
-    && gpg $CATALINA_HOME/tomcat.tar.gz.asc \
+        && curl -s -o $CATALINA_HOME/tomcat.tar.gz "$TOMCAT_TGZ_URL" \
+        && curl -s -o $CATALINA_HOME/tomcat.tar.gz.asc "$TOMCAT_TGZ_URL.asc" \
+	&& curl -s -L -o $CATALINA_HOME/KEYS "https://www.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/KEYS" \
+        && gpg --import $CATALINA_HOME/KEYS \
+        && gpg $CATALINA_HOME/tomcat.tar.gz.asc \
 	&& gpg --batch --verify $CATALINA_HOME/tomcat.tar.gz.asc $CATALINA_HOME/tomcat.tar.gz \
 	&& tar -xvf $CATALINA_HOME/tomcat.tar.gz -C $CATALINA_HOME --strip-components=1 \
 	&& rm $CATALINA_HOME/bin/*.bat \
-	&& rm $CATALINA_HOME/tomcat.tar.gz* \
-    && mkdir -p $CATALINA_HOME/conf/Catalina \
-    && rm -rf /usr/local/tomcat/webapps/* \
-    && ln -s /opt/shibboleth-idp/war/idp.war $CATALINA_HOME/webapps/idp.war
-	
+	&& rm $CATALINA_HOME/tomcat.tar.gz*
+RUN mkdir -p $CATALINA_HOME/conf/Catalina \
+	&& rm -rf /usr/local/tomcat/webapps/* \
+	&& ln -s /opt/shibboleth-idp/war/idp.war $CATALINA_HOME/webapps/idp.war
+
 ADD container_files/idp/idp.xml /usr/local/tomcat/conf/Catalina/idp.xml
 ADD container_files/tomcat/server.xml /usr/local/tomcat/conf/server.xml
 
@@ -129,12 +125,9 @@ ADD container_files/tomcat/jakarta.servlet.jsp.jstl-2.0.0.jar /usr/local/tomcat/
 ADD container_files/tomcat/jakarta.servlet.jsp.jstl-api-2.0.0.jar /usr/local/tomcat/lib/
 
 #use log4j for tomcat logging
-#ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.17.2/log4j-core-2.17.2.jar /usr/local/tomcat/bin/
-COPY container_files/tomcat/log4j-core-2.17.2.jar /usr/local/tomcat/bin/
-#ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.17.2/log4j-api-2.17.2.jar /usr/local/tomcat/bin/
-COPY container_files/tomcat/log4j-api-2.17.2.jar /usr/local/tomcat/bin/
-#ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-jul/2.17.2/log4j-jul-2.17.2.jar /usr/local/tomcat/bin/
-COPY container_files/tomcat/log4j-jul-2.17.2.jar /usr/local/tomcat/bin/
+ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.18.0/log4j-core-2.18.0.jar /usr/local/tomcat/bin/
+ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.18.0/log4j-api-2.18.0.jar /usr/local/tomcat/bin/
+ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-jul/2.18.0/log4j-jul-2.18.0.jar /usr/local/tomcat/bin/
 
 RUN cd /usr/local/tomcat/; \
     chmod +r bin/log4j-*.jar;
@@ -142,7 +135,6 @@ ADD container_files/tomcat/log4j2.xml /usr/local/tomcat/conf/
 ADD container_files/tomcat/setenv.sh /usr/local/tomcat/bin/
 RUN mkdir -p /usr/local/tomcat/webapps/ROOT
 ADD container_files/tomcat/robots.txt /usr/local/tomcat/webapps/ROOT
-#ADD container_files/tomcat/keystore.jks /opt/certs/
 ADD container_files/tomcat/idp-default.key /opt/certs/
 ADD container_files/tomcat/idp-default.crt /opt/certs/
 
@@ -169,6 +161,9 @@ RUN mkdir -p /etc/supervisor/conf.d && chmod +x /opt/tier/setenv.sh \
 
 #set cron to not require a login session
 RUN sed -i '/session    required   pam_loginuid.so/c\#session    required   pam_loginuid.so' /etc/pam.d/crond
+
+#upgrade pip to remove sec vuln
+#RUN pip3 install --upgrade pip
 
 # Expose the port tomcat will be serving on
 EXPOSE 443
