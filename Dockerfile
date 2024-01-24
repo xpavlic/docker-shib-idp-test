@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM rockylinux:8.8
+FROM --platform=$TARGETPLATFORM rockylinux:8.9
 
 ########################
 ### VERSION SETTINGS ###
@@ -6,11 +6,11 @@ FROM --platform=$TARGETPLATFORM rockylinux:8.8
 #
 ##tomcat \
 ENV TOMCAT_MAJOR=10 \
-    TOMCAT_VERSION=10.1.17 \
+    TOMCAT_VERSION=10.1.18 \
 ##shib-idp \
     VERSION=5.0.0 \
 ##TIER \
-    TIERVERSION=20231218_rocky8_multiarch \
+    TIERVERSION=20240124_rocky8_multiarch \
 #################### \
 #### OTHER VARS #### \
 #################### \
@@ -102,7 +102,7 @@ RUN mkdir -p /tmp/shibboleth && cd /tmp/shibboleth && \
 RUN mkdir -p "$CATALINA_HOME" && set -x \
         && curl -s -o $CATALINA_HOME/tomcat.tar.gz "$TOMCAT_TGZ_URL" \
         && curl -s -o $CATALINA_HOME/tomcat.tar.gz.asc "$TOMCAT_TGZ_URL.asc" \
-	&& curl -s -L -o $CATALINA_HOME/KEYS "https://www.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/KEYS" \
+        && curl -s -L -o $CATALINA_HOME/KEYS "https://downloads.apache.org/tomcat/tomcat-$TOMCAT_MAJOR/KEYS" \
         && gpg --import $CATALINA_HOME/KEYS \
         && gpg $CATALINA_HOME/tomcat.tar.gz.asc \
 	&& gpg --batch --verify $CATALINA_HOME/tomcat.tar.gz.asc $CATALINA_HOME/tomcat.tar.gz \
@@ -123,9 +123,10 @@ ADD container_files/tomcat/jakarta.servlet.jsp.jstl-2.0.0.jar /usr/local/tomcat/
 ADD container_files/tomcat/jakarta.servlet.jsp.jstl-api-2.0.0.jar /usr/local/tomcat/lib/
 
 #use log4j for tomcat logging
-ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.18.0/log4j-core-2.18.0.jar /usr/local/tomcat/bin/
-ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.18.0/log4j-api-2.18.0.jar /usr/local/tomcat/bin/
-ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-jul/2.18.0/log4j-jul-2.18.0.jar /usr/local/tomcat/bin/
+# from https://repo1.maven.org/maven2/org/apache/logging/log4j/
+ADD container_files/tomcat/log4j-core-2.18.0.jar /usr/local/tomcat/bin/
+ADD container_files/tomcat/log4j-api-2.18.0.jar /usr/local/tomcat/bin/
+ADD container_files/tomcat/log4j-jul-2.18.0.jar /usr/local/tomcat/bin/
 RUN cd /usr/local/tomcat/; \
     chmod +r bin/log4j-*.jar;
 ADD container_files/tomcat/log4j2.xml /usr/local/tomcat/conf/
