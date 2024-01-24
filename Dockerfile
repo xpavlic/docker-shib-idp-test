@@ -17,7 +17,7 @@ ENV TOMCAT_MAJOR=10 \
 # \
 #global \
     IMAGENAME=shibboleth_idp \
-    MAINTAINER=tier \
+    MAINTAINER=i2incommon \
 #java \
     JAVA_OPTS='-Xmx3000m' \
 #tomcat \
@@ -69,6 +69,7 @@ RUN update-ca-trust extract
 # To keep it commented, keep multiple comments on the following line (to prevent other scripts from processing it).
 #####     ENV TIER_BEACON_OPT_OUT True
 
+
 # Install Corretto Java JDK (from Amazon repo, more arch independent)
 RUN rpm --import https://yum.corretto.aws/corretto.key \
     && curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo \
@@ -93,7 +94,8 @@ RUN mkdir -p /tmp/shibboleth && cd /tmp/shibboleth && \
     cd /tmp/shibboleth/$SHIB_PREFIX && \
 	./bin/install.sh \
         --noPrompt true \
-	--propertyFile /tmp/idp.installer.properties && \
+      	--propertyFile /tmp/idp.installer.properties && \
+
 # Cleanup
     cd ~ && \
     rm -rf /tmp/shibboleth
@@ -127,6 +129,7 @@ ADD container_files/tomcat/jakarta.servlet.jsp.jstl-api-2.0.0.jar /usr/local/tom
 ADD container_files/tomcat/log4j-core-2.18.0.jar /usr/local/tomcat/bin/
 ADD container_files/tomcat/log4j-api-2.18.0.jar /usr/local/tomcat/bin/
 ADD container_files/tomcat/log4j-jul-2.18.0.jar /usr/local/tomcat/bin/
+
 RUN cd /usr/local/tomcat/; \
     chmod +r bin/log4j-*.jar;
 ADD container_files/tomcat/log4j2.xml /usr/local/tomcat/conf/

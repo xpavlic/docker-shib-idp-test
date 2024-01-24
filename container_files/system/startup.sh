@@ -60,4 +60,4 @@ sed -i -e '/<rollingPolicy/,/<\/rollingPolicy>/d' ${IDP_LOG_CFG_FILE}
 
 
 #launch supervisord
-/usr/bin/supervisord -c /etc/supervisor/supervisord.conf
+exec /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
