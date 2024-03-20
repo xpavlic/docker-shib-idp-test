@@ -6,11 +6,11 @@ FROM --platform=$TARGETPLATFORM rockylinux:8.9
 #
 ##tomcat \
 ENV TOMCAT_MAJOR=10 \
-    TOMCAT_VERSION=10.1.18 \
+    TOMCAT_VERSION=10.1.19 \
 ##shib-idp \
-    VERSION=5.0.0 \
+    VERSION=5.1.1 \
 ##TIER \
-    TIERVERSION=20240124_rocky8_multiarch \
+    TIERVERSION=20240320_rocky8_multiarch \
 #################### \
 #### OTHER VARS #### \
 #################### \
@@ -95,7 +95,6 @@ RUN mkdir -p /tmp/shibboleth && cd /tmp/shibboleth && \
 	./bin/install.sh \
         --noPrompt true \
       	--propertyFile /tmp/idp.installer.properties && \
-
 # Cleanup
     cd ~ && \
     rm -rf /tmp/shibboleth
