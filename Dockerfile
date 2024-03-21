@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM rockylinux:8.8
+FROM --platform=$TARGETPLATFORM rockylinux:8.9
 
 ########################
 ### VERSION SETTINGS ###
@@ -6,11 +6,11 @@ FROM --platform=$TARGETPLATFORM rockylinux:8.8
 #
 ##tomcat \
 ENV TOMCAT_MAJOR=9 \
-    TOMCAT_VERSION=9.0.83 \
+    TOMCAT_VERSION=9.0.87 \
 ##shib-idp \
-    VERSION=4.3.1 \
+    VERSION=4.3.2 \
 ##TIER \
-    TIERVERSION=20231128_rocky8_multiarch \
+    TIERVERSION=20240321_rocky8_multiarch \
 #################### \
 #### OTHER VARS #### \
 #################### \
