@@ -116,6 +116,8 @@ RUN mkdir -p $CATALINA_HOME/conf/Catalina \
 ADD container_files/tomcat/jstl-1.2.jar /usr/local/tomcat/lib/	
 ADD container_files/idp/idp.xml /usr/local/tomcat/conf/Catalina/idp.xml
 ADD container_files/tomcat/server.xml /usr/local/tomcat/conf/server.xml
+#ADD https://repo.maven.apache.org/maven2/jstl/jstl/1.2/jstl-1.2.jar /usr/local/tomcat/lib/
+ADD container_files/tomcat/jstl-1.2.jar /usr/local/tomcat/lib/
 
 #use log4j for tomcat logging
 ADD container_files/tomcat/log4j-core-2.18.0.jar /usr/local/tomcat/bin/
