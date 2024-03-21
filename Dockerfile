@@ -1,4 +1,5 @@
-FROM centos:centos7
+FROM rockylinux:8.9
+#FROM centos:centos7.9.2009
 
 ########################
 ### VERSION SETTINGS ###
@@ -8,9 +9,9 @@ FROM centos:centos7
 ENV TOMCAT_MAJOR=9 \
     TOMCAT_VERSION=9.0.87 \
 ##shib-idp \
-    VERSION=4.3.1 \
+    VERSION=4.3.2 \
 ##TIER \
-    TIERVERSION=20240318 \
+    TIERVERSION=20240321 \
 #################### \
 #### OTHER VARS #### \
 #################### \
