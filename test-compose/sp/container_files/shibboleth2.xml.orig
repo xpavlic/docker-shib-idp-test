@@ -67,7 +67,7 @@
         Allows overriding of error template information/filenames. You can
         also add attributes with values that can be plugged into the templates.
         -->
-        <Errors supportContact="root@localhost"
+        <Errors supportContact="root@ip-78-128-251-22.flt.cloud.muni.cz"
             helpLocation="/about.html"
             styleSheet="/shibboleth-sp/main.css"/>
         

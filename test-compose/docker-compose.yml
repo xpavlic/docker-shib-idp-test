@@ -1,9 +1,6 @@
-
-version: "3.3"
-
 services:
   idp:
-    build: 
+    build:
       context: ./idp/
       args:
         TOMCFG: ./container_files/config/tomcat
@@ -16,45 +13,53 @@ services:
         SHBMSGS: ./container_files/config/shib-idp/messages
         SHBMD: ./container_files/config/shib-idp/metadata
     depends_on:
-     - data
+      - data
     networks:
-     - front
-     - back
+      - front
+      - back
     ports:
-     - "443:443"
+      - "443:443"
 
 
   data:
     build: ./data/
     expose:
-     - "389"
+      - "389"
     networks:
-     - back
+      - back
     ports:
-     - "389:389"
+      - "389:389"
     volumes:
-     - shibidp_ldap:/var/lib/dirsrv
+      - shibidp_ldap:/var/lib/dirsrv
 
 
   sp:
     build: ./sp/
     expose:
-     - "8443"
+      - "8443"
     networks:
-     - front
-     - back
+      - front
+      - back
     ports:
-     - "8443:8443"
+      - "8443:8443"
 
 
 networks:
+  default:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1442
   front:
     driver: bridge
-  back:    
+    driver_opts:
+      com.docker.network.driver.mtu: 1442
+  back:
     driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1442
 
- 
+
 volumes:
-  shibidp_ldap:  
+  shibidp_ldap:
     driver: local
 

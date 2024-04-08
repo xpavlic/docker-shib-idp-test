@@ -24,9 +24,9 @@
       <!--<UpgradeProtocol className="org.apache.coyote.http2.Http2Protocol" />-->
     </Connector>
 
-    <Engine name="Catalina" defaultHost="localhost">
+    <Engine name="Catalina" defaultHost="ip-78-128-251-22.flt.cloud.muni.cz">
 
-      <Host name="localhost"  appBase="webapps"
+      <Host name="ip-78-128-251-22.flt.cloud.muni.cz"  appBase="webapps"
             unpackWARs="true" autoDeploy="true">
 
         <Valve className="org.apache.catalina.valves.AccessLogValve"
