@@ -1,7 +1,7 @@
-<EntityDescriptor entityID="https://idp.example.edu/idp/shibboleth" xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+<EntityDescriptor entityID="https://ip-78-128-251-22.flt.cloud.muni.cz/idp/shibboleth" xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
   <IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
     <Extensions>
-      <shibmd:Scope regexp="false">example.edu</shibmd:Scope>
+      <shibmd:Scope regexp="false">ip-78-128-251-22.flt.cloud.muni.cz</shibmd:Scope>
     </Extensions>
     <KeyDescriptor use="signing">
       <ds:KeyInfo>
@@ -28,10 +28,10 @@ VZlKtYzYjJhVqXx1vKrWEE1hkpqm+iYgZe4MvgcdswY=
         </ds:X509Data>
       </ds:KeyInfo>
     </KeyDescriptor>
-    <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://idp.example.edu/idp/profile/SAML2/Redirect/SSO"/>
-    <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://idp.example.edu/idp/profile/SAML2/POST/SSO"/>
-    <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign" Location="https://idp.example.edu/idp/profile/SAML2/POST-SimpleSign/SSO"/>
-    <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://idp.example.edu/idp/profile/SAML2/SOAP/ECP"/>
+    <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://ip-78-128-251-22.flt.cloud.muni.cz/idp/profile/SAML2/Redirect/SSO"/>
+    <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://ip-78-128-251-22.flt.cloud.muni.cz/idp/profile/SAML2/POST/SSO"/>
+    <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign" Location="https://ip-78-128-251-22.flt.cloud.muni.cz/idp/profile/SAML2/POST-SimpleSign/SSO"/>
+    <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://ip-78-128-251-22.flt.cloud.muni.cz/idp/profile/SAML2/SOAP/ECP"/>
   </IDPSSODescriptor>
 </EntityDescriptor>
 

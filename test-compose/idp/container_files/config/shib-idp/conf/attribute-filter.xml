@@ -154,7 +154,7 @@
 
     <!-- the test SP container -->
     <AttributeFilterPolicy id="SPtest">
-        <PolicyRequirementRule xsi:type="Requester" value="https://sptest.example.edu/shibboleth" />
+        <PolicyRequirementRule xsi:type="Requester" value="https://ip-78-128-251-22.flt.cloud.muni.cz:8443/shibboleth" />
         <AttributeRule attributeID="eduPersonPrincipalName">
             <PermitValueRule xsi:type="ANY" />
         </AttributeRule>
