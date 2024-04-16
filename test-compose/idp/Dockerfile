@@ -22,4 +22,9 @@ ADD ${SHBVIEWS} /opt/shibboleth-idp/views
 #ADD ${SHBMSGS} /opt/shibboleth-idp/messages
 ADD ${SHBMD} /opt/shibboleth-idp/metadata
 
+RUN dnf makecache --refresh && dnf -y install expect
 
+COPY ./install_plugins.sh /usr/bin/install_plugins.sh
+RUN chmod +x /usr/bin/install_plugins.sh && ./usr/bin/install_plugins.sh
+
+CMD ["/usr/bin/startup.sh"]
