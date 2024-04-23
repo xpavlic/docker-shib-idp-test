@@ -1,0 +1,31 @@
+[
+  {
+    "scope": "openid email",
+    "redirect_uris": [
+      "https://oidcdebugger.com/debug"
+    ],
+    "client_id": "a0bd72aa-8ae9-4cd5-87ce-8d0797a1582a",
+    "response_types": [
+      "code"
+    ],
+    "grant_types": [
+      "authorization_code"
+    ]
+  },
+
+
+  {
+    "scope": "openid email",
+    "redirect_uris": [
+      "https://demorp.example.org/redirect_uri"
+    ],
+    "client_id": "demo_rp",
+    "client_secret": "topsecret",
+    "response_types": [
+      "code"
+    ],
+    "grant_types": [
+      "authorization_code"
+    ]
+  }
+]

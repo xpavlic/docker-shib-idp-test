@@ -2,25 +2,33 @@
 <!--
     This file is an EXAMPLE configuration file containing lots of commented
     example attributes, encoders, and a couple of example data connectors.
-     
+
     Not all attribute definitions or data connectors are demonstrated, but
     a variety of LDAP attributes, some common to Shibboleth deployments and
     many not, are included.
-    
+
     Deployers should refer to the Identity Provider 3 documentation
-    
+
     https://wiki.shibboleth.net/confluence/display/IDP30/AttributeResolverConfiguration
-     
+
     for a complete list of components and their options.
 -->
 <AttributeResolver
         xmlns="urn:mace:shibboleth:2.0:resolver"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="urn:mace:shibboleth:2.0:resolver http://shibboleth.net/schema/idp/shibboleth-attribute-resolver.xsd">
+        xmlns:oidc="urn:mace:shibboleth:2.0:resolver:oidc"
+        xsi:schemaLocation="urn:mace:shibboleth:2.0:resolver http://shibboleth.net/schema/idp/shibboleth-attribute-resolver.xsd
+            urn:mace:shibboleth:2.0:resolver:oidc http://shibboleth.net/schema/oidc/shibboleth-attribute-encoder-oidc.xsd">
 
     <!-- ========================================== -->
     <!--      Attribute Definitions                 -->
     <!-- ========================================== -->
+
+    <AttributeDefinition id="sub" xsi:type="Scoped" scope="%{idp.scope}">
+        <InputDataConnector ref="myLDAP" attributeNames="uid"/>
+        <AttributeEncoder xsi:type="oidc:OIDCScopedString" name="sub" />
+    </AttributeDefinition>
+
 
     <!-- Schema: Core schema attributes-->
     <AttributeDefinition xsi:type="Simple" id="uid">
@@ -103,10 +111,10 @@
     <AttributeDefinition xsi:type="Simple" id="departmentNumber">
         <InputDataConnector ref="myLDAP" attributeNames="departmentNumber"/>
     </AttributeDefinition>
-    
+
     <AttributeDefinition xsi:type="Simple" id="displayName">
         <InputDataConnector ref="myLDAP" attributeNames="displayName"/>
-    </AttributeDefinition> 
+    </AttributeDefinition>
 
     <AttributeDefinition xsi:type="Simple" id="employeeNumber">
         <InputDataConnector ref="myLDAP" attributeNames="employeeNumber"/>
@@ -143,6 +151,7 @@
 
     <AttributeDefinition xsi:type="Prescoped" id="eduPersonPrincipalName">
         <InputDataConnector ref="myLDAP" attributeNames="eduPersonPrincipalName"/>
+        <AttributeEncoder xsi:type="oidc:OIDCScopedString" name="eppn" />
     </AttributeDefinition>
 
     <AttributeDefinition xsi:type="Prescoped" id="eduPersonPrincipalNamePrior">
@@ -152,13 +161,13 @@
     <AttributeDefinition xsi:type="Scoped" id="eduPersonScopedAffiliation" scope="%{idp.scope}">
         <InputDataConnector ref="myLDAP" attributeNames="eduPersonAffiliation"/>
     </AttributeDefinition>
-    
+
     <AttributeDefinition xsi:type="Simple" id="eduPersonAssurance">
         <InputDataConnector ref="myLDAP" attributeNames="eduPersonAssurance"/>
     </AttributeDefinition>
 
     <!-- Semi-deprecated eduPersonUniqueId, should be phased out in favor of SAML subject-id replacement below. -->
-<!-- 
+<!--
     <AttributeDefinition xsi:type="Scoped" id="eduPersonUniqueId" scope="%{idp.scope}">
         <InputDataConnector ref="myLDAP" attributeNames="%{idp.persistentId.sourceAttribute}"/>
     </AttributeDefinition>
@@ -181,15 +190,15 @@
 
     <!-- Example Static Connector -->
 
-    <!-- Example Relational Database Connector.  
+    <!-- Example Relational Database Connector.
          In practice a <SimpleManagedConnection> is enough to get you going but you should consider a
          <BeanManagedConnection> fully configured for your particular environment -->
-    
+
 <!--
     <DataConnector id="mySIS" xsi:type="RelationalDatabase">
         <SimpleManagedConnection jdbcDriver="oracle.jdbc.driver.OracleDriver"
-                                 jdbcURL="jdbc:oracle:thin:@db.example.org:1521:SomeDB" 
-                                 jdbcUserName="myid" 
+                                 jdbcURL="jdbc:oracle:thin:@db.example.org:1521:SomeDB"
+                                 jdbcUserName="myid"
                                  jdbcPassword="mypassword" />
         <QueryTemplate>
             <![CDATA[
@@ -205,7 +214,7 @@
     <!-- Example LDAP Connector -->
     <DataConnector id="myLDAP" xsi:type="LDAPDirectory"
         ldapURL="%{idp.attribute.resolver.LDAP.ldapURL}"
-        baseDN="%{idp.attribute.resolver.LDAP.baseDN}" 
+        baseDN="%{idp.attribute.resolver.LDAP.baseDN}"
         principal="%{idp.attribute.resolver.LDAP.bindDN}"
         principalCredential="%{idp.attribute.resolver.LDAP.bindDNCredential}"
         useStartTLS="%{idp.attribute.resolver.LDAP.useStartTLS:true}"
@@ -227,15 +236,15 @@
 
     <!-- DataConector for pairwise-id (example depends on saml-nameid.properties). -->
 
-<!-- 
+<!--
     <DataConnector id="computed" xsi:type="ComputedId"
 	    generatedAttributeID="computedId"
 	    salt="%{idp.persistentId.salt}"
 	    algorithm="%{idp.persistentId.algorithm:SHA}"
         encoding="%{idp.persistentId.encoding:BASE32}">
-	    
+
         <InputDataConnector ref="myLDAP" attributeNames="%{idp.persistentId.sourceAttribute}" />
-        
+
 	</DataConnector>
 -->
 
