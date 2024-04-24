@@ -1,0 +1,88 @@
+<md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui" xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute" xmlns:mdrpi="urn:oasis:names:tc:SAML:metadata:rpi" xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" xmlns:xrd="http://docs.oasis-open.org/ns/xri/xrd-1.0" xmlns:pyff="http://pyff.io/NS" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ser="http://eidas.europa.eu/metadata/servicelist" xmlns:eidas="http://eidas.europa.eu/saml-extensions" xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:eduidmd="http://eduid.cz/schema/metadata/1.0" xmlns:req-attr="urn:oasis:names:tc:SAML:protocol:ext:req-attr" xmlns:ns0="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ns1="http://www.w3.org/2000/09/xmldsig#" xmlns:ns2="urn:oasis:names:tc:SAML:metadata:attribute" xmlns:ns3="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:ns4="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" xmlns:ns5="urn:oasis:names:tc:SAML:metadata:algsupport" xmlns:idpdisc="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" xmlns:init="urn:oasis:names:tc:SAML:profiles:SSO:request-init" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:ui="urn:oasis:names:tc:SAML:metadata:ui" xmlns:remd="http://refeds.org/metadata" xmlns:ns6="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" xmlns:ns7="urn:oasis:names:tc:SAML:metadata:ui" xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:q1="urn:oasis:names:tc:SAML:2.0:metadata" entityID="https://idp2.ics.muni.cz/idp/shibboleth">
+    <md:Extensions>
+        <mdattr:EntityAttributes>
+            <saml:Attribute Name="http://macedir.org/entity-category-support" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+                <saml:AttributeValue xsi:type="xs:string">http://www.geant.net/uri/dataprotection-code-of-conduct/v1</saml:AttributeValue>
+                <saml:AttributeValue xsi:type="xs:string">http://refeds.org/category/research-and-scholarship</saml:AttributeValue>
+                <saml:AttributeValue xsi:type="xs:string">http://eduid.cz/uri/sp-group/clarin</saml:AttributeValue>
+            </saml:Attribute>
+            <saml:Attribute Name="urn:oasis:names:tc:SAML:attribute:assurance-certification" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+                <saml:AttributeValue xsi:type="xs:string">https://refeds.org/sirtfi</saml:AttributeValue>
+            </saml:Attribute>
+            <saml:Attribute Name="http://macedir.org/entity-category" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+                <saml:AttributeValue>http://eduid.cz/uri/group/mefanet</saml:AttributeValue>
+                <saml:AttributeValue>http://eduid.cz/uri/idp-group/university</saml:AttributeValue>
+            </saml:Attribute>
+        </mdattr:EntityAttributes>
+        <eduidmd:RepublishRequest>
+            <eduidmd:RepublishTarget>http://edugain.org/</eduidmd:RepublishTarget>
+        </eduidmd:RepublishRequest>
+    </md:Extensions>
+    <md:IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+        <md:Extensions>
+            <shibmd:Scope regexp="false">muni.cz</shibmd:Scope>
+            <mdui:UIInfo>
+                <mdui:DisplayName xml:lang="en">Masaryk University</mdui:DisplayName>
+                <mdui:DisplayName xml:lang="cs">Masarykova univerzita</mdui:DisplayName>
+                <mdui:Description xml:lang="en">Primary Identity Provider for MU</mdui:Description>
+                <mdui:Description xml:lang="cs">P&#345;ihla&#353;ov&#225;n&#237; prim&#225;rn&#237;mi hesly na MU</mdui:Description>
+                <mdui:InformationURL xml:lang="en">https://www.muni.cz/en</mdui:InformationURL>
+                <mdui:InformationURL xml:lang="cs">https://www.muni.cz/</mdui:InformationURL>
+                <mdui:PrivacyStatementURL xml:lang="en">https://www.muni.cz/en/about-us/official-notice-board/personal-data-protection</mdui:PrivacyStatementURL>
+                <mdui:PrivacyStatementURL xml:lang="cs">https://www.muni.cz/o-univerzite/uredni-deska/ochrana-osobnich-udaju</mdui:PrivacyStatementURL>
+                <mdui:Logo height="80" width="80">https://id.muni.cz/muni-80x80.png</mdui:Logo>
+                <mdui:Logo height="40" width="85">https://id.muni.cz/muni-85x40.png</mdui:Logo>
+                <mdui:Logo height="906" width="1920">https://id.muni.cz/muni-1920x906.png</mdui:Logo>
+                <mdui:Logo height="1920" width="1920">https://id.muni.cz/muni-1920x1920.png</mdui:Logo>
+            </mdui:UIInfo>
+        </md:Extensions>
+        <md:KeyDescriptor use="signing">
+            <ds:KeyInfo>
+                <ds:X509Data>
+                    <ds:X509Certificate>MIIC/TCCAeWgAwIBAgIJAJ18Q00DtkMIMA0GCSqGSIb3DQEBCwUAMBUxEzARBgNVBAMMCmlkLm11bmkuY3owHhcNMTYxMTA0MTQ0OTMwWhcNMjYxMTAyMTQ0OTMwWjAVMRMwEQYDVQQDDAppZC5tdW5pLmN6MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwDHZ5X2M7lJN7t2e5zw3L3m3mme777OG0Qgoct5NpmgNbsHJ+9bh3sLxTkkf7F7I0kaCyxNyrFOaIvWQ75ndr4XHQRj5r/n+bp+8/sjn3Fnp2yzxNae8Sg74G8Sw1du74coJ8Ftjqo/ODyamRW4wgk+DkNIk8VSOD0CJkEpFxdwwBMsPZMgXRYIxRCOIzjpyo/R38ai4w+rf0zVry+duX0Xyv1ByNgrYAG02/AgRcXcFsODvxL1M47ubbpgmks1gcXxR4+jINz0mQNpEGtu/EZ5JZerZM2J99CVpTcI6KP4anf3yDgKYjoQTzdBQALFIwpt5BseYI7E1yxeLZBu9/QIDAQABo1AwTjAdBgNVHQ4EFgQUibREYbTm5VVSnoTFcZxMvWsH+mUwHwYDVR0jBBgwFoAUibREYbTm5VVSnoTFcZxMvWsH+mUwDAYDVR0TBAUwAwEB/zANBgkqhkiG9w0BAQsFAAOCAQEAQoIIi4XnqWbGRZ1gXmhcJVTiDdcf39dp1IiQZ7X0fAWLR4h9AO5ww8JFzj5aQMeybM+ZSl8t6HspVAKNz3fqEoYPSixK32uKV/GP46sos/Dwp04U4XR+smAsc5jbTwndP7tiMPMf03Own4mG1ZeR2s9LYf8sFV+FSjOBP3zlwWK8RAOJwRQXs5Bn9rtYAOdDrqqqwUWUSNXE2o9hq0/W65DmqbnUTOCOAe72FqLryS0ytFZGXm8R1gMZI1uMfEM76/+WvYFuCeMvROAoVwJH8aK7davxoM0w3JqUpzZy1dqQ9rTys3u2GffiPCsju+OJ7uEsbhR7eYegxCpRKLp58Q==</ds:X509Certificate>
+                </ds:X509Data>
+            </ds:KeyInfo>
+        </md:KeyDescriptor>
+        <md:KeyDescriptor use="encryption">
+            <ds:KeyInfo>
+                <ds:X509Data>
+                    <ds:X509Certificate>MIIC/TCCAeWgAwIBAgIJAJ18Q00DtkMIMA0GCSqGSIb3DQEBCwUAMBUxEzARBgNVBAMMCmlkLm11bmkuY3owHhcNMTYxMTA0MTQ0OTMwWhcNMjYxMTAyMTQ0OTMwWjAVMRMwEQYDVQQDDAppZC5tdW5pLmN6MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwDHZ5X2M7lJN7t2e5zw3L3m3mme777OG0Qgoct5NpmgNbsHJ+9bh3sLxTkkf7F7I0kaCyxNyrFOaIvWQ75ndr4XHQRj5r/n+bp+8/sjn3Fnp2yzxNae8Sg74G8Sw1du74coJ8Ftjqo/ODyamRW4wgk+DkNIk8VSOD0CJkEpFxdwwBMsPZMgXRYIxRCOIzjpyo/R38ai4w+rf0zVry+duX0Xyv1ByNgrYAG02/AgRcXcFsODvxL1M47ubbpgmks1gcXxR4+jINz0mQNpEGtu/EZ5JZerZM2J99CVpTcI6KP4anf3yDgKYjoQTzdBQALFIwpt5BseYI7E1yxeLZBu9/QIDAQABo1AwTjAdBgNVHQ4EFgQUibREYbTm5VVSnoTFcZxMvWsH+mUwHwYDVR0jBBgwFoAUibREYbTm5VVSnoTFcZxMvWsH+mUwDAYDVR0TBAUwAwEB/zANBgkqhkiG9w0BAQsFAAOCAQEAQoIIi4XnqWbGRZ1gXmhcJVTiDdcf39dp1IiQZ7X0fAWLR4h9AO5ww8JFzj5aQMeybM+ZSl8t6HspVAKNz3fqEoYPSixK32uKV/GP46sos/Dwp04U4XR+smAsc5jbTwndP7tiMPMf03Own4mG1ZeR2s9LYf8sFV+FSjOBP3zlwWK8RAOJwRQXs5Bn9rtYAOdDrqqqwUWUSNXE2o9hq0/W65DmqbnUTOCOAe72FqLryS0ytFZGXm8R1gMZI1uMfEM76/+WvYFuCeMvROAoVwJH8aK7davxoM0w3JqUpzZy1dqQ9rTys3u2GffiPCsju+OJ7uEsbhR7eYegxCpRKLp58Q==</ds:X509Certificate>
+                </ds:X509Data>
+            </ds:KeyInfo>
+        </md:KeyDescriptor>
+        <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://id.muni.cz/simplesaml/saml2/idp/SingleLogoutService.php"/>
+        <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://id.muni.cz/simplesaml/saml2/idp/SingleLogoutService.php"/>
+        <md:NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified</md:NameIDFormat>
+        <md:NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</md:NameIDFormat>
+        <md:NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:persistent</md:NameIDFormat>
+        <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://id.muni.cz/simplesaml/saml2/idp/SSOService.php"/>
+        <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://id.muni.cz/simplesaml/saml2/idp/SSOService.php"/>
+    </md:IDPSSODescriptor>
+    <md:Organization>
+        <md:OrganizationName xml:lang="en">Masaryk University</md:OrganizationName>
+        <md:OrganizationName xml:lang="cs">Masarykova univerzita</md:OrganizationName>
+        <md:OrganizationDisplayName xml:lang="en">Masaryk University</md:OrganizationDisplayName>
+        <md:OrganizationDisplayName xml:lang="cs">Masarykova univerzita</md:OrganizationDisplayName>
+        <md:OrganizationURL xml:lang="en">https://www.muni.cz/en</md:OrganizationURL>
+        <md:OrganizationURL xml:lang="cs">https://www.muni.cz/</md:OrganizationURL>
+    </md:Organization>
+    <md:ContactPerson contactType="support">
+        <md:Company>ICS MUNI</md:Company>
+        <md:GivenName>IT</md:GivenName>
+        <md:SurName>Service Desk</md:SurName>
+        <md:EmailAddress>mailto:it@muni.cz</md:EmailAddress>
+    </md:ContactPerson>
+    <md:ContactPerson contactType="technical">
+        <md:Company>ICS MUNI</md:Company>
+        <md:GivenName>MUNI Unified Login</md:GivenName>
+        <md:SurName>Support</md:SurName>
+        <md:EmailAddress>mailto:idm@ics.muni.cz</md:EmailAddress>
+    </md:ContactPerson>
+    <md:ContactPerson contactType="other" remd:contactType="http://refeds.org/metadata/contactType/security">
+        <md:Company>ICS MUNI</md:Company>
+        <md:GivenName>CSIRT</md:GivenName>
+        <md:SurName>MU</md:SurName>
+        <md:EmailAddress>mailto:csirt@muni.cz</md:EmailAddress>
+        <md:TelephoneNumber>+420549494242</md:TelephoneNumber>
+    </md:ContactPerson>
+</md:EntityDescriptor>

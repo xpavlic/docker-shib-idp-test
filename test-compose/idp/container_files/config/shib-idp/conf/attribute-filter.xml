@@ -308,4 +308,15 @@
         </AttributeRule>
     </AttributeFilterPolicy>
 
+
+    <AttributeFilterPolicy id="saml-proxy-pass-through">
+        <PolicyRequirementRule xsi:type="Issuer" value="https://idp2.ics.muni.cz/idp/shibboleth" />
+        <AttributeRule attributeID="givenName" permitAny="true" />
+        <AttributeRule attributeID="sn" permitAny="true" />
+        <AttributeRule attributeID="mail" permitAny="true" />
+        <AttributeRule attributeID="eduPersonPrincipalName">
+            <PermitValueRule xsi:type="ScopeMatchesShibMDScope" />
+        </AttributeRule>
+    </AttributeFilterPolicy>
+
 </AttributeFilterPolicyGroup>

@@ -102,4 +102,10 @@
     <MetadataProvider id="TestMetadata"  xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/testsp-metadata.xml"/>
     <!--end of test SP container -->
 
+
+    <MetadataProvider id="upstream-idp-metadata"
+                      xsi:type="FilesystemMetadataProvider"
+                      metadataFile="/opt/shibboleth-idp/metadata/id-muni-metadata.xml"
+    />
+
 </MetadataProvider>
