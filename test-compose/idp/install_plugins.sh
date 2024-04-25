@@ -4,6 +4,7 @@ set timeout -1
 
 set plugins [list "net.shibboleth.oidc.common" \
               "net.shibboleth.idp.plugin.oidc.config" \
+              "net.shibboleth.idp.plugin.authn.oidc.rp" \
               "net.shibboleth.idp.plugin.oidc.op"]
 
 foreach plugin $plugins {

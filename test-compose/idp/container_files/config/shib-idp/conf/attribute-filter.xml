@@ -188,7 +188,6 @@
             <Rule xsi:type="NOT">
                 <Rule xsi:type="oidc:OIDCScope" value="openid" />
             </Rule>
-            <Rule xsi:type="Profile" value="http://shibboleth.net/ns/profiles/oidc/sso/browser" />
         </PolicyRequirementRule>
         <AttributeRule attributeID="sub">
             <PermitValueRule xsi:type="ANY" />
@@ -314,6 +313,16 @@
         <AttributeRule attributeID="givenName" permitAny="true" />
         <AttributeRule attributeID="sn" permitAny="true" />
         <AttributeRule attributeID="mail" permitAny="true" />
+        <AttributeRule attributeID="eduPersonPrincipalName">
+            <PermitValueRule xsi:type="ScopeMatchesShibMDScope" />
+        </AttributeRule>
+    </AttributeFilterPolicy>
+
+    <AttributeFilterPolicy id="alwaysReleaseFromProxy">
+        <PolicyRequirementRule xsi:type="Issuer" value="https://oidc.muni.cz/oidc/" />
+        <AttributeRule attributeID="displayName" permitAny="true" />
+        <AttributeRule attributeID="mail" permitAny="true" />
+        <AttributeRule attributeID="sn" permitAny="true" />
         <AttributeRule attributeID="eduPersonPrincipalName">
             <PermitValueRule xsi:type="ScopeMatchesShibMDScope" />
         </AttributeRule>

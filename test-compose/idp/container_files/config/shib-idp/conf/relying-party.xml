@@ -83,4 +83,7 @@
         
     </util:list>
 
+    <bean id="shibboleth.authn.oidc.rp.ContextToPrivateCredentialsMappingStrategy"
+          class="net.shibboleth.idp.plugin.authn.oidc.rp.impl.AccessTokenToPrivateCredentialsMappingStrategy"/>
+
 </beans>
